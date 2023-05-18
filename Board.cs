@@ -5,6 +5,10 @@ namespace Advance
         internal const int Size = 9;
 
         internal Square[] Squares = new Square[Size * Size];
+        internal bool[] ThreatenedByWhite = new bool[Size * Size];
+        internal bool[] ThreatenedByBlack = new bool[Size * Size];
+        internal bool WhiteInCheck = false;
+        internal bool BlackInCheck = false;
 
         internal Board(string text)
         {
