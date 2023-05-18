@@ -3,6 +3,7 @@ namespace Advance
     public class Game
     {
         internal Board Board { get; }
+        internal Moves Moves = new Moves();
 
         public Game()
         {
@@ -14,6 +15,8 @@ namespace Advance
             text = text.Replace("\n", "");
 
             Board = new Board(text);
+            // Moves = new Moves();
+            Moves.GetValidMoves(Board);
         }
 
         public override string ToString()

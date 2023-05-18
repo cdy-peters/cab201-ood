@@ -13,8 +13,8 @@ namespace Advance
         Wall,
         Zombie,
         Builder,
-        Miner,
         Jester,
+        Miner,
         Sentinel,
         Catapult,
         Dragon,
@@ -25,17 +25,20 @@ namespace Advance
     {
         internal PieceColor PieceColor;
         internal PieceType PieceType;
+        internal List<int> ValidMoves;
 
         internal Piece(Piece piece)
         {
             PieceColor = piece.PieceColor;
             PieceType = piece.PieceType;
+            ValidMoves = piece.ValidMoves;
         }
 
         internal Piece(PieceColor pieceColor, PieceType pieceType)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
+            ValidMoves = new List<int>();
         }
 
         public new string ToString()
