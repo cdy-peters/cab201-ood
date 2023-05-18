@@ -1,8 +1,8 @@
 namespace Advance
 {
-    internal class Game
+    public class Game
     {
-        public Board Board { get; set; }
+        internal Board Board { get; }
 
         public Game()
         {
