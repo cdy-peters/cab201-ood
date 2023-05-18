@@ -1,11 +1,12 @@
-namespace Advance;
-
-public struct Square
+namespace Advance
 {
-    public Piece Piece;
-
-    public Square(Piece piece)
+    internal struct Square
     {
-        Piece = new Piece(piece);
+        internal Piece Piece;
+
+        internal Square(Piece piece)
+        {
+            Piece = new Piece(piece);
+        }
     }
 }
