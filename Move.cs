@@ -49,11 +49,16 @@ namespace Advance
 
         internal void AddValidMove(Board board, Square square, int destPos)
         {
-            square.Piece.ValidMoves.Add(destPos);
             if (square.Piece.PieceColor == PieceColor.White)
                 board.ThreatenedByWhite[destPos] = true;
             else
                 board.ThreatenedByBlack[destPos] = true;
+
+            // Check if destination piece is protected by a sentinel
+            if (IsProtected(board, square, destPos))
+                return;
+
+            square.Piece.ValidMoves.Add(destPos);
 
             // Check if the move puts the enemy general in check
             Square destSquare = board.Squares[destPos];
@@ -64,6 +69,36 @@ namespace Advance
                 else
                     board.BlackInCheck = true;
             }
+        }
+
+        private bool IsProtected(Board board, Square square, int destPos)
+        {
+            if (square.Piece.PieceType == PieceType.Jester)
+                return false;
+
+            int[] offsets = { -1, 0, 1 };
+
+            foreach (int offsetY in offsets)
+            {
+                foreach (int offsetX in offsets)
+                {
+                    if (Math.Abs(offsetX) == Math.Abs(offsetY))
+                        continue;
+                    int tempPos = destPos + offsetY * Board.Size + offsetX;
+                    if (tempPos < 0 || tempPos >= Board.Size * Board.Size)
+                        continue;
+                    if (offsetX == 1 && tempPos % Board.Size <= 0)
+                        continue;
+                    if (offsetX == -1 && tempPos % Board.Size >= Board.Size - 1)
+                        continue;
+                    Square tempSquare = board.Squares[tempPos];
+
+                    if (tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private void GetValidMovesZombie(Board board, Square square, int pos)
