@@ -5,12 +5,12 @@ YELLOW='\033[1;33m'
 
 test()
 {
-    for color in $(ls cases/$grade); do
+    for color in $(ls cases/$grade | sort -n); do
         if [ ! -d cases/$grade/$color/output ]; then
             mkdir cases/$grade/$color/output
         fi
 
-        for i in $(ls cases/$grade/$color/tests); do
+        for i in $(ls cases/$grade/$color/tests | sort -n); do
             echo "${NC}__________________________________________________"
             echo "Testing $grade/$color/$i\n"
             ./../bin/Debug/net7.0/CAB201 $color cases/$grade/$color/tests/$i cases/$grade/$color/output/$i
