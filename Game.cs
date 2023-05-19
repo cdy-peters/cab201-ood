@@ -1,22 +1,32 @@
 namespace Advance
 {
+    public enum PlayerColor
+    {
+        White,
+        Black
+    }
+
     public class Game
     {
+        internal PlayerColor PlayerColor;
+        internal string SrcFilePath;
+        internal string DestFilePath;
         internal Board Board { get; }
         internal Moves Moves = new Moves();
 
-        public Game()
+        public Game(string[] args)
         {
-            string currFilepath = "tests/4/white/tests/0.txt";
-            string text = System.IO.File.ReadAllText(currFilepath);
+            // TODO: Validate args
+            PlayerColor = args[0] == "white" ? PlayerColor.White : PlayerColor.Black;
+            SrcFilePath = args[1];
+            DestFilePath = args[2];
 
-            // remove escape sequences
-            text = text.Replace("\r", "");
-            text = text.Replace("\n", "");
+            string boardStr = FileIO.LoadFile(SrcFilePath);
 
-            Board = new Board(text);
-            // Moves = new Moves();
+            Board = new Board(boardStr);
             Moves.GetValidMoves(Board);
+
+            FileIO.SaveFile(DestFilePath, Board.ToString());
         }
 
         public override string ToString()
