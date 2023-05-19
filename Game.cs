@@ -25,6 +25,7 @@ namespace Advance
 
             Board = new Board(boardStr);
             Moves.GetValidMoves(Board);
+            Moves.FindMove(Board, PieceColor.White);
 
             FileIO.SaveFile(DestFilePath, Board.ToString());
         }

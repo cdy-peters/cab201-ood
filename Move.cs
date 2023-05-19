@@ -101,6 +101,29 @@ namespace Advance
             return false;
         }
 
+        internal void FindMove(Board board, PieceColor color) // ! This assumes only 1 move is valid for the test case
+        {
+            // TODO: Check if general is in check, move if needed
+            for (int i = 0; i < Board.Size * Board.Size; i++)
+            {
+                Square square = board.Squares[i];
+
+                if (square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                    continue;
+
+                if (square.Piece.PieceColor != color)
+                    continue;
+
+                foreach (int move in square.Piece.ValidMoves)
+                {
+                    Square destSquare = board.Squares[move];
+
+                    Console.WriteLine($"Move {square.Piece.PieceType} {square.Piece.PieceColor} from {i} to {move}");
+                    board.MovePiece(board, i, move);
+                }
+            }
+        }
+
         private void GetValidMovesZombie(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
