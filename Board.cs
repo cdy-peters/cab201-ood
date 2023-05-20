@@ -36,7 +36,7 @@ namespace Advance
         internal Board(string text) : this()
         {
             Player = PieceColor.White;
-            
+
             for (int i = 0; i < Size * Size; i++)
             {
                 char c = text[i];
@@ -113,7 +113,7 @@ namespace Advance
 
             for (int i = 0; i < Size * Size; i++)
             {
-                if (squares[i].Piece.PieceType == PieceType.None || squares[i].Piece.PieceType == PieceType.Wall)
+                if (squares[i].Piece == null || squares[i].Piece.PieceType == PieceType.None || squares[i].Piece.PieceType == PieceType.Wall)
                     continue;
                 Squares[i] = new Square(squares[i].Piece);
             }
@@ -141,7 +141,7 @@ namespace Advance
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
 
-            return newBoard;    
+            return newBoard;
         }
 
         internal static MoveContent MovePiece(Board board, int currPos, int destPos)

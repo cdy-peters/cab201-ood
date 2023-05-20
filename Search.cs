@@ -93,7 +93,7 @@ namespace Advance
 
                 if (square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
                     continue;
-                
+
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
@@ -192,7 +192,7 @@ namespace Advance
 
                 if (piece == null || piece.PieceType == PieceType.None || piece.PieceType == PieceType.Wall)
                     continue;
-                
+
                 if (piece.PieceColor != board.Player)
                     continue;
 
@@ -201,18 +201,22 @@ namespace Advance
                     Position move = new Position();
                     move.SrcPos = i;
                     move.DestPos = dest;
-                    
+
                     Piece destPiece = board.Squares[move.DestPos].Piece;
+
+                    if (destPiece == null)
+                        continue;
+
                     if (destPiece.PieceType != PieceType.None)
                     {
                         move.Score += destPiece.PieceValue;
-                        if(piece.PieceValue < destPiece.PieceValue)
+                        if (piece.PieceValue < destPiece.PieceValue)
                             move.Score += piece.PieceValue - destPiece.PieceValue;
                     }
                     positions.Add(move);
                 }
             }
-            
+
             return positions;
         }
 
@@ -276,7 +280,7 @@ namespace Advance
                     return true;
                 }
             }
-            
+
             return false;
         }
 
