@@ -3,6 +3,9 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 
+total_tests=0
+passed_tests=0
+
 run_tests()
 {
     if [ ! -d cases/$grade/$color/output ]; then
@@ -10,8 +13,11 @@ run_tests()
     fi
 
     for i in $(ls cases/$grade/$color/tests | sort -n); do
+        total_tests=$((total_tests+1))
         test
     done
+
+    echo "${NC}\nPassed $passed_tests/$total_tests tests"
 }
 
 test()
@@ -22,13 +28,14 @@ test()
 
     if [ ! -f cases/$grade/$color/output/$i ]; then
         echo "${YELLOW}error"
-        continue
+        return
     fi
 
     diff -b -s cases/$grade/$color/output/$i cases/$grade/$color/answers/$i
     if [ $? -eq 1 ]; then
         echo "${RED}false"
     else
+        passed_tests=$((passed_tests+1))
         echo "${GREEN}true"
     fi
 }
