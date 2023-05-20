@@ -40,9 +40,7 @@ namespace Advance
                         GetValidMovesGeneral(board, square, i);
                         break;
 
-                        // TODO: Check if any of the added moves are protected by the sentinel
-                        // ? Maybe make a method for adding the moves and then check if they are protected
-                        // ? Move methods into their own classes
+                    // ? Move methods into their own classes
                 }
             }
         }
@@ -97,36 +95,15 @@ namespace Advance
                         continue;
                     Square tempSquare = board.Squares[tempPos];
 
-                    if (tempSquare.Piece == null || tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
+                    if (tempSquare.Piece == null)
+                        continue;
+
+                    if (tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
                         return true;
                 }
             }
 
             return false;
-        }
-
-        internal static void FindMove(Board board, PieceColor color)
-        {
-            // TODO: Check if general is in check, move if needed
-            for (int i = 0; i < Board.Size * Board.Size; i++)
-            {
-                Square square = board.Squares[i];
-
-                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
-                    continue;
-
-                if (square.Piece.PieceColor != color)
-                    continue;
-
-                foreach (int move in square.Piece.ValidMoves)
-                {
-                    Square destSquare = board.Squares[move];
-                    // TODO: Determine best move
-
-                    Console.WriteLine($"Move {square.Piece.PieceType} {square.Piece.PieceColor} from {i} to {move}");
-                    Board.MovePiece(board, i, move);
-                }
-            }
         }
 
         private static void GetValidMovesZombie(Board board, Square square, int pos)
@@ -149,12 +126,11 @@ namespace Advance
                             continue;
                         if (offset == -1 && destPos % Board.Size >= Board.Size - 1)
                             continue;
+                        if (destPos < 0)
+                            continue;
                         Square destSquare = board.Squares[destPos];
 
-                        if (destSquare.Piece == null)
-                            continue;
-
-                        if (destSquare.Piece.PieceType == PieceType.None)
+                        if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
                         {
                             AddValidMove(board, square, destPos);
 
@@ -162,6 +138,9 @@ namespace Advance
                             if (row > 1)
                             {
                                 destPos = pos - Board.Size * 2 + offset * 2;
+                                if (destPos < 0)
+                                    continue;
+
                                 destSquare = board.Squares[destPos];
 
                                 if (destSquare.Piece == null)

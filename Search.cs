@@ -51,7 +51,7 @@ namespace Advance
                 int value = -AlphaBeta(pos, depth - 1, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove; // ? Does this get set elsewhere
+                    return pos.LastMove;
             }
 
             int currentBoard = 0;
@@ -120,11 +120,8 @@ namespace Advance
 
         private static int AlphaBeta(Board board, int depth, int alpha, int beta)
         {
-            // nodesSearched++;
-
             if (depth == 0)
             {
-                // Evaluation Evaluation = new Evaluation();
                 Evaluation.BoardEvaluation(board);
                 return SideToMoveScore(board.Score, board.Player);
             }
