@@ -22,6 +22,10 @@ run_tests()
 
 test()
 {
+    if [ -f cases/$grade/$color/output/$i ]; then
+        rm cases/$grade/$color/output/$i
+    fi
+
     echo "${NC}__________________________________________________"
     echo "Testing $grade/$color/$i\n"
     ./../bin/Debug/net7.0/CAB201 $color cases/$grade/$color/tests/$i cases/$grade/$color/output/$i
