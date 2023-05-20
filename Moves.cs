@@ -130,7 +130,10 @@ namespace Advance
                             continue;
                         Square destSquare = board.Squares[destPos];
 
-                        if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
+                        if (destSquare.Piece == null)
+                            continue;
+
+                        if (destSquare.Piece.PieceColor != PieceColor.White)
                         {
                             AddValidMove(board, square, destPos);
 
@@ -173,7 +176,7 @@ namespace Advance
                         if (destSquare.Piece == null)
                             continue;
 
-                        if (destSquare.Piece.PieceType == PieceType.None)
+                        if (destSquare.Piece.PieceColor != PieceColor.Black)
                         {
                             AddValidMove(board, square, destPos);
 

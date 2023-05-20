@@ -208,7 +208,7 @@ namespace Advance
                     {
                         move.Score += destPiece.PieceValue;
                         if (piece.PieceValue < destPiece.PieceValue)
-                            move.Score += piece.PieceValue - destPiece.PieceValue;
+                            move.Score += destPiece.PieceValue - piece.PieceValue;
                     }
                     positions.Add(move);
                 }
