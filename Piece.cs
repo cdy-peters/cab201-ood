@@ -21,18 +21,19 @@ namespace Advance
         General
     }
 
+    // TODO: Change None to null
     internal class Piece
     {
         internal PieceColor PieceColor;
         internal PieceType PieceType;
-        internal int PieceScore;
+        internal int PieceValue;
         internal List<int> ValidMoves;
 
         internal Piece(Piece piece)
         {
             PieceColor = piece.PieceColor;
             PieceType = piece.PieceType;
-            PieceScore = piece.PieceScore;
+            PieceValue = piece.PieceValue;
             ValidMoves = piece.ValidMoves;
         }
 
@@ -40,7 +41,7 @@ namespace Advance
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
-            PieceScore = pieceType switch
+            PieceValue = pieceType switch
             {
                 PieceType.Wall => 0,
                 PieceType.Zombie => 1,

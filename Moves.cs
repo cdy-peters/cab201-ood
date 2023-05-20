@@ -1,14 +1,14 @@
 namespace Advance
 {
-    internal class Moves
+    internal static class Moves
     {
-        internal void GetValidMoves(Board board)
+        internal static void GetValidMoves(Board board)
         {
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
 
-                if (square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 square.Piece.ValidMoves = new List<int>();
@@ -47,7 +47,7 @@ namespace Advance
             }
         }
 
-        internal void AddValidMove(Board board, Square square, int destPos)
+        internal static void AddValidMove(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceColor == PieceColor.White)
                 board.ThreatenedByWhite[destPos] = true;
@@ -65,13 +65,13 @@ namespace Advance
             if (destSquare.Piece.PieceType == PieceType.General)
             {
                 if (destSquare.Piece.PieceColor == PieceColor.White)
-                    board.WhiteInCheck = true;
+                    board.WhiteCheck = true;
                 else
-                    board.BlackInCheck = true;
+                    board.BlackCheck = true;
             }
         }
 
-        private bool IsProtected(Board board, Square square, int destPos)
+        private static bool IsProtected(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)
                 return false;
@@ -93,7 +93,7 @@ namespace Advance
                         continue;
                     Square tempSquare = board.Squares[tempPos];
 
-                    if (tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
+                    if (tempSquare.Piece == null || tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
                         return true;
                 }
             }
@@ -101,7 +101,7 @@ namespace Advance
             return false;
         }
 
-        internal void FindMove(Board board, PieceColor color)
+        internal static void FindMove(Board board, PieceColor color)
         {
             // TODO: Check if general is in check, move if needed
             for (int i = 0; i < Board.Size * Board.Size; i++)
@@ -120,12 +120,12 @@ namespace Advance
                     // TODO: Determine best move
 
                     Console.WriteLine($"Move {square.Piece.PieceType} {square.Piece.PieceColor} from {i} to {move}");
-                    board.MovePiece(board, i, move);
+                    Board.MovePiece(board, i, move);
                 }
             }
         }
 
-        private void GetValidMovesZombie(Board board, Square square, int pos)
+        private static void GetValidMovesZombie(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
             int col = pos % Board.Size;
@@ -200,7 +200,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesBuilder(Board board, Square square, int pos)
+        private static void GetValidMovesBuilder(Board board, Square square, int pos)
         {
             int destPos = pos;
             int[] offsets = { -1, 0, 1 };
@@ -224,7 +224,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesJester(Board board, Square square, int pos)
+        private static void GetValidMovesJester(Board board, Square square, int pos)
         {
             int destPos = pos;
             int[] offsets = { -1, 0, 1 };
@@ -252,7 +252,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesMiner(Board board, Square square, int pos)
+        private static void GetValidMovesMiner(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
             int col = pos % Board.Size;
@@ -266,7 +266,7 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
@@ -290,7 +290,7 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
@@ -314,7 +314,7 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
@@ -338,7 +338,7 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
@@ -354,7 +354,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesSentinel(Board board, Square square, int pos)
+        private static void GetValidMovesSentinel(Board board, Square square, int pos)
         {
             int[] offsets = { -2, -1, 1, 2 };
 
@@ -383,7 +383,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesCatapult(Board board, Square square, int pos)
+        private static void GetValidMovesCatapult(Board board, Square square, int pos)
         {
             // ? Possible refactor?
 
@@ -456,7 +456,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesDragon(Board board, Square square, int pos)
+        private static void GetValidMovesDragon(Board board, Square square, int pos)
         {
             // Up
             int destPos = pos;
@@ -643,7 +643,7 @@ namespace Advance
             }
         }
 
-        private void GetValidMovesGeneral(Board board, Square square, int pos)
+        private static void GetValidMovesGeneral(Board board, Square square, int pos)
         {
             int destPos = pos;
             int[] offsets = { -1, 0, 1 };
@@ -661,7 +661,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
                     {
                         // Check if new position is in check
                         if (IsGeneralInCheck(board, square, destPos))
@@ -673,7 +673,7 @@ namespace Advance
             }
         }
 
-        private bool IsGeneralInCheck(Board board, Square square, int destPos)
+        private static bool IsGeneralInCheck(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceColor == PieceColor.White)
                 return board.ThreatenedByBlack[destPos];

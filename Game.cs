@@ -12,7 +12,6 @@ namespace Advance
         internal string SrcFilePath;
         internal string DestFilePath;
         internal Board Board { get; }
-        internal Moves Moves = new Moves();
 
         public Game(string[] args)
         {
@@ -25,7 +24,9 @@ namespace Advance
 
             Board = new Board(boardStr);
             Moves.GetValidMoves(Board);
-            Moves.FindMove(Board, PieceColor.White);
+            MoveContent bestMove = Search.IterativeSearch(Board, 7);
+            Console.WriteLine($"Moving {bestMove.MovingPiece.SrcPos} to {bestMove.MovingPiece.DestPos}");
+            Board.MovePiece(Board, bestMove.MovingPiece.SrcPos, bestMove.MovingPiece.DestPos); // TODO: Make an overload that takes a MoveContent
 
             FileIO.SaveFile(DestFilePath, Board.ToString());
         }

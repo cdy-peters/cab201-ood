@@ -1,12 +1,12 @@
 namespace Advance
 {
-    internal class Evaluation
+    internal static class Evaluation
     {
-        private int PieceEvaluation(Square square, int pos)
+        private static int PieceEvaluation(Square square, int pos)
         {
             int totalScore = 0;
 
-            totalScore += square.Piece.PieceScore;
+            totalScore += square.Piece.PieceValue;
             // TODO: Consider pieces that are threatened by the opponent
             // TODO: Consider opponent pieces that are threatening this piece
             // TODO: Consider pieces that are protected by this piece
@@ -15,15 +15,15 @@ namespace Advance
             return totalScore;
         }
 
-        internal int BoardEvaluation(Board board)
+        internal static int BoardEvaluation(Board board)
         {
             int totalScore = 0;
 
-            if (board.WhiteInCheck)
+            if (board.WhiteCheck)
             {
                 totalScore += 1000;
             }
-            else if (board.BlackInCheck)
+            else if (board.BlackCheck)
             {
                 totalScore -= 1000;
             }
@@ -31,7 +31,7 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
-                if (square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 if (square.Piece.PieceColor == PieceColor.White)

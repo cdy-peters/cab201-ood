@@ -5,13 +5,38 @@ namespace Advance
         internal const int Size = 9;
 
         internal Square[] Squares = new Square[Size * Size];
+        internal PieceColor Player;
+        internal int Score = 0;
+        internal MoveContent LastMove;
+
         internal bool[] ThreatenedByWhite = new bool[Size * Size];
         internal bool[] ThreatenedByBlack = new bool[Size * Size];
-        internal bool WhiteInCheck = false;
-        internal bool BlackInCheck = false;
 
-        internal Board(string text)
+        internal bool WhiteCheck = false;
+        internal bool BlackCheck = false;
+        internal bool WhiteMate = false;
+        internal bool BlackMate = false;
+        internal bool StaleMate = false;
+
+        internal Board()
         {
+            Squares = new Square[Size * Size];
+
+            for (int i = 0; i < Size * Size; i++)
+            {
+                Squares[i] = new Square();
+            }
+
+            LastMove = new MoveContent();
+
+            ThreatenedByWhite = new bool[Size * Size];
+            ThreatenedByBlack = new bool[Size * Size];
+        }
+
+        internal Board(string text) : this()
+        {
+            Player = PieceColor.White;
+            
             for (int i = 0; i < Size * Size; i++)
             {
                 char c = text[i];
@@ -52,17 +77,87 @@ namespace Advance
             }
         }
 
-        internal void MovePiece(Board board, int currPos, int destPos)
+        internal Board(Board board)
+        {
+            Squares = new Square[Size * Size];
+
+            for (int i = 0; i < Size * Size; i++)
+            {
+                if (board.Squares[i].Piece.PieceType == PieceType.None || board.Squares[i].Piece.PieceType == PieceType.Wall)
+                    Squares[i] = new Square(board.Squares[i].Piece);
+            }
+
+            ThreatenedByWhite = new bool[Size * Size];
+            ThreatenedByBlack = new bool[Size * Size];
+
+            for (int i = 0; i < Size * Size; i++)
+            {
+                ThreatenedByWhite[i] = board.ThreatenedByWhite[i];
+                ThreatenedByBlack[i] = board.ThreatenedByBlack[i];
+            }
+
+            Player = board.Player;
+            Score = board.Score;
+            LastMove = new MoveContent(board.LastMove);
+
+            BlackCheck = board.BlackCheck;
+            WhiteCheck = board.WhiteCheck;
+            BlackMate = board.BlackMate;
+            WhiteMate = board.WhiteMate;
+            StaleMate = board.StaleMate;
+        }
+
+        private Board(Square[] squares)
+        {
+            Squares = new Square[Size * Size];
+
+            for (int i = 0; i < Size * Size; i++)
+            {
+                if (squares[i].Piece.PieceType == PieceType.None || squares[i].Piece.PieceType == PieceType.Wall)
+                    continue;
+                Squares[i] = new Square(squares[i].Piece);
+            }
+
+            LastMove = new MoveContent();
+
+            ThreatenedByWhite = new bool[Size * Size];
+            ThreatenedByBlack = new bool[Size * Size];
+        }
+
+        internal Board(int score) : this()
+        {
+            Score = score;
+
+            ThreatenedByWhite = new bool[Size * Size];
+            ThreatenedByBlack = new bool[Size * Size];
+        }
+
+        internal Board CopyBoard()
+        {
+            Board newBoard = new Board(Squares);
+
+            newBoard.Player = Player;
+
+            ThreatenedByWhite = new bool[Size * Size];
+            ThreatenedByBlack = new bool[Size * Size];
+
+            return newBoard;    
+        }
+
+        internal static MoveContent MovePiece(Board board, int currPos, int destPos)
         {
             Piece currPiece = board.Squares[currPos].Piece;
+            board.LastMove = new MoveContent();
 
-            Square destSquare = board.Squares[destPos];
+            board.LastMove.MovingPiece = new PieceMoving(currPiece.PieceColor, currPiece.PieceType, currPos, destPos);
 
             // Clear old square
             board.Squares[currPos].Piece = new Piece(PieceColor.None, PieceType.None);
 
             // Move piece to new square
             board.Squares[destPos].Piece = currPiece;
+
+            return board.LastMove;
         }
 
         public override string ToString()
