@@ -4,6 +4,9 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board)
         {
+            int whiteGeneralPos = -1;
+            int blackGeneralPos = -1;
+
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
@@ -37,12 +40,18 @@ namespace Advance
                         GetValidMovesDragon(board, square, i);
                         break;
                     case PieceType.General:
-                        GetValidMovesGeneral(board, square, i);
+                        if (square.Piece.PieceColor == PieceColor.White)
+                            whiteGeneralPos = i;
+                        else
+                            blackGeneralPos = i;
                         break;
 
                     // ? Move methods into their own classes
                 }
             }
+
+            GetValidMovesGeneral(board, whiteGeneralPos);
+            GetValidMovesGeneral(board, blackGeneralPos);
         }
 
         internal static void AddValidMove(Board board, Square square, int destPos)
@@ -151,6 +160,7 @@ namespace Advance
 
                                 if (destSquare.Piece.PieceColor == PieceColor.Black)
                                     AddValidMove(board, square, destPos);
+                                board.ThreatenedByWhite[destPos] = true;
                             }
                         }
                     }
@@ -194,6 +204,7 @@ namespace Advance
 
                                 if (destSquare.Piece.PieceColor == PieceColor.White)
                                     AddValidMove(board, square, destPos);
+                                board.ThreatenedByBlack[destPos] = true;
                             }
                         }
                     }
@@ -686,8 +697,12 @@ namespace Advance
             }
         }
 
-        private static void GetValidMovesGeneral(Board board, Square square, int pos)
+        private static void GetValidMovesGeneral(Board board, int pos)
         {
+            if (pos < 0 || pos >= Board.Size * Board.Size)
+                return;
+            Square square = board.Squares[pos];
+
             int destPos = pos;
             int[] offsets = { -1, 0, 1 };
 
