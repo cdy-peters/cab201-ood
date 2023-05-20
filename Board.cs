@@ -144,19 +144,35 @@ namespace Advance
             return newBoard;
         }
 
-        internal static MoveContent MovePiece(Board board, int currPos, int destPos)
+        internal static MoveContent MovePiece(Board board, int srcPos, int destPos)
         {
-            Piece currPiece = board.Squares[currPos].Piece;
+            Piece srcPiece = board.Squares[srcPos].Piece;
+            Piece destPiece = board.Squares[destPos].Piece;
+
             board.LastMove = new MoveContent();
+            board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, destPos);
 
-            board.LastMove.MovingPiece = new PieceMoving(currPiece.PieceColor, currPiece.PieceType, currPos, destPos);
+            if (srcPiece.PieceType != PieceType.Jester || destPiece == null) {
+                board.Squares[srcPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                board.Squares[destPos].Piece = srcPiece;
+                return board.LastMove;
+            }
 
-            // Clear old square
-            board.Squares[currPos].Piece = new Piece(PieceColor.None, PieceType.None);
-
-            // Move piece to new square
-            board.Squares[destPos].Piece = currPiece;
-
+            // Jester abilities
+            if (srcPiece.PieceType == PieceType.Jester && (destPiece.PieceType != PieceType.None))
+            {
+                if (destPiece.PieceColor == srcPiece.PieceColor)
+                {
+                    // Swap pieces
+                    board.Squares[srcPos].Piece = destPiece;
+                    board.Squares[destPos].Piece = srcPiece;
+                }
+                else if (destPiece.PieceColor != PieceColor.None)
+                {
+                    // Change color of destination piece
+                    board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
+                }
+            }
             return board.LastMove;
         }
 
