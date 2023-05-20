@@ -35,7 +35,7 @@ namespace Advance
 
         internal Board(string text) : this()
         {
-            Player = PieceColor.White;
+            Player = Game.PlayerColor;
 
             for (int i = 0; i < Size * Size; i++)
             {

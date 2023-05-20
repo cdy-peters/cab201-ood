@@ -1,14 +1,15 @@
 namespace Advance
 {
-    public enum PlayerColor
-    {
-        White,
-        Black
-    }
+    // ! Currently using PieceColor from Piece.cs
+    // public enum PlayerColor
+    // {
+    //     White,
+    //     Black
+    // }
 
     public class Game
     {
-        internal PlayerColor PlayerColor;
+        internal static PieceColor PlayerColor { get; private set; }
         internal string SrcFilePath;
         internal string DestFilePath;
         internal Board Board { get; }
@@ -16,7 +17,7 @@ namespace Advance
         public Game(string[] args)
         {
             // TODO: Validate args
-            PlayerColor = args[0] == "white" ? PlayerColor.White : PlayerColor.Black;
+            PlayerColor = args[0] == "white" ? PieceColor.White : PieceColor.Black;
             SrcFilePath = args[1];
             DestFilePath = args[2];
 
