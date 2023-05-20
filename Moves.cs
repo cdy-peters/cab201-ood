@@ -184,6 +184,9 @@ namespace Advance
                             if (row < Board.Size - 2)
                             {
                                 destPos = pos + Board.Size * 2 + offset * 2;
+                                if (destPos < 0)
+                                    continue;
+                                    
                                 destSquare = board.Squares[destPos];
 
                                 if (destSquare.Piece == null)
