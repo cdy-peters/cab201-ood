@@ -150,7 +150,7 @@ namespace Advance
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (row > 1)
+                            if (row > 1 && destSquare.Piece.PieceType == PieceType.None)
                             {
                                 destPos = pos - Board.Size * 2 + offset * 2;
                                 if (destPos < 0)
@@ -194,7 +194,7 @@ namespace Advance
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (row < Board.Size - 2)
+                            if (row < Board.Size - 2 && destSquare.Piece.PieceType == PieceType.None)
                             {
                                 destPos = pos + Board.Size * 2 + offset * 2;
                                 if (destPos < 0 || destPos >= Board.Size * Board.Size)
