@@ -146,13 +146,30 @@ namespace Advance
 
         internal static MoveContent MovePiece(Board board, int srcPos, int destPos)
         {
+            // TODO: Refactor this method
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
             board.LastMove = new MoveContent();
             board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, destPos);
 
-            if (srcPiece.PieceType != PieceType.Jester || destPiece == null) {
+            // Catapult move
+            if (srcPiece.PieceType == PieceType.Catapult)
+            {
+                // check if destpos is a square away
+                if (Math.Abs(srcPos - destPos) == 1 || Math.Abs(srcPos - destPos) == Size)
+                {
+                    board.Squares[srcPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                    board.Squares[destPos].Piece = srcPiece;
+                    return board.LastMove;
+                }
+
+                board.Squares[destPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                return board.LastMove;
+            }
+
+            if (srcPiece.PieceType != PieceType.Jester || destPiece == null)
+            {
                 board.Squares[srcPos].Piece = new Piece(PieceColor.None, PieceType.None);
                 board.Squares[destPos].Piece = srcPiece;
                 return board.LastMove;
@@ -173,6 +190,7 @@ namespace Advance
                     board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
                 }
             }
+
             return board.LastMove;
         }
 
