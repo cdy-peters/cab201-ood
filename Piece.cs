@@ -39,6 +39,24 @@ namespace Advance
         internal int PieceValue;
         internal List<ValidMove> ValidMoves;
 
+        internal static bool IsFriendlyPiece(Square square, Square destSquare)
+        {
+            if (destSquare.Piece.PieceColor == PieceColor.None)
+                return false;
+            if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
+                return true;
+            return false;
+        }
+
+        internal static bool IsEnemyPiece(Square square, Square destSquare)
+        {
+            if (destSquare.Piece.PieceColor == PieceColor.None)
+                return false;
+            if (square.Piece.PieceColor != destSquare.Piece.PieceColor)
+                return true;
+            return false;
+        }
+
         internal Piece(Piece piece)
         {
             PieceColor = piece.PieceColor;
