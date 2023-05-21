@@ -142,15 +142,12 @@ namespace Advance
                             continue;
                         Square destSquare = board.Squares[destPos];
 
-                        if (destSquare.Piece == null)
-                            continue;
-
-                        if (destSquare.Piece.PieceColor != PieceColor.White && destSquare.Piece.PieceType != PieceType.Wall)
+                        if (destSquare.Piece == null || destSquare.Piece.PieceColor != PieceColor.White && destSquare.Piece.PieceType != PieceType.Wall)
                         {
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (row > 1 && destSquare.Piece.PieceType == PieceType.None)
+                            if (destSquare.Piece == null || row > 1 && destSquare.Piece.PieceType == PieceType.None)
                             {
                                 destPos = pos - Board.Size * 2 + offset * 2;
                                 if (destPos < 0)
@@ -186,15 +183,12 @@ namespace Advance
                             continue;
                         Square destSquare = board.Squares[destPos];
 
-                        if (destSquare.Piece == null)
-                            continue;
-
-                        if (destSquare.Piece.PieceColor != PieceColor.Black && destSquare.Piece.PieceType != PieceType.Wall)
+                        if (destSquare.Piece == null || destSquare.Piece.PieceColor != PieceColor.Black && destSquare.Piece.PieceType != PieceType.Wall)
                         {
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (row < Board.Size - 2 && destSquare.Piece.PieceType == PieceType.None)
+                            if (destSquare.Piece == null || row < Board.Size - 2 && destSquare.Piece.PieceType == PieceType.None)
                             {
                                 destPos = pos + Board.Size * 2 + offset * 2;
                                 if (destPos < 0 || destPos >= Board.Size * Board.Size)
