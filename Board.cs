@@ -113,7 +113,7 @@ namespace Advance
 
             for (int i = 0; i < Size * Size; i++)
             {
-                if (squares[i].Piece == null || squares[i].Piece.PieceType == PieceType.None || squares[i].Piece.PieceType == PieceType.Wall)
+                if (squares[i].Piece == null || squares[i].Piece.PieceType == PieceType.None)
                     continue;
                 Squares[i] = new Square(squares[i].Piece);
             }
