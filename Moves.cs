@@ -46,7 +46,7 @@ namespace Advance
                             blackGeneralPos = i;
                         break;
 
-                    // ? Move methods into their own classes
+                        // ? Move methods into their own classes
                 }
             }
 
@@ -56,10 +56,13 @@ namespace Advance
 
         internal static void AddValidMove(Board board, Square square, int destPos)
         {
-            if (square.Piece.PieceColor == PieceColor.White)
-                board.ThreatenedByWhite[destPos] = true;
-            else
-                board.ThreatenedByBlack[destPos] = true;
+            if (square.Piece.PieceType != PieceType.Dragon)
+            {
+                if (square.Piece.PieceColor == PieceColor.White)
+                    board.ThreatenedByWhite[destPos] = true;
+                else
+                    board.ThreatenedByBlack[destPos] = true;
+            }
 
             // Check if destination piece is protected by a sentinel
             if (IsProtected(board, square, destPos))
@@ -196,7 +199,7 @@ namespace Advance
                                 destPos = pos + Board.Size * 2 + offset * 2;
                                 if (destPos < 0 || destPos >= Board.Size * Board.Size)
                                     continue;
-                                    
+
                                 destSquare = board.Squares[destPos];
 
                                 if (destSquare.Piece == null)
