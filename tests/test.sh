@@ -32,7 +32,7 @@ test()
     echo "Testing $grade/$color/$i\n"
     ./../bin/Debug/net7.0/CAB201 $color cases/$grade/$color/tests/$i cases/$grade/$color/output/$i
 
-    if [ ! -f cases/$grade/$color/output/$i ]; then
+    if [ ! -s cases/$grade/$color/output/$i ]; then
         echo "${YELLOW}error"
         return
     fi
