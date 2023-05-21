@@ -22,7 +22,7 @@ namespace Advance
             Moves.GetValidMoves(Board);
 
             MoveContent bestMove = Search.IterativeSearch(Board, 7);
-            Console.WriteLine($"Moving {bestMove.MovingPiece.SrcPos} to {bestMove.MovingPiece.DestPos}");
+            Console.WriteLine($"Moving {bestMove.MovingPiece.SrcPos} to {bestMove.MovingPiece.DestPos.DestPos}");
             if (bestMove.MovingPiece.SrcPos == 0 && bestMove.MovingPiece.DestPos.DestPos == 0)
                 throw new Exception("No valid moves found");
 

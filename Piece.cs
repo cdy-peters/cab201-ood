@@ -9,7 +9,6 @@ namespace Advance
 
     public enum PieceType
     {
-        None,
         Wall,
         Zombie,
         Builder,
@@ -33,7 +32,6 @@ namespace Advance
         }
     }
 
-    // TODO: Change None to null
     internal class Piece
     {
         internal PieceColor PieceColor;
@@ -49,7 +47,7 @@ namespace Advance
             ValidMoves = piece.ValidMoves;
         }
 
-        internal Piece(PieceColor pieceColor, PieceType pieceType)
+        internal Piece(PieceType pieceType, PieceColor pieceColor = PieceColor.None)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;

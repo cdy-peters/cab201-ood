@@ -1,13 +1,15 @@
+using System.Text.RegularExpressions;
+
 namespace Advance
 {
     internal class Board
     {
         internal const int Size = 9;
 
-        internal Square[] Squares = new Square[Size * Size];
         internal PieceColor Player;
         internal int Score = 0;
         internal MoveContent LastMove;
+        internal Square[] Squares;
 
         internal bool[] ThreatenedByWhite = new bool[Size * Size];
         internal bool[] ThreatenedByBlack = new bool[Size * Size];
@@ -33,25 +35,24 @@ namespace Advance
             ThreatenedByBlack = new bool[Size * Size];
         }
 
-        internal Board(string text) : this()
+        internal Board(string boardStr) : this()
         {
             Player = Game.PlayerColor;
 
             for (int i = 0; i < Size * Size; i++)
             {
-                char c = text[i];
+                char c = boardStr[i];
                 PieceColor pieceColor;
                 PieceType pieceType;
 
                 if (c == '.')
                 {
-                    pieceColor = PieceColor.None;
-                    pieceType = PieceType.None;
+                    continue;
                 }
                 else if (c == '#')
                 {
-                    pieceColor = PieceColor.None;
-                    pieceType = PieceType.Wall;
+                    Squares[i].Piece = new Piece(PieceType.Wall);
+                    continue;
                 }
                 else
                 {
@@ -69,11 +70,11 @@ namespace Advance
                         'c' => PieceType.Catapult,
                         'd' => PieceType.Dragon,
                         'g' => PieceType.General,
-                        _ => PieceType.None
+                        _ => throw new ArgumentException("An invalid character was found in the board string.")
                     };
                 }
 
-                Squares[i].Piece = new Piece(pieceColor, pieceType);
+                Squares[i].Piece = new Piece(pieceType, pieceColor);
             }
         }
 
@@ -83,7 +84,7 @@ namespace Advance
 
             for (int i = 0; i < Size * Size; i++)
             {
-                if (board.Squares[i].Piece.PieceType == PieceType.None || board.Squares[i].Piece.PieceType == PieceType.Wall)
+                if (board.Squares[i].Piece == null || board.Squares[i].Piece.PieceType == PieceType.Wall)
                     Squares[i] = new Square(board.Squares[i].Piece);
             }
 
@@ -113,7 +114,7 @@ namespace Advance
 
             for (int i = 0; i < Size * Size; i++)
             {
-                if (squares[i].Piece == null || squares[i].Piece.PieceType == PieceType.None)
+                if (squares[i].Piece == null)
                     continue;
                 Squares[i] = new Square(squares[i].Piece);
             }
@@ -160,7 +161,7 @@ namespace Advance
             {
                 if (validMove.IsWall)
                 {
-                    board.Squares[destPos].Piece = new Piece(PieceColor.None, PieceType.Wall);
+                    board.Squares[destPos].Piece = new Piece(PieceType.Wall);
                     return board.LastMove;
                 }
             }
@@ -171,24 +172,24 @@ namespace Advance
                 // check if destpos is a square away
                 if (Math.Abs(srcPos - destPos) == 1 || Math.Abs(srcPos - destPos) == Size)
                 {
-                    board.Squares[srcPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                    board.Squares[srcPos].Piece = null!;
                     board.Squares[destPos].Piece = srcPiece;
                     return board.LastMove;
                 }
 
-                board.Squares[destPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                board.Squares[destPos].Piece = null!;
                 return board.LastMove;
             }
 
             if (srcPiece.PieceType != PieceType.Jester || destPiece == null)
             {
-                board.Squares[srcPos].Piece = new Piece(PieceColor.None, PieceType.None);
+                board.Squares[srcPos].Piece = null!;
                 board.Squares[destPos].Piece = srcPiece;
                 return board.LastMove;
             }
 
             // Jester abilities
-            if (srcPiece.PieceType == PieceType.Jester && (destPiece.PieceType != PieceType.None))
+            if (srcPiece.PieceType == PieceType.Jester && (destPiece != null))
             {
                 if (destPiece.PieceColor == srcPiece.PieceColor)
                 {
@@ -208,26 +209,32 @@ namespace Advance
 
         public override string ToString()
         {
-            string boardString = "";
-            for (int i = 0; i < Size * Size; i++)
+            string boardStr = "";
+
+            foreach (Square square in Squares)
             {
-                PieceType type = Squares[i].Piece.PieceType;
-                PieceColor color = Squares[i].Piece.PieceColor;
+                if (square.Piece == null)
+                {
+                    boardStr += ".";
+                    continue;
+                }
 
-                if (type == PieceType.None)
-                    boardString += ".";
-                else if (type == PieceType.Wall)
-                    boardString += "#";
-                else
-                    if (color == PieceColor.White)
-                    boardString += type.ToString()[0];
-                else
-                    boardString += Char.ToLower(type.ToString()[0]);
+                PieceType type = square.Piece.PieceType;
+                PieceColor color = square.Piece.PieceColor;
 
-                if (i % Size == Size - 1)
-                    boardString += "\n";
+                if (type == PieceType.Wall)
+                    boardStr += "#";
+                else
+                {
+                    char c = type.ToString()[0];
+                    if (color == PieceColor.Black)
+                        c = Char.ToLower(c);
+
+                    boardStr += c;
+                }
             }
-            return boardString;
+
+            return Regex.Replace(boardStr, $".{{{Size}}}", "$0\n"); ;
         }
     }
 }

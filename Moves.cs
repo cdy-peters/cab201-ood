@@ -11,7 +11,7 @@ namespace Advance
             {
                 Square square = board.Squares[i];
 
-                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 square.Piece.ValidMoves = new List<ValidMove>();
@@ -149,7 +149,7 @@ namespace Advance
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (destSquare.Piece == null || row > 1 && destSquare.Piece.PieceType == PieceType.None)
+                            if (destSquare.Piece == null && row > 1)
                             {
                                 destPos = pos - Board.Size * 2 + offset * 2;
                                 if (destPos < 0)
@@ -190,7 +190,7 @@ namespace Advance
                             AddValidMove(board, square, destPos);
 
                             // Kill
-                            if (destSquare.Piece == null || row < Board.Size - 2 && destSquare.Piece.PieceType == PieceType.None)
+                            if (destSquare.Piece == null && row < Board.Size - 2)
                             {
                                 destPos = pos + Board.Size * 2 + offset * 2;
                                 if (destPos < 0 || destPos >= Board.Size * Board.Size)
@@ -229,10 +229,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece == null || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
                         AddValidMove(board, square, destPos);
                 }
             }
@@ -256,10 +253,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (destSquare.Piece.PieceType == PieceType.None ||
+                    if (destSquare.Piece == null ||
                         (destSquare.Piece.PieceColor == square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Jester) ||
                         (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall && destSquare.Piece.PieceType != PieceType.General))
                     {
@@ -283,11 +277,11 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
                     AddValidMove(board, square, destPos);
                     break;
@@ -307,11 +301,11 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
                     AddValidMove(board, square, destPos);
                     break;
@@ -331,11 +325,11 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
                     AddValidMove(board, square, destPos);
                     break;
@@ -355,11 +349,11 @@ namespace Advance
                     break;
                 Square destSquare = board.Squares[destPos];
 
-                if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None)
+                if (destSquare.Piece == null)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
                     AddValidMove(board, square, destPos);
                     break;
@@ -394,10 +388,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece == null || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
                         AddValidMove(board, square, destPos);
                 }
             }
@@ -425,10 +416,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece == null || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
                         AddValidMove(board, square, destPos);
                 }
             }
@@ -455,7 +443,7 @@ namespace Advance
                     if (destSquare.Piece == null)
                         continue;
 
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                         AddValidMove(board, square, destPos);
                 }
             }
@@ -479,7 +467,7 @@ namespace Advance
                     if (destSquare.Piece == null)
                         continue;
 
-                    if (destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                         AddValidMove(board, square, destPos);
                 }
             }
@@ -495,13 +483,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos - Board.Size)
                         AddValidMove(board, square, destPos);
@@ -521,13 +506,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos + Board.Size)
                         AddValidMove(board, square, destPos);
@@ -547,13 +529,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos - 1)
                         AddValidMove(board, square, destPos);
@@ -573,13 +552,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos + 1)
                         AddValidMove(board, square, destPos);
@@ -599,13 +575,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos - Board.Size - 1)
                         AddValidMove(board, square, destPos);
@@ -625,13 +598,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos - Board.Size + 1)
                         AddValidMove(board, square, destPos);
@@ -651,13 +621,10 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
                 {
                     if (destPos != pos + Board.Size - 1)
                         AddValidMove(board, square, destPos);
@@ -677,15 +644,12 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
-                    continue;
-
-                if (destSquare.Piece.PieceType == PieceType.None)
                 {
                     AddValidMove(board, square, destPos);
                 }
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.None)
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
-                    if (destPos != pos + Board.Size + 1)
+                    if (destPos != pos + Board.Size + 1 && destSquare.Piece.PieceType != PieceType.Wall)
                         AddValidMove(board, square, destPos);
                     break;
                 }
@@ -718,7 +682,7 @@ namespace Advance
                         continue;
                     Square destSquare = board.Squares[destPos];
 
-                    if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.None || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
+                    if (destSquare.Piece == null || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
                     {
                         // Check if new position is in check
                         if (IsGeneralInCheck(board, square, destPos))

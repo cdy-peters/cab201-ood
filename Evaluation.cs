@@ -31,7 +31,7 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
-                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 if (square.Piece.PieceColor == PieceColor.White)

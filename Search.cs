@@ -91,7 +91,7 @@ namespace Advance
             {
                 Square square = board.Squares[i];
 
-                if (square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 if (square.Piece.PieceColor != board.Player)
@@ -187,7 +187,7 @@ namespace Advance
             {
                 Piece piece = board.Squares[i].Piece;
 
-                if (piece == null || piece.PieceType == PieceType.None || piece.PieceType == PieceType.Wall)
+                if (piece == null || piece.PieceType == PieceType.Wall)
                     continue;
 
                 if (piece.PieceColor != board.Player)
@@ -204,7 +204,7 @@ namespace Advance
                     if (destPiece == null)
                         continue;
 
-                    if (destPiece.PieceType != PieceType.None)
+                    if (destPiece != null)
                     {
                         move.Score += destPiece.PieceValue;
                         if (piece.PieceValue < destPiece.PieceValue)
@@ -226,7 +226,7 @@ namespace Advance
             {
                 Square square = board.Squares[i];
 
-                if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
                 if (square.Piece.PieceColor != player)
