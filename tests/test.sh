@@ -22,8 +22,10 @@ run_tests()
 
 test()
 {
-    if [ -f cases/$grade/$color/output/$i ]; then
-        rm cases/$grade/$color/output/$i
+    if [ ! -f cases/$grade/$color/output/$i ]; then
+        touch cases/$grade/$color/output/$i
+    else
+        > cases/$grade/$color/output/$i
     fi
 
     echo "${NC}__________________________________________________"
