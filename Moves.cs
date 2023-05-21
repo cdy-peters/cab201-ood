@@ -14,7 +14,7 @@ namespace Advance
                 if (square.Piece == null || square.Piece.PieceType == PieceType.None || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
-                square.Piece.ValidMoves = new List<int>();
+                square.Piece.ValidMoves = new List<ValidMove>();
 
                 switch (square.Piece.PieceType)
                 {
@@ -68,7 +68,9 @@ namespace Advance
             if (IsProtected(board, square, destPos))
                 return;
 
-            square.Piece.ValidMoves.Add(destPos);
+            square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+            if (square.Piece.PieceType == PieceType.Builder)
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
 
             // Check if the move puts the enemy general in check
             Square destSquare = board.Squares[destPos];

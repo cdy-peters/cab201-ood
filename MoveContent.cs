@@ -2,12 +2,12 @@ namespace Advance
 {
     public struct PieceMoving
     {
-        public int DestPos;
         public PieceColor PieceColor;
         public PieceType PieceType;
         public int SrcPos;
+        public ValidMove DestPos;
 
-        public PieceMoving(PieceColor pieceColor, PieceType pieceType, int srcPos, int destPos)
+        public PieceMoving(PieceColor pieceColor, PieceType pieceType, int srcPos, ValidMove destPos)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
@@ -31,7 +31,7 @@ namespace Advance
         //     DestPos = 0;
         // }
     }
-    
+
     public struct PieceTaken
     {
         public PieceColor PieceColor;

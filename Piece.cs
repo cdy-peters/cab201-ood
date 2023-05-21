@@ -21,13 +21,25 @@ namespace Advance
         General
     }
 
+    public struct ValidMove
+    {
+        internal int DestPos;
+        internal bool IsWall;
+
+        internal ValidMove(int destPos, bool isWall = false)
+        {
+            DestPos = destPos;
+            IsWall = isWall;
+        }
+    }
+
     // TODO: Change None to null
     internal class Piece
     {
         internal PieceColor PieceColor;
         internal PieceType PieceType;
         internal int PieceValue;
-        internal List<int> ValidMoves;
+        internal List<ValidMove> ValidMoves;
 
         internal Piece(Piece piece)
         {
@@ -54,7 +66,7 @@ namespace Advance
                 PieceType.General => 10000,
                 _ => 0
             };
-            ValidMoves = new List<int>();
+            ValidMoves = new List<ValidMove>();
         }
 
         public new string ToString()

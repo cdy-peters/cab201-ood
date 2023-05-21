@@ -97,10 +97,10 @@ namespace Advance
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
-                foreach (int dest in square.Piece.ValidMoves)
+                foreach (ValidMove validMove in square.Piece.ValidMoves)
                 {
                     Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, dest);
+                    Board.MovePiece(newBoard, i, validMove);
                     Moves.GetValidMoves(newBoard);
 
                     if (newBoard.WhiteCheck && board.Player == PieceColor.White)
@@ -154,7 +154,7 @@ namespace Advance
             foreach (Position move in positions)
             {
                 Board newBoard = board.CopyBoard();
-                Board.MovePiece(newBoard, move.SrcPos, move.DestPos);
+                Board.MovePiece(newBoard, move.SrcPos, new ValidMove(move.DestPos));
                 Moves.GetValidMoves(newBoard);
 
                 if (newBoard.WhiteCheck)
@@ -193,11 +193,11 @@ namespace Advance
                 if (piece.PieceColor != board.Player)
                     continue;
 
-                foreach (int dest in piece.ValidMoves)
+                foreach (ValidMove validMove in piece.ValidMoves)
                 {
                     Position move = new Position();
                     move.SrcPos = i;
-                    move.DestPos = dest;
+                    move.DestPos = validMove.DestPos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
 
@@ -232,10 +232,10 @@ namespace Advance
                 if (square.Piece.PieceColor != player)
                     continue;
 
-                foreach (int dest in square.Piece.ValidMoves)
+                foreach (ValidMove validMove in square.Piece.ValidMoves)
                 {
                     Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, dest);
+                    Board.MovePiece(newBoard, i, validMove);
                     Moves.GetValidMoves(newBoard);
 
                     if (newBoard.WhiteCheck == false)

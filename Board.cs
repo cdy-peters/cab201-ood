@@ -144,14 +144,26 @@ namespace Advance
             return newBoard;
         }
 
-        internal static MoveContent MovePiece(Board board, int srcPos, int destPos)
+        internal static MoveContent MovePiece(Board board, int srcPos, ValidMove validMove)
         {
+            int destPos = validMove.DestPos;
+
             // TODO: Refactor this method
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
             board.LastMove = new MoveContent();
-            board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, destPos);
+            board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
+
+            // Builder move
+            if (srcPiece.PieceType == PieceType.Builder)
+            {
+                if (validMove.IsWall)
+                {
+                    board.Squares[destPos].Piece = new Piece(PieceColor.None, PieceType.Wall);
+                    return board.LastMove;
+                }
+            }
 
             // Catapult move
             if (srcPiece.PieceType == PieceType.Catapult)
