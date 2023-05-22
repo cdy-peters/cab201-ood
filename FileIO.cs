@@ -31,7 +31,7 @@ namespace Advance
                 throw new System.ArgumentException("Destination file does not exist");
         }
 
-        internal static void ValidateFile(string boardStr)
+        private static void ValidateFile(string boardStr)
         {
             if (!System.Text.RegularExpressions.Regex.IsMatch(boardStr, @"^[ZBMJSDCGzbmjsdcg\.#]+$"))
                 throw new System.ArgumentException("Invalid characters in file");

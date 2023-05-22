@@ -7,12 +7,11 @@ namespace Advance
             internal int SrcPos;
             internal int DestPos;
             internal int Score;
-            // internal string Move;
+        }
 
-            // public new string ToString()
-            // {
-            //     return Move;
-            // }
+        internal struct ResultBoards
+        {
+            internal List<Board> Positions;
         }
 
         private static int Sort(Position s2, Position s1)
@@ -32,9 +31,16 @@ namespace Advance
             return score;
         }
 
-        internal struct ResultBoards
+        private static int ModifyDepth(int depth, int possibleMoves)
         {
-            internal List<Board> Positions;
+            if (possibleMoves <= 20)
+            {
+                if (possibleMoves <= 10)
+                    depth += 1;
+                depth += 1;
+            }
+
+            return depth;
         }
 
         internal static MoveContent IterativeSearch(Board board, int depth)
@@ -157,16 +163,10 @@ namespace Advance
                 Board.MovePiece(newBoard, move.SrcPos, new ValidMove(move.DestPos));
                 Moves.GetValidMoves(newBoard);
 
-                if (newBoard.WhiteCheck)
-                {
-                    if (board.Player == PieceColor.White)
-                        continue;
-                }
-                if (newBoard.BlackCheck)
-                {
-                    if (board.Player == PieceColor.Black)
-                        continue;
-                }
+                if (newBoard.WhiteCheck && board.Player == PieceColor.White)
+                    continue;
+                if (newBoard.BlackCheck && board.Player == PieceColor.Black)
+                    continue;
 
                 int value = -AlphaBeta(newBoard, depth - 1, -beta, -alpha);
 
@@ -204,12 +204,10 @@ namespace Advance
                     if (destPiece == null)
                         continue;
 
-                    if (destPiece != null)
-                    {
-                        move.Score += destPiece.PieceValue;
-                        if (piece.PieceValue < destPiece.PieceValue)
-                            move.Score += destPiece.PieceValue - piece.PieceValue;
-                    }
+                    move.Score += destPiece.PieceValue;
+                    if (piece.PieceValue < destPiece.PieceValue)
+                        move.Score += destPiece.PieceValue - piece.PieceValue;
+
                     positions.Add(move);
                 }
             }
@@ -279,18 +277,6 @@ namespace Advance
             }
 
             return false;
-        }
-
-        private static int ModifyDepth(int depth, int possibleMoves)
-        {
-            if (possibleMoves <= 20)
-            {
-                if (possibleMoves <= 10)
-                    depth += 1;
-                depth += 1;
-            }
-
-            return depth;
         }
     }
 }

@@ -7,7 +7,6 @@ namespace Advance
             int totalScore = 0;
 
             totalScore += square.Piece.PieceValue;
-            // TODO: Consider pieces that are threatened by the opponent
             // TODO: Consider opponent pieces that are threatening this piece
             // TODO: Consider pieces that are protected by this piece
             // ? Consider if a pawn is in a poor position
@@ -15,18 +14,14 @@ namespace Advance
             return totalScore;
         }
 
-        internal static int BoardEvaluation(Board board)
+        internal static void BoardEvaluation(Board board)
         {
-            int totalScore = 0;
+            board.Score = 0;
 
             if (board.WhiteCheck)
-            {
-                totalScore += 1000;
-            }
-            else if (board.BlackCheck)
-            {
-                totalScore -= 1000;
-            }
+                board.Score += 1000;
+            if (board.BlackCheck)
+                board.Score -= 1000;
 
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
@@ -35,16 +30,10 @@ namespace Advance
                     continue;
 
                 if (square.Piece.PieceColor == PieceColor.White)
-                {
-                    totalScore += PieceEvaluation(square, i);
-                }
+                    board.Score += PieceEvaluation(square, i);
                 else
-                {
-                    totalScore -= PieceEvaluation(square, i);
-                }
+                    board.Score -= PieceEvaluation(square, i);
             }
-
-            return totalScore;
         }
     }
 }

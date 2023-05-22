@@ -1,12 +1,5 @@
 namespace Advance
 {
-    // ! Currently using PieceColor from Piece.cs
-    // public enum PlayerColor
-    // {
-    //     White,
-    //     Black
-    // }
-
     public class Game
     {
         internal static PieceColor PlayerColor { get; private set; }
@@ -21,8 +14,7 @@ namespace Advance
 
             Moves.GetValidMoves(Board);
 
-            MoveContent bestMove = Search.IterativeSearch(Board, 7);
-            Console.WriteLine($"Moving {bestMove.MovingPiece.SrcPos} to {bestMove.MovingPiece.DestPos.DestPos}");
+            MoveContent bestMove = Search.IterativeSearch(Board, 5);
             if (bestMove.MovingPiece.SrcPos == 0 && bestMove.MovingPiece.DestPos.DestPos == 0)
                 throw new Exception("No valid moves found");
 
@@ -33,7 +25,7 @@ namespace Advance
 
         public override string ToString()
         {
-            return $"Game:\n{Board}";
+            return $"Moving {Board!.LastMove.MovingPiece.SrcPos} to {Board.LastMove.MovingPiece.DestPos.DestPos}\n {Board}";
         }
     }
 }

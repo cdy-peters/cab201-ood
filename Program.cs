@@ -15,6 +15,6 @@ internal class Program
 
         Game game = new Game(player: args[0], srcFile: args[1], destFile: args[2]);
 
-        Console.WriteLine($"Initial Game = {game}");
+        Console.WriteLine(game);
     }
 }

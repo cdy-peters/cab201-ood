@@ -25,9 +25,7 @@ namespace Advance
             Squares = new Square[Size * Size];
 
             for (int i = 0; i < Size * Size; i++)
-            {
                 Squares[i] = new Square();
-            }
 
             LastMove = new MoveContent();
 
@@ -46,9 +44,7 @@ namespace Advance
                 PieceType pieceType;
 
                 if (c == '.')
-                {
                     continue;
-                }
                 else if (c == '#')
                 {
                     Squares[i].Piece = new Piece(PieceType.Wall);
@@ -83,10 +79,8 @@ namespace Advance
             Squares = new Square[Size * Size];
 
             for (int i = 0; i < Size * Size; i++)
-            {
                 if (board.Squares[i].Piece == null || board.Squares[i].Piece.PieceType == PieceType.Wall)
                     Squares[i] = new Square(board.Squares[i].Piece);
-            }
 
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
@@ -113,11 +107,8 @@ namespace Advance
             Squares = new Square[Size * Size];
 
             for (int i = 0; i < Size * Size; i++)
-            {
-                if (squares[i].Piece == null)
-                    continue;
-                Squares[i] = new Square(squares[i].Piece);
-            }
+                if (squares[i].Piece != null)
+                    Squares[i] = new Square(squares[i].Piece);
 
             LastMove = new MoveContent();
 
@@ -145,7 +136,7 @@ namespace Advance
             return newBoard;
         }
 
-        internal static MoveContent MovePiece(Board board, int srcPos, ValidMove validMove)
+        internal static void MovePiece(Board board, int srcPos, ValidMove validMove)
         {
             int destPos = validMove.DestPos;
 
@@ -162,7 +153,7 @@ namespace Advance
                 if (validMove.IsWall)
                 {
                     board.Squares[destPos].Piece = new Piece(PieceType.Wall);
-                    return board.LastMove;
+                    return;
                 }
             }
 
@@ -174,18 +165,18 @@ namespace Advance
                 {
                     board.Squares[srcPos].Piece = null!;
                     board.Squares[destPos].Piece = srcPiece;
-                    return board.LastMove;
+                    return;
                 }
 
                 board.Squares[destPos].Piece = null!;
-                return board.LastMove;
+                return;
             }
 
             if (srcPiece.PieceType != PieceType.Jester || destPiece == null)
             {
                 board.Squares[srcPos].Piece = null!;
                 board.Squares[destPos].Piece = srcPiece;
-                return board.LastMove;
+                return;
             }
 
             // Jester abilities
@@ -203,8 +194,6 @@ namespace Advance
                     board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
                 }
             }
-
-            return board.LastMove;
         }
 
         public override string ToString()
