@@ -10,7 +10,6 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
-
                 if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
@@ -54,6 +53,39 @@ namespace Advance
             General.GetValidMoves(board, blackGeneralPos);
         }
 
+        internal static int GetDestPos(int pos, int offsetX, int offsetY)
+        {
+            int destPos = pos + offsetY * Board.Size + offsetX;
+
+            if (IsOutOfBounds(destPos, offsetX, offsetY))
+                return -1;
+            return destPos;
+        }
+
+        internal static bool IsOutOfBounds(int pos, int? offsetX = null, int? offsetY = null)
+        {
+            if (pos < 0 || pos >= Board.Size * Board.Size)
+                return true;
+
+            if (offsetX != null)
+            {
+                if (offsetX == 1 && pos % Board.Size <= 0)
+                    return true;
+                if (offsetX == -1 && pos % Board.Size >= Board.Size - 1)
+                    return true;
+            }
+
+            if (offsetY != null)
+            {
+                if (offsetY == 1 && pos / Board.Size <= 0)
+                    return true;
+                if (offsetY == -1 && pos / Board.Size >= Board.Size - 1)
+                    return true;
+            }
+
+            return false;
+        }
+
         internal static void AddValidMove(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType != PieceType.Dragon)
@@ -72,12 +104,11 @@ namespace Advance
             if (square.Piece.PieceType == PieceType.Builder)
                 square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
 
-            // Check if the general is in check
             Square destSquare = board.Squares[destPos];
-
             if (destSquare.Piece == null)
                 return;
 
+            // Check if the general is in check
             if (destSquare.Piece.PieceType == PieceType.General)
             {
                 if (destSquare.Piece.PieceColor == PieceColor.White)
@@ -95,27 +126,22 @@ namespace Advance
             int[] offsets = { -1, 0, 1 };
 
             foreach (int offsetY in offsets)
-            {
                 foreach (int offsetX in offsets)
                 {
                     if (Math.Abs(offsetX) == Math.Abs(offsetY))
                         continue;
-                    int tempPos = destPos + offsetY * Board.Size + offsetX;
-                    if (tempPos < 0 || tempPos >= Board.Size * Board.Size)
-                        continue;
-                    if (offsetX == 1 && tempPos % Board.Size <= 0)
-                        continue;
-                    if (offsetX == -1 && tempPos % Board.Size >= Board.Size - 1)
-                        continue;
-                    Square tempSquare = board.Squares[tempPos];
 
+                    int tempPos = GetDestPos(destPos, offsetX, offsetY);
+                    if (tempPos == -1)
+                        continue;
+
+                    Square tempSquare = board.Squares[tempPos];
                     if (tempSquare.Piece == null)
                         continue;
 
                     if (tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
                         return true;
                 }
-            }
 
             return false;
         }

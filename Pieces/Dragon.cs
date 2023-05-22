@@ -9,6 +9,7 @@ namespace Advance
             while (destPos >= Board.Size)
             {
                 destPos -= Board.Size;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -28,6 +29,7 @@ namespace Advance
             while (destPos < Board.Size * Board.Size - Board.Size)
             {
                 destPos += Board.Size;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -46,7 +48,8 @@ namespace Advance
             destPos = pos;
             while (destPos % Board.Size != 0)
             {
-                destPos -= 1;
+                destPos--;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -65,7 +68,8 @@ namespace Advance
             destPos = pos;
             while (destPos % Board.Size != Board.Size - 1)
             {
-                destPos += 1;
+                destPos++;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -85,6 +89,7 @@ namespace Advance
             while (destPos >= Board.Size && destPos % Board.Size != 0)
             {
                 destPos -= Board.Size + 1;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -104,6 +109,7 @@ namespace Advance
             while (destPos >= Board.Size && destPos % Board.Size != Board.Size - 1)
             {
                 destPos -= Board.Size - 1;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -123,6 +129,7 @@ namespace Advance
             while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != 0)
             {
                 destPos += Board.Size - 1;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -142,6 +149,7 @@ namespace Advance
             while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != Board.Size - 1)
             {
                 destPos += Board.Size + 1;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)

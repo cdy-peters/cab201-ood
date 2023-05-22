@@ -14,6 +14,7 @@ namespace Advance
                 destPos -= Board.Size;
                 if (destPos < 0)
                     break;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -34,6 +35,7 @@ namespace Advance
                 destPos += Board.Size;
                 if (destPos >= Board.Size * Board.Size)
                     break;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -51,9 +53,10 @@ namespace Advance
             destPos = pos;
             while (col > 0)
             {
-                destPos -= 1;
+                destPos--;
                 if (destPos % Board.Size >= Board.Size - 1 || destPos < 0)
                     break;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
@@ -71,9 +74,10 @@ namespace Advance
             destPos = pos;
             while (col < Board.Size - 1)
             {
-                destPos += 1;
+                destPos++;
                 if (destPos % Board.Size <= 0)
                     break;
+
                 Square destSquare = board.Squares[destPos];
 
                 if (destSquare.Piece == null)
