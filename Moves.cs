@@ -44,8 +44,6 @@ namespace Advance
                         else
                             blackGeneralPos = i;
                         break;
-
-                        // ? Move methods into their own classes
                 }
             }
 
@@ -88,37 +86,32 @@ namespace Advance
 
         internal static void AddValidMove(Board board, Square square, int destPos)
         {
-            if (square.Piece.PieceType != PieceType.Dragon)
-            {
-                if (square.Piece.PieceColor == PieceColor.White)
-                    board.ThreatenedByWhite[destPos] = true;
-                else
-                    board.ThreatenedByBlack[destPos] = true;
-            }
 
             // Check if destination piece is protected by a sentinel
             if (IsProtected(board, square, destPos))
                 return;
 
+            // Set destination square as threatened
+            SetThreat(board, square, destPos);
+
+            // Check if the general is in check
+            IsGeneralInCheck(board, destPos);
+
+            // Add move
             square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
             if (square.Piece.PieceType == PieceType.Builder)
                 square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
-
-            Square destSquare = board.Squares[destPos];
-            if (destSquare.Piece == null)
-                return;
-
-            // Check if the general is in check
-            if (destSquare.Piece.PieceType == PieceType.General)
-            {
-                if (destSquare.Piece.PieceColor == PieceColor.White)
-                    board.WhiteCheck = true;
-                else
-                    board.BlackCheck = true;
-            }
         }
 
-        private static bool IsProtected(Board board, Square square, int destPos)
+        internal static void SetThreat(Board board, Square square, int destPos)
+        {
+            if (square.Piece.PieceColor == PieceColor.White)
+                board.ThreatenedByWhite[destPos] = true;
+            else
+                board.ThreatenedByBlack[destPos] = true;
+        }
+
+        internal static bool IsProtected(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)
                 return false;
@@ -144,6 +137,18 @@ namespace Advance
                 }
 
             return false;
+        }
+
+        internal static void IsGeneralInCheck(Board board, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+            if (destSquare.Piece == null || destSquare.Piece.PieceType != PieceType.General)
+                return;
+
+            if (destSquare.Piece.PieceColor == PieceColor.White)
+                board.WhiteCheck = true;
+            else
+                board.BlackCheck = true;
         }
     }
 }
