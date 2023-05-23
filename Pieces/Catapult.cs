@@ -32,8 +32,8 @@ namespace Advance
                     if (Math.Abs(offsetX) == Math.Abs(offsetY))
                         continue;
 
-                    int destPos = pos + offsetY * Board.Size + offsetX;
-                    if (Moves.IsOutOfBounds(destPos, offsetX))
+                    int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
+                    if (destPos == -1)
                         continue;
 
                     AddCapture(board, square, destPos);
@@ -45,8 +45,12 @@ namespace Advance
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {
-                    int destPos = pos + offsetY * Board.Size + offsetX;
-                    if (Moves.IsOutOfBounds(destPos, offsetX))
+                    int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
+                    if (destPos == -1)
+                        continue;
+
+                    // Compare row and column of destination and current position
+                    if (Math.Abs(destPos / 3 - pos / 3) != Math.Abs(destPos % 3 - pos % 3))
                         continue;
 
                     AddCapture(board, square, destPos);
@@ -76,7 +80,6 @@ namespace Advance
 
                 // Add move
                 square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
             }
         }
 
