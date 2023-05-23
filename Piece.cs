@@ -37,10 +37,14 @@ namespace Advance
         internal PieceColor PieceColor;
         internal PieceType PieceType;
         internal int PieceValue;
+        internal int AttackValue;
+        internal int DefenseValue;
         internal List<ValidMove> ValidMoves;
 
         internal static bool IsFriendlyPiece(Square square, Square destSquare)
         {
+            if (destSquare.Piece == null)
+                return false;
             if (destSquare.Piece.PieceColor == PieceColor.None)
                 return false;
             if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
@@ -50,6 +54,8 @@ namespace Advance
 
         internal static bool IsEnemyPiece(Square square, Square destSquare)
         {
+            if (destSquare.Piece == null)
+                return false;
             if (destSquare.Piece.PieceColor == PieceColor.None)
                 return false;
             if (square.Piece.PieceColor != destSquare.Piece.PieceColor)

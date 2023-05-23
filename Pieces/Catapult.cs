@@ -19,10 +19,7 @@ namespace Advance
                     if (destPos == -1)
                         continue;
 
-                    Square destSquare = board.Squares[destPos];
-
-                    if (destSquare.Piece == null || (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall))
-                        Moves.AddValidMove(board, square, destPos);
+                    AddMove(board, square, destPos);
                 }
 
             // Shooting
@@ -39,13 +36,7 @@ namespace Advance
                     if (Moves.IsOutOfBounds(destPos, offsetX))
                         continue;
 
-                    Square destSquare = board.Squares[destPos];
-
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (Piece.IsEnemyPiece(square, destSquare))
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
                 }
 
             // Diagonal directions
@@ -58,13 +49,63 @@ namespace Advance
                     if (Moves.IsOutOfBounds(destPos, offsetX))
                         continue;
 
-                    Square destSquare = board.Squares[destPos];
-                    if (destSquare.Piece == null)
-                        continue;
-
-                    if (destSquare.Piece.PieceColor != square.Piece.PieceColor && destSquare.Piece.PieceType != PieceType.Wall)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
                 }
+        }
+
+        private static void AddMove(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+
+            // Check if destination piece is protected by a sentinel
+            if (Moves.IsProtected(board, square, destPos))
+                return;
+
+            // Set destination square as threatened
+            Moves.SetThreat(board, square, destPos);
+
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceValue;
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceValue;
+
+            if (destSquare.Piece == null || Piece.IsEnemyPiece(square, destSquare))
+            {
+                // Check if the general is in check
+                Moves.IsGeneralInCheck(board, destPos);
+
+                // Add move
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
+            }
+        }
+
+        private static void AddCapture(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+            if (destSquare.Piece == null)
+                return;
+
+            // Check if destination piece is protected by a sentinel
+            if (Moves.IsProtected(board, square, destPos))
+                return;
+
+            // Set destination square as threatened
+            Moves.SetThreat(board, square, destPos);
+
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceValue;
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceValue;
+
+            if (Piece.IsEnemyPiece(square, destSquare))
+            {
+                // Check if the general is in check
+                Moves.IsGeneralInCheck(board, destPos);
+
+                // Add move
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+            }
         }
     }
 }

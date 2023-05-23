@@ -7,8 +7,9 @@ namespace Advance
             int totalScore = 0;
 
             totalScore += square.Piece.PieceValue;
-            // TODO: Consider opponent pieces that are threatening this piece
-            // TODO: Consider pieces that are protected by this piece
+            totalScore += square.Piece.AttackValue;
+            totalScore += square.Piece.DefenseValue;
+
             // ? Consider if a pawn is in a poor position
 
             return totalScore;

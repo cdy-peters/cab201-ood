@@ -84,25 +84,6 @@ namespace Advance
             return false;
         }
 
-        internal static void AddValidMove(Board board, Square square, int destPos)
-        {
-
-            // Check if destination piece is protected by a sentinel
-            if (IsProtected(board, square, destPos))
-                return;
-
-            // Set destination square as threatened
-            SetThreat(board, square, destPos);
-
-            // Check if the general is in check
-            IsGeneralInCheck(board, destPos);
-
-            // Add move
-            square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
-            if (square.Piece.PieceType == PieceType.Builder)
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
-        }
-
         internal static void SetThreat(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)

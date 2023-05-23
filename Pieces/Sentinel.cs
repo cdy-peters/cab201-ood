@@ -16,11 +16,34 @@ namespace Advance
                     if (destPos == -1)
                         continue;
 
-                    Square destSquare = board.Squares[destPos];
-
-                    if (destSquare.Piece == null || Piece.IsEnemyPiece(square, destSquare))
-                        Moves.AddValidMove(board, square, destPos);
+                    AddMove(board, square, destPos);
                 }
+        }
+
+        private static void AddMove(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+
+            // Check if destination piece is protected by a sentinel
+            if (Moves.IsProtected(board, square, destPos))
+                return;
+
+            // Set destination square as threatened
+            Moves.SetThreat(board, square, destPos);
+
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceValue; //? Should protected pieces be added
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceValue;
+
+            if (destSquare.Piece == null || Piece.IsEnemyPiece(square, destSquare))
+            {
+                // Check if the general is in check
+                Moves.IsGeneralInCheck(board, destPos);
+
+                // Add move
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+            }
         }
     }
 }
