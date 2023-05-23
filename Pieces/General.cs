@@ -13,11 +13,25 @@ namespace Advance
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {
+                    if (offsetX == 0 && offsetY == 0)
+                        continue;
+                        
                     int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
                     if (destPos == -1)
                         continue;
 
-                    // TODO: Is new general position in check?
+                    // Check if the destination square is threatened
+                    Square destSquare = board.Squares[destPos];
+                    if (square.Piece.PieceColor == PieceColor.White)
+                    {
+                        if (board.ThreatenedByBlack[destPos])
+                            continue;
+                    }
+                    else
+                    {
+                        if (board.ThreatenedByWhite[destPos])
+                            continue;
+                    }
 
                     AddMove(board, square, destPos);
                 }

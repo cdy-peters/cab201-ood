@@ -8,7 +8,10 @@ namespace Advance
 
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
-                {                    
+                {
+                    if (offsetX == 0 && offsetY == 0)
+                        continue;
+                        
                     int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
                     if (destPos == -1)
                         continue;
