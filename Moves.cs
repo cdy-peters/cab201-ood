@@ -105,6 +105,9 @@ namespace Advance
 
         internal static void SetThreat(Board board, Square square, int destPos)
         {
+            if (square.Piece.PieceType == PieceType.Jester)
+                return;
+                
             if (square.Piece.PieceColor == PieceColor.White)
                 board.ThreatenedByWhite[destPos] = true;
             else
