@@ -4,6 +4,9 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board)
         {
+            board.WhiteCheck = false;
+            board.BlackCheck = false;
+
             int whiteGeneralPos = -1;
             int blackGeneralPos = -1;
 
@@ -126,7 +129,7 @@ namespace Advance
         internal static void IsGeneralInCheck(Board board, int destPos)
         {
             Square destSquare = board.Squares[destPos];
-            if (destSquare.Piece == null || destSquare.Piece.PieceType != PieceType.General)
+            if (destSquare.Piece.PieceType != PieceType.General)
                 return;
 
             if (destSquare.Piece.PieceColor == PieceColor.White)

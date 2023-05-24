@@ -139,16 +139,15 @@ namespace Advance
         {
             Square destSquare = board.Squares[destPos];
 
+            // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceValue;
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceValue;
 
+            // Add move
             if (destSquare.Piece == null)
-            {
-                // Add move
                 square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
-            }
         }
 
         private static void AddCapture(Board board, Square square, int destPos)
@@ -162,17 +161,25 @@ namespace Advance
             // Set destination square as threatened
             Moves.SetThreat(board, square, destPos);
 
+            // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceValue;
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceValue;
 
-            if (destSquare.Piece == null || Piece.IsEnemyPiece(square, destSquare))
+            // Add move
+            if (destSquare.Piece == null)
             {
-                // Check if the general is in check
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                return;
+            }
+
+            // Add capture
+            if (Piece.IsEnemyPiece(square, destSquare))
+            {
+                // If destination piece is general, set check
                 Moves.IsGeneralInCheck(board, destPos);
 
-                // Add move
                 square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
             }
         }

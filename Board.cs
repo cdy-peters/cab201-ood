@@ -223,7 +223,7 @@ namespace Advance
                 }
             }
 
-            return Regex.Replace(boardStr, $".{{{Size}}}", "$0\n"); ;
+            return Regex.Replace(boardStr, $".{{{Size}}}", "$0\n");
         }
     }
 }
