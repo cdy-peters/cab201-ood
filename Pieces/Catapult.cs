@@ -6,6 +6,9 @@ namespace Advance
         {
             // ? Possible refactor?
 
+            int row = pos / Board.Size;
+            int col = pos % Board.Size;
+
             // Moving
             int[] offsets = { -1, 0, 1 };
 
@@ -50,11 +53,9 @@ namespace Advance
                         continue;
 
                     // Check if destination square is in the correct row and column
-                    int row = pos / 3;
-                    int col = pos % 3;
-                    int destRow = destPos / 3;
-                    int destCol = destPos % 3;
-                    if (Math.Abs(destRow - row) != Math.Abs(destCol - col))
+                    int destRow = destPos / Board.Size;
+                    int destCol = destPos % Board.Size;
+                    if (destRow != row + offsetY && destCol != col + offsetX)
                         continue;
 
                     AddCapture(board, square, destPos);
