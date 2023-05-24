@@ -147,6 +147,8 @@ namespace Advance
             board.LastMove = new MoveContent();
             board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
 
+            board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
+
             // Builder move
             if (srcPiece.PieceType == PieceType.Builder)
             {

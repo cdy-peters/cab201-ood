@@ -20,19 +20,6 @@ namespace Advance
                     if (destPos == -1)
                         continue;
 
-                    // Check if the destination square is threatened
-                    Square destSquare = board.Squares[destPos];
-                    if (square.Piece.PieceColor == PieceColor.White)
-                    {
-                        if (board.ThreatenedByBlack[destPos])
-                            continue;
-                    }
-                    else
-                    {
-                        if (board.ThreatenedByWhite[destPos])
-                            continue;
-                    }
-
                     AddMove(board, square, destPos);
                 }
         }
@@ -53,6 +40,18 @@ namespace Advance
                 square.Piece.DefenseValue += destSquare.Piece.PieceValue;
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceValue;
+
+            // Check if the destination square is threatened
+            if (square.Piece.PieceColor == PieceColor.White)
+            {
+                if (board.ThreatenedByBlack[destPos])
+                    return;
+            }
+            else
+            {
+                if (board.ThreatenedByWhite[destPos])
+                    return;
+            }
 
             // Add move
             if (destSquare.Piece == null)
