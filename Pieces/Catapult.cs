@@ -49,8 +49,12 @@ namespace Advance
                     if (destPos == -1)
                         continue;
 
-                    // Compare row and column of destination and current position
-                    if (Math.Abs(destPos / 3 - pos / 3) != Math.Abs(destPos % 3 - pos % 3))
+                    // Check if destination square is in the correct row and column
+                    int row = pos / 3;
+                    int col = pos % 3;
+                    int destRow = destPos / 3;
+                    int destCol = destPos % 3;
+                    if (Math.Abs(destRow - row) != Math.Abs(destCol - col))
                         continue;
 
                     AddCapture(board, square, destPos);

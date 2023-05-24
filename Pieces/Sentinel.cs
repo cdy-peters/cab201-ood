@@ -5,6 +5,8 @@ namespace Advance
         internal static void GetValidMoves(Board board, Square square, int pos)
         {
             int[] offsets = { -2, -1, 1, 2 };
+            int row = pos / Board.Size;
+            int col = pos % Board.Size;
 
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
@@ -14,6 +16,12 @@ namespace Advance
 
                     int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
                     if (destPos == -1)
+                        continue;
+
+                    // Check if destination square is in the correct row and column
+                    int destRow = destPos / Board.Size;
+                    int destCol = destPos % Board.Size;
+                    if (destRow != row + offsetY || destCol != col + offsetX)
                         continue;
 
                     AddMove(board, square, destPos);
