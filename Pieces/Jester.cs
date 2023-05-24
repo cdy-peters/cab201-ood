@@ -30,9 +30,9 @@ namespace Advance
             Moves.SetThreat(board, square, destPos);
 
             if (Piece.IsFriendlyPiece(square, destSquare))
-                square.Piece.DefenseValue += destSquare.Piece.PieceValue;
+                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
             else if (Piece.IsEnemyPiece(square, destSquare))
-                square.Piece.AttackValue += destSquare.Piece.PieceValue;
+                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
             if (destSquare.Piece == null ||
                 (Piece.IsFriendlyPiece(square, destSquare) && destSquare.Piece.PieceType != PieceType.Jester) ||

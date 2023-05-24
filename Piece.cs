@@ -37,6 +37,7 @@ namespace Advance
         internal PieceColor PieceColor;
         internal PieceType PieceType;
         internal int PieceValue;
+        internal int PieceActionValue;
         internal int AttackValue;
         internal int DefenseValue;
         internal List<ValidMove> ValidMoves;
@@ -68,6 +69,7 @@ namespace Advance
             PieceColor = piece.PieceColor;
             PieceType = piece.PieceType;
             PieceValue = piece.PieceValue;
+            PieceActionValue = piece.PieceActionValue;
             ValidMoves = piece.ValidMoves;
         }
 
@@ -86,6 +88,19 @@ namespace Advance
                 PieceType.Catapult => 6,
                 PieceType.Dragon => 7,
                 PieceType.General => 10000,
+                _ => 0
+            };
+            PieceActionValue = pieceType switch
+            {
+                PieceType.Wall => 0,
+                PieceType.Zombie => 8,
+                PieceType.Builder => 7,
+                PieceType.Jester => 6,
+                PieceType.Miner => 5,
+                PieceType.Sentinel => 4,
+                PieceType.Catapult => 3,
+                PieceType.Dragon => 2,
+                PieceType.General => 1,
                 _ => 0
             };
             ValidMoves = new List<ValidMove>();

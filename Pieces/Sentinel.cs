@@ -41,9 +41,9 @@ namespace Advance
 
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
-                square.Piece.DefenseValue += destSquare.Piece.PieceValue; //? Should protected pieces be added
+                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue; //? Should protected pieces be added
             else if (Piece.IsEnemyPiece(square, destSquare))
-                square.Piece.AttackValue += destSquare.Piece.PieceValue;
+                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
             // Add move
             if (destSquare.Piece == null)
