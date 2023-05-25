@@ -31,18 +31,6 @@ namespace Advance
             return score;
         }
 
-        private static int ModifyDepth(int depth, int possibleMoves)
-        {
-            if (possibleMoves <= 20)
-            {
-                if (possibleMoves <= 10)
-                    depth += 1;
-                depth += 1;
-            }
-
-            return depth;
-        }
-
         internal static MoveContent IterativeSearch(Board board, int depth)
         {
             int alpha = -100000000;
@@ -54,22 +42,19 @@ namespace Advance
 
             foreach (Board pos in succ.Positions)
             {
-                int value = -AlphaBeta(pos, depth - 1, -beta, -alpha);
+                int value = -AlphaBeta(pos, 1, -beta, -alpha);
 
                 if (value >= 10000)
                     return pos.LastMove;
             }
 
-            int currentBoard = 0;
             alpha = -100000000;
             succ.Positions.Sort(Sort);
             depth--;
-            int plyDepthReached = ModifyDepth(depth, succ.Positions.Count);
 
             foreach (Board pos in succ.Positions)
             {
-                currentBoard++;
-                int value = -AlphaBeta(pos, plyDepthReached, -beta, -alpha);
+                int value = -AlphaBeta(pos, depth, -beta, -alpha);
 
                 if (value >= 10000)
                     return pos.LastMove;
@@ -82,7 +67,7 @@ namespace Advance
                     bestMove = pos.LastMove;
                 }
             }
-            plyDepthReached++;
+
             return bestMove;
         }
 
@@ -200,13 +185,17 @@ namespace Advance
                     move.DestPos = validMove.DestPos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
+                    // if (destPiece.PieceType == PieceType.Wall)
+                    //     continue;
 
-                    if (destPiece == null)
-                        continue;
-
-                    move.Score += destPiece.PieceValue;
-                    if (piece.PieceValue < destPiece.PieceValue)
-                        move.Score += destPiece.PieceValue - piece.PieceValue;
+                    // ? Should walls go beyond this? what about miners moving to a wall?
+                    if (destPiece != null)
+                    {
+                        move.Score += destPiece.PieceValue;
+                        if (piece.PieceValue < destPiece.PieceValue)
+                            move.Score += destPiece.PieceValue - piece.PieceValue;
+                    }
+                    move.Score += piece.PieceActionValue;
 
                     positions.Add(move);
                 }

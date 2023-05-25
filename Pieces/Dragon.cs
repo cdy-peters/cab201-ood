@@ -12,16 +12,14 @@ namespace Advance
             {
                 destPos -= Board.Size;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos - Board.Size)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos - Board.Size)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Down
@@ -30,16 +28,14 @@ namespace Advance
             {
                 destPos += Board.Size;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos + Board.Size)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos + Board.Size)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Left
@@ -48,16 +44,14 @@ namespace Advance
             {
                 destPos--;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos - 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos - 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Right
@@ -66,16 +60,14 @@ namespace Advance
             {
                 destPos++;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos + 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos + 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Up Left
@@ -84,16 +76,14 @@ namespace Advance
             {
                 destPos -= Board.Size + 1;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos - Board.Size - 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos - Board.Size - 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Up Right
@@ -102,16 +92,14 @@ namespace Advance
             {
                 destPos -= Board.Size - 1;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos - Board.Size + 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos - Board.Size + 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Down Left
@@ -120,16 +108,14 @@ namespace Advance
             {
                 destPos += Board.Size - 1;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos + Board.Size - 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos + Board.Size - 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
             }
 
             // Down Right
@@ -138,16 +124,63 @@ namespace Advance
             {
                 destPos += Board.Size + 1;
 
-                Square destSquare = board.Squares[destPos];
-
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
+                if (destPos == pos + Board.Size + 1)
+                    AddMove(board, square, destPos);
                 else
-                {
-                    if (Piece.IsEnemyPiece(square, destSquare) && destPos != pos + Board.Size + 1)
-                        Moves.AddValidMove(board, square, destPos);
+                    AddCapture(board, square, destPos);
+
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
+            }
+        }
+
+        private static void AddMove(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+
+            // Add attack/defense values
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
+
+            // Add move
+            if (destSquare.Piece == null)
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+        }
+
+        private static void AddCapture(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+
+            // Check if destination piece is protected by a sentinel
+            if (Moves.IsProtected(board, square, destPos))
+                return;
+
+            // Set destination square as threatened
+            Moves.SetThreat(board, square, destPos);
+
+            // Add attack/defense values
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
+
+            // Add move
+            if (destSquare.Piece == null)
+            {
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                return;
+            }
+
+            // Add capture
+            if (Piece.IsEnemyPiece(square, destSquare))
+            {
+                // If destination piece is general, set check
+                Moves.IsGeneralInCheck(board, destPos);
+
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
             }
         }
     }

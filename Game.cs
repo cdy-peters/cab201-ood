@@ -14,7 +14,7 @@ namespace Advance
 
             Moves.GetValidMoves(Board);
 
-            MoveContent bestMove = Search.IterativeSearch(Board, 5);
+            MoveContent bestMove = Search.IterativeSearch(Board, 3);
             if (bestMove.MovingPiece.SrcPos == 0 && bestMove.MovingPiece.DestPos.DestPos == 0)
                 throw new Exception("No valid moves found");
 
@@ -25,7 +25,7 @@ namespace Advance
 
         public override string ToString()
         {
-            return $"Moving {Board!.LastMove.MovingPiece.SrcPos} to {Board.LastMove.MovingPiece.DestPos.DestPos}\n {Board}";
+            return $"Moving {Board!.LastMove.MovingPiece.SrcPos} to {Board.LastMove.MovingPiece.DestPos.DestPos}\n{Board}";
         }
     }
 }

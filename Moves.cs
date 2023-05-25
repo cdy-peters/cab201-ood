@@ -4,6 +4,9 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board)
         {
+            board.WhiteCheck = false;
+            board.BlackCheck = false;
+
             int whiteGeneralPos = -1;
             int blackGeneralPos = -1;
 
@@ -84,25 +87,6 @@ namespace Advance
             return false;
         }
 
-        internal static void AddValidMove(Board board, Square square, int destPos)
-        {
-
-            // Check if destination piece is protected by a sentinel
-            if (IsProtected(board, square, destPos))
-                return;
-
-            // Set destination square as threatened
-            SetThreat(board, square, destPos);
-
-            // Check if the general is in check
-            IsGeneralInCheck(board, destPos);
-
-            // Add move
-            square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
-            if (square.Piece.PieceType == PieceType.Builder)
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, true));
-        }
-
         internal static void SetThreat(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)
@@ -117,6 +101,10 @@ namespace Advance
         internal static bool IsProtected(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)
+                return false;
+            
+            Square destSquare = board.Squares[destPos];
+            if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.Wall)
                 return false;
 
             int[] offsets = { -1, 0, 1 };
@@ -145,7 +133,7 @@ namespace Advance
         internal static void IsGeneralInCheck(Board board, int destPos)
         {
             Square destSquare = board.Squares[destPos];
-            if (destSquare.Piece == null || destSquare.Piece.PieceType != PieceType.General)
+            if (destSquare.Piece.PieceType != PieceType.General)
                 return;
 
             if (destSquare.Piece.PieceColor == PieceColor.White)

@@ -15,16 +15,10 @@ namespace Advance
                 if (destPos < 0)
                     break;
 
-                Square destSquare = board.Squares[destPos];
+                AddMove(board, square, destPos);
 
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
-                {
-                    Moves.AddValidMove(board, square, destPos);
-                    break;
-                }
-                else
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
             }
 
@@ -36,16 +30,10 @@ namespace Advance
                 if (destPos >= Board.Size * Board.Size)
                     break;
 
-                Square destSquare = board.Squares[destPos];
+                AddMove(board, square, destPos);
 
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
-                {
-                    Moves.AddValidMove(board, square, destPos);
-                    break;
-                }
-                else
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
             }
 
@@ -57,16 +45,10 @@ namespace Advance
                 if (destPos % Board.Size >= Board.Size - 1 || destPos < 0)
                     break;
 
-                Square destSquare = board.Squares[destPos];
+                AddMove(board, square, destPos);
 
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
-                {
-                    Moves.AddValidMove(board, square, destPos);
-                    break;
-                }
-                else
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
             }
 
@@ -78,17 +60,45 @@ namespace Advance
                 if (destPos % Board.Size <= 0)
                     break;
 
-                Square destSquare = board.Squares[destPos];
+                AddMove(board, square, destPos);
 
-                if (destSquare.Piece == null)
-                    Moves.AddValidMove(board, square, destPos);
-                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
-                {
-                    Moves.AddValidMove(board, square, destPos);
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece != null)
                     break;
-                }
-                else
-                    break;
+            }
+        }
+
+        private static void AddMove(Board board, Square square, int destPos)
+        {
+            Square destSquare = board.Squares[destPos];
+
+            // Check if destination piece is protected by a sentinel
+            if (Moves.IsProtected(board, square, destPos))
+                return;
+
+            // Set destination square as threatened
+            Moves.SetThreat(board, square, destPos);
+
+            // Add attack/defense values
+            if (Piece.IsFriendlyPiece(square, destSquare))
+                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
+            else if (Piece.IsEnemyPiece(square, destSquare))
+                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
+
+            // Add move
+            if (destSquare.Piece == null)
+            {
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                return;
+            }
+
+            // Capture
+            if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+            {
+                // If destination piece is general, set check
+                Moves.IsGeneralInCheck(board, destPos);
+
+                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
             }
         }
     }
