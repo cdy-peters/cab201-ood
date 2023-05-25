@@ -113,6 +113,9 @@ namespace Advance
         {
             if (depth == 0)
             {
+                if (board.WhiteCheck || board.BlackCheck)
+                    return AlphaBeta(board, 1, alpha, beta);
+
                 Evaluation.BoardEvaluation(board);
                 return SideToMoveScore(board.Score, board.Player);
             }
