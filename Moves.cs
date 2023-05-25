@@ -102,6 +102,10 @@ namespace Advance
         {
             if (square.Piece.PieceType == PieceType.Jester)
                 return false;
+            
+            Square destSquare = board.Squares[destPos];
+            if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.Wall)
+                return false;
 
             int[] offsets = { -1, 0, 1 };
 
