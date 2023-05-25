@@ -185,12 +185,16 @@ namespace Advance
                     move.DestPos = validMove.DestPos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
-                    if (destPiece == null || destPiece.PieceType == PieceType.Wall)
-                        continue;
+                    // if (destPiece.PieceType == PieceType.Wall)
+                    //     continue;
 
-                    move.Score += destPiece.PieceValue;
-                    if (piece.PieceValue < destPiece.PieceValue)
-                        move.Score += destPiece.PieceValue - piece.PieceValue;
+                    // ? Should walls go beyond this? what about miners moving to a wall?
+                    if (destPiece != null)
+                    {
+                        move.Score += destPiece.PieceValue;
+                        if (piece.PieceValue < destPiece.PieceValue)
+                            move.Score += destPiece.PieceValue - piece.PieceValue;
+                    }
                     move.Score += piece.PieceActionValue;
 
                     positions.Add(move);
