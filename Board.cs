@@ -110,8 +110,6 @@ namespace Advance
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
 
-            // LastMove = new MovingPiece();
-
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
         }
@@ -136,21 +134,21 @@ namespace Advance
             return newBoard;
         }
 
-        internal static void MovePiece(Board board, int srcPos, ValidMove validMove)
+        internal static void MovePiece(Board board, int srcPos, MoveDest moveDest)
         {
-            int destPos = validMove.DestPos;
+            int destPos = moveDest.Pos;
 
             // TODO: Refactor this method
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
-            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
+            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, moveDest);
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
             // Builder move
             if (srcPiece.PieceType == PieceType.Builder)
             {
-                if (validMove.IsWall)
+                if (moveDest.IsWall)
                 {
                     board.Squares[destPos].Piece = new Piece(PieceType.Wall);
                     return;

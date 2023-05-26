@@ -90,7 +90,7 @@ namespace Advance
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
                 return;
             }
 
@@ -100,7 +100,7 @@ namespace Advance
                 // Check if the general is in check
                 Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
             }
         }
 
@@ -130,7 +130,7 @@ namespace Advance
                 Moves.IsGeneralInCheck(board, destPos);
 
                 // Add move
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
             }
         }
     }

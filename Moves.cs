@@ -16,7 +16,7 @@ namespace Advance
                 if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
-                square.Piece.ValidMoves = new List<ValidMove>();
+                square.Piece.ValidMoves = new List<MoveDest>();
 
                 switch (square.Piece.PieceType)
                 {

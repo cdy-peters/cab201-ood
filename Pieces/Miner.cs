@@ -88,7 +88,7 @@ namespace Advance
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace Advance
                 // If destination piece is general, set check
                 Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
             }
         }
     }

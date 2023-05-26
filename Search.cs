@@ -77,8 +77,8 @@ namespace Advance
 
                 for (int i = 0; i < bestMoves.Count; i++)
                 {
-                    ValidMove dest = bestMoves[i].DestPos;
-                    Square destSquare = board.Squares[dest.DestPos];
+                    MoveDest dest = bestMoves[i].Dest;
+                    Square destSquare = board.Squares[dest.Pos];
                     if (destSquare.Piece != null)
                         bestMaterialMoves.Add(bestMoves[i]);
                 }
@@ -147,10 +147,10 @@ namespace Advance
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
-                foreach (ValidMove validMove in square.Piece.ValidMoves)
+                foreach (MoveDest moveDest in square.Piece.ValidMoves)
                 {
                     Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, validMove);
+                    Board.MovePiece(newBoard, i, moveDest);
                     Moves.GetValidMoves(newBoard);
 
                     if (newBoard.WhiteCheck && board.Player == PieceColor.White)
@@ -184,7 +184,7 @@ namespace Advance
             foreach (Position move in positions)
             {
                 Board newBoard = board.CopyBoard();
-                Board.MovePiece(newBoard, move.SrcPos, new ValidMove(move.DestPos));
+                Board.MovePiece(newBoard, move.SrcPos, new MoveDest(move.DestPos));
                 Moves.GetValidMoves(newBoard);
 
                 if (newBoard.WhiteCheck && board.Player == PieceColor.White)
@@ -217,11 +217,11 @@ namespace Advance
                 if (piece.PieceColor != board.Player)
                     continue;
 
-                foreach (ValidMove validMove in piece.ValidMoves)
+                foreach (MoveDest moveDest in piece.ValidMoves)
                 {
                     Position move = new Position();
                     move.SrcPos = i;
-                    move.DestPos = validMove.DestPos;
+                    move.DestPos = moveDest.Pos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
 

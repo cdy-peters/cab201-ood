@@ -20,14 +20,14 @@ namespace Advance
         General
     }
 
-    public struct ValidMove
+    public struct MoveDest
     {
-        internal int DestPos;
+        internal int Pos;
         internal bool IsWall;
 
-        internal ValidMove(int destPos, bool isWall = false)
+        internal MoveDest(int destPos, bool isWall = false)
         {
-            DestPos = destPos;
+            Pos = destPos;
             IsWall = isWall;
         }
     }
@@ -37,14 +37,14 @@ namespace Advance
         public PieceColor PieceColor;
         public PieceType PieceType;
         public int SrcPos;
-        public ValidMove DestPos;
+        public MoveDest Dest;
 
-        public MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, ValidMove destPos)
+        public MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
             SrcPos = srcPos;
-            DestPos = destPos;
+            Dest = dest;
         }
 
         public MovingPiece(MovingPiece MovingPiece)
@@ -52,7 +52,7 @@ namespace Advance
             PieceColor = MovingPiece.PieceColor;
             PieceType = MovingPiece.PieceType;
             SrcPos = MovingPiece.SrcPos;
-            DestPos = MovingPiece.DestPos;
+            Dest = MovingPiece.Dest;
         }
     }
 
@@ -64,7 +64,7 @@ namespace Advance
         internal int PieceActionValue;
         internal int AttackValue;
         internal int DefenseValue;
-        internal List<ValidMove> ValidMoves;
+        internal List<MoveDest> ValidMoves;
 
         internal static bool IsFriendlyPiece(Square square, Square destSquare)
         {
@@ -127,7 +127,7 @@ namespace Advance
                 PieceType.General => 1,
                 _ => 0
             };
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveDest>();
         }
 
         public new string ToString()

@@ -39,7 +39,7 @@ namespace Advance
                 (Piece.IsEnemyPiece(square, destSquare) && destSquare.Piece.PieceType != PieceType.General))
             {
                 // Add move
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
             }
         }
     }

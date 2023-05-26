@@ -16,17 +16,17 @@ namespace Advance
 
             // MoveContent bestMove = Search.ShallowSearch(Board, 3);
             MovingPiece bestMove = Search.ShallowSearch(Board, 3);
-            if (bestMove.SrcPos == 0 && bestMove.DestPos.DestPos == 0)
+            if (bestMove.SrcPos == 0 && bestMove.Dest.Pos == 0)
                 throw new Exception("No valid moves found");
 
-            Board.MovePiece(Board, bestMove.SrcPos, bestMove.DestPos); // TODO: Make an overload that takes a MoveContent)
+            Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
 
             FileIO.SaveFile(destFile, Board.ToString());
         }
 
         public override string ToString()
         {
-            return $"Moving {Board!.LastMove.SrcPos} to {Board.LastMove.DestPos.DestPos}\n{Board}";
+            return $"Moving {Board!.LastMove.SrcPos} to {Board.LastMove.Dest.Pos}\n{Board}";
         }
     }
 }
