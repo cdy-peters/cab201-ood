@@ -8,7 +8,7 @@ namespace Advance
 
         internal PieceColor Player;
         internal int Score = 0;
-        internal MoveContent LastMove;
+        internal MovingPiece LastMove;
         internal Square[] Squares;
 
         internal bool[] ThreatenedByWhite = new bool[Size * Size];
@@ -27,7 +27,7 @@ namespace Advance
             for (int i = 0; i < Size * Size; i++)
                 Squares[i] = new Square();
 
-            LastMove = new MoveContent();
+            LastMove = new MovingPiece();
 
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
@@ -93,7 +93,7 @@ namespace Advance
 
             Player = board.Player;
             Score = board.Score;
-            LastMove = new MoveContent(board.LastMove);
+            LastMove = board.LastMove;
 
             BlackCheck = board.BlackCheck;
             WhiteCheck = board.WhiteCheck;
@@ -110,7 +110,7 @@ namespace Advance
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
 
-            LastMove = new MoveContent();
+            // LastMove = new MovingPiece();
 
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
@@ -144,9 +144,7 @@ namespace Advance
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
-            board.LastMove = new MoveContent();
-            board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
-
+            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
             // Builder move

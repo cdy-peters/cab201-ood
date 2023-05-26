@@ -32,11 +32,35 @@ namespace Advance
         }
     }
 
+    public struct MovingPiece
+    {
+        public PieceColor PieceColor;
+        public PieceType PieceType;
+        public int SrcPos;
+        public ValidMove DestPos;
+
+        public MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, ValidMove destPos)
+        {
+            PieceColor = pieceColor;
+            PieceType = pieceType;
+            SrcPos = srcPos;
+            DestPos = destPos;
+        }
+
+        public MovingPiece(MovingPiece MovingPiece)
+        {
+            PieceColor = MovingPiece.PieceColor;
+            PieceType = MovingPiece.PieceType;
+            SrcPos = MovingPiece.SrcPos;
+            DestPos = MovingPiece.DestPos;
+        }
+    }
+
     internal class Piece
     {
         internal PieceColor PieceColor;
         internal PieceType PieceType;
-        internal int PieceValue;
+        internal int PieceMaterialValue;
         internal int PieceActionValue;
         internal int AttackValue;
         internal int DefenseValue;
@@ -68,7 +92,7 @@ namespace Advance
         {
             PieceColor = piece.PieceColor;
             PieceType = piece.PieceType;
-            PieceValue = piece.PieceValue;
+            PieceMaterialValue = piece.PieceMaterialValue;
             PieceActionValue = piece.PieceActionValue;
             ValidMoves = piece.ValidMoves;
         }
@@ -77,7 +101,7 @@ namespace Advance
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
-            PieceValue = pieceType switch
+            PieceMaterialValue = pieceType switch
             {
                 PieceType.Wall => 0,
                 PieceType.Zombie => 100,

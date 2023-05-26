@@ -31,12 +31,12 @@ namespace Advance
             return score;
         }
 
-        internal static MoveContent ShallowSearch(Board board, int depth)
+        internal static MovingPiece ShallowSearch(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
-            List<MoveContent> bestMoves = new List<MoveContent>(30);
+            List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards succ = GetSortValidMoves(board);
             succ.Positions.Sort(Sort);
 
@@ -73,11 +73,11 @@ namespace Advance
                 return bestMoves[0];
             else
             {
-                List<MoveContent> bestMaterialMoves = new List<MoveContent>(30);
+                List<MovingPiece> bestMaterialMoves = new List<MovingPiece>(30);
 
                 for (int i = 0; i < bestMoves.Count; i++)
                 {
-                    ValidMove dest = bestMoves[i].MovingPiece.DestPos;
+                    ValidMove dest = bestMoves[i].DestPos;
                     Square destSquare = board.Squares[dest.DestPos];
                     if (destSquare.Piece != null)
                         bestMaterialMoves.Add(bestMoves[i]);
@@ -91,12 +91,12 @@ namespace Advance
             }
         }
 
-        internal static MoveContent DeepSearch(Board board, int depth)
+        internal static MovingPiece DeepSearch(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
-            MoveContent bestMove = new MoveContent();
+            MovingPiece bestMove = new MovingPiece();
             ResultBoards succ = GetSortValidMoves(board);
             succ.Positions.Sort(Sort);
 
@@ -224,15 +224,12 @@ namespace Advance
                     move.DestPos = validMove.DestPos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
-                    // if (destPiece.PieceType == PieceType.Wall)
-                    //     continue;
 
-                    // ? Should walls go beyond this? what about miners moving to a wall?
-                    if (destPiece != null)
+                    if (destPiece != null && destPiece.PieceType != PieceType.Wall)
                     {
-                        move.Score += destPiece.PieceValue;
-                        if (piece.PieceValue < destPiece.PieceValue)
-                            move.Score += destPiece.PieceValue - piece.PieceValue;
+                        move.Score += destPiece.PieceMaterialValue;
+                        if (piece.PieceMaterialValue < destPiece.PieceMaterialValue)
+                            move.Score += destPiece.PieceMaterialValue - piece.PieceMaterialValue;
                     }
                     move.Score += piece.PieceActionValue;
 

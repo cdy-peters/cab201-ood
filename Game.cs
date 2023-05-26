@@ -14,18 +14,19 @@ namespace Advance
 
             Moves.GetValidMoves(Board);
 
-            MoveContent bestMove = Search.ShallowSearch(Board, 3);
-            if (bestMove.MovingPiece.SrcPos == 0 && bestMove.MovingPiece.DestPos.DestPos == 0)
+            // MoveContent bestMove = Search.ShallowSearch(Board, 3);
+            MovingPiece bestMove = Search.ShallowSearch(Board, 3);
+            if (bestMove.SrcPos == 0 && bestMove.DestPos.DestPos == 0)
                 throw new Exception("No valid moves found");
 
-            Board.MovePiece(Board, bestMove.MovingPiece.SrcPos, bestMove.MovingPiece.DestPos); // TODO: Make an overload that takes a MoveContent)
+            Board.MovePiece(Board, bestMove.SrcPos, bestMove.DestPos); // TODO: Make an overload that takes a MoveContent)
 
             FileIO.SaveFile(destFile, Board.ToString());
         }
 
         public override string ToString()
         {
-            return $"Moving {Board!.LastMove.MovingPiece.SrcPos} to {Board.LastMove.MovingPiece.DestPos.DestPos}\n{Board}";
+            return $"Moving {Board!.LastMove.SrcPos} to {Board.LastMove.DestPos.DestPos}\n{Board}";
         }
     }
 }

@@ -6,11 +6,9 @@ namespace Advance
         {
             int totalScore = 0;
 
-            totalScore += square.Piece.PieceValue;
+            totalScore += square.Piece.PieceMaterialValue;
             totalScore -= square.Piece.AttackValue;
             totalScore += square.Piece.DefenseValue;
-
-            // ? Consider if a pawn is in a poor position
 
             return totalScore;
         }
