@@ -1,6 +1,6 @@
 namespace Advance
 {
-    internal static class Search7
+    internal static class Search7Eff
     {
         private struct Position
         {

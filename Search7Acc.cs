@@ -1,6 +1,6 @@
 namespace Advance
 {
-    internal static class Search
+    internal static class Search7Acc
     {
         private struct Position
         {
@@ -36,7 +36,7 @@ namespace Advance
             int alpha = -100000000;
             const int beta = 100000000;
 
-            List<MoveContent> bestMoves = new List<MoveContent>(depth);
+            MoveContent bestMove = new MoveContent();
 
             ResultBoards succ = GetSortValidMoves(board);
 
@@ -61,39 +61,14 @@ namespace Advance
 
                 pos.Score = value;
 
-                if (value > alpha)
+                if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
-                    bestMoves.Clear();
-                    bestMoves.Add(pos.LastMove);
-                }
-                else if (value == alpha)
-                {
-                    bestMoves.Add(pos.LastMove);
+                    bestMove = pos.LastMove;
                 }
             }
 
-            if (bestMoves.Count == 1)
-                return bestMoves[0];
-            else
-            {
-                List<MoveContent> bestMoves2 = new List<MoveContent>(30);
-
-                for (int i = 0; i < bestMoves.Count; i++)
-                {
-                    ValidMove dest = bestMoves[i].MovingPiece.DestPos;
-                    Square destSquare = board.Squares[dest.DestPos];
-                    if (destSquare.Piece != null)
-                        bestMoves2.Add(bestMoves[i]);
-                }
-
-                if (bestMoves2.Count == 1)
-                    return bestMoves2[0];
-                
-                // Deeper search
-                // return Search7Eff.IterativeSearch(board, bestMoves, 3);
-                return Search7Acc.IterativeSearch(board, 3);
-            }
+            return bestMove;
         }
 
         private static ResultBoards GetSortValidMoves(Board board)
