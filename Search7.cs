@@ -1,6 +1,6 @@
 namespace Advance
 {
-    internal static class Search
+    internal static class Search7
     {
         private struct Position
         {
@@ -31,14 +31,14 @@ namespace Advance
             return score;
         }
 
-        internal static MoveContent IterativeSearch(Board board, int depth)
+        internal static MoveContent IterativeSearch(Board board, List<MoveContent> bestMoves, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
-            List<MoveContent> bestMoves = new List<MoveContent>(depth);
+            MoveContent bestMove = new MoveContent();
 
-            ResultBoards succ = GetSortValidMoves(board);
+            ResultBoards succ = GetSortValidMoves(board, bestMoves);
 
             foreach (Board pos in succ.Positions)
             {
@@ -61,78 +61,37 @@ namespace Advance
 
                 pos.Score = value;
 
-                // if (value > alpha || alpha == -100000000)
-                // {
-                //     alpha = value;
-                //     bestMove = pos.LastMove;
-                // }
-
-                if (value > alpha)
+                if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
-                    bestMoves.Clear();
-                    bestMoves.Add(pos.LastMove);
-                }
-                else if (value == alpha)
-                {
-                    bestMoves.Add(pos.LastMove);
+                    bestMove = pos.LastMove;
                 }
             }
 
-            if (bestMoves.Count == 1)
-                return bestMoves[0];
-            else
-            {
-                List<MoveContent> bestMoves2 = new List<MoveContent>(30);
-
-                for (int i = 0; i < bestMoves.Count; i++)
-                {
-                    ValidMove dest = bestMoves[i].MovingPiece.DestPos;
-                    Square destSquare = board.Squares[dest.DestPos];
-                    if (destSquare.Piece != null)
-                        bestMoves2.Add(bestMoves[i]);
-                }
-
-                if (bestMoves2.Count == 1)
-                    return bestMoves2[0];
-                
-                // Deeper search
-                return Search7.IterativeSearch(board, bestMoves2, 2);
-            }
+            return bestMove;
         }
 
-        private static ResultBoards GetSortValidMoves(Board board)
+        private static ResultBoards GetSortValidMoves(Board board, List<MoveContent> bestMoves)
         {
             ResultBoards succ = new ResultBoards
             {
                 Positions = new List<Board>(30)
             };
 
-            for (int i = 0; i < Board.Size * Board.Size; i++)
+            foreach (MoveContent move in bestMoves)
             {
-                Square square = board.Squares[i];
+                Board newBoard = board.CopyBoard();
+                Board.MovePiece(newBoard, move.MovingPiece.SrcPos, move.MovingPiece.DestPos);
+                Moves.GetValidMoves(newBoard);
 
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
+                if (newBoard.WhiteCheck && board.Player == PieceColor.White)
+                    continue;
+                if (newBoard.BlackCheck && board.Player == PieceColor.Black)
                     continue;
 
-                if (square.Piece.PieceColor != board.Player)
-                    continue;
-
-                foreach (ValidMove validMove in square.Piece.ValidMoves)
-                {
-                    Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, validMove);
-                    Moves.GetValidMoves(newBoard);
-
-                    if (newBoard.WhiteCheck && board.Player == PieceColor.White)
-                        continue;
-                    if (newBoard.BlackCheck && board.Player == PieceColor.Black)
-                        continue;
-
-                    Evaluation.BoardEvaluation(newBoard);
-                    newBoard.Score = SideToMoveScore(newBoard.Score, newBoard.Player);
-                    succ.Positions.Add(newBoard);
-                }
+                Evaluation.BoardEvaluation(newBoard);
+                newBoard.Score = SideToMoveScore(newBoard.Score, newBoard.Player);
+                succ.Positions.Add(newBoard);
             }
 
             succ.Positions.Sort(Sort);
