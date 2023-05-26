@@ -137,29 +137,26 @@ namespace Advance
         internal static void MovePiece(Board board, int srcPos, MoveDest moveDest)
         {
             int destPos = moveDest.Pos;
-
-            // TODO: Refactor this method
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
             board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, moveDest);
+
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
-            // Builder move
-            if (srcPiece.PieceType == PieceType.Builder)
+            // Builder move (wall)
+            if (srcPiece.PieceType == PieceType.Builder && moveDest.IsWall)
             {
-                if (moveDest.IsWall)
-                {
-                    board.Squares[destPos].Piece = new Piece(PieceType.Wall);
-                    return;
-                }
+                board.Squares[destPos].Piece = new Piece(PieceType.Wall);
+                return;
             }
 
             // Catapult move
             if (srcPiece.PieceType == PieceType.Catapult)
             {
-                // check if destpos is a square away
-                if (Math.Abs(srcPos - destPos) == 1 || Math.Abs(srcPos - destPos) == Size)
+                // Check for move or shot
+                int diff = Math.Abs(srcPos - destPos);
+                if (diff == 1 || diff == Size)
                 {
                     board.Squares[srcPos].Piece = null!;
                     board.Squares[destPos].Piece = srcPiece;
@@ -167,13 +164,6 @@ namespace Advance
                 }
 
                 board.Squares[destPos].Piece = null!;
-                return;
-            }
-
-            if (srcPiece.PieceType != PieceType.Jester || destPiece == null)
-            {
-                board.Squares[srcPos].Piece = null!;
-                board.Squares[destPos].Piece = srcPiece;
                 return;
             }
 
@@ -185,13 +175,18 @@ namespace Advance
                     // Swap pieces
                     board.Squares[srcPos].Piece = destPiece;
                     board.Squares[destPos].Piece = srcPiece;
+                    return;
                 }
                 else if (destPiece.PieceColor != PieceColor.None)
                 {
                     // Change color of destination piece
                     board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
+                    return;
                 }
             }
+
+            board.Squares[srcPos].Piece = null!;
+            board.Squares[destPos].Piece = srcPiece;
         }
 
         public override string ToString()
