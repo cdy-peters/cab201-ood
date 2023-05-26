@@ -20,9 +20,9 @@ namespace Advance
             board.Score = 0;
 
             if (board.WhiteCheck)
-                board.Score += 1000;
-            if (board.BlackCheck)
                 board.Score -= 1000;
+            if (board.BlackCheck)
+                board.Score += 1000;
 
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
