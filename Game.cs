@@ -14,8 +14,8 @@ namespace Advance
 
             Moves.GetValidMoves(Board);
 
-            // MoveContent bestMove = Search.ShallowSearch(Board, 3);
-            MovingPiece bestMove = Search.ShallowSearch(Board, 3);
+            MovingPiece bestMove = Search.ShallowSearchRoot(Board, 3);
+            // MoveContent bestMove = Search.DeepSearchRoot(Board, 3);
             if (bestMove.SrcPos == 0 && bestMove.Dest.Pos == 0)
                 throw new Exception("No valid moves found");
 

@@ -24,49 +24,47 @@ namespace Advance
             return (s1.Score).CompareTo(s2.Score);
         }
 
-        private static int SideToMoveScore(int score, PieceColor color)
+        private static int SideToMove(int score, PieceColor color)
         {
-            if (color == PieceColor.Black)
-                return -score;
-            return score;
+            return color == PieceColor.Black ? -score : score;
         }
 
-        internal static MovingPiece ShallowSearch(Board board, int depth)
+        internal static MovingPiece ShallowSearchRoot(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
-            ResultBoards succ = GetSortValidMoves(board);
-            succ.Positions.Sort(Sort);
+            ResultBoards resBoards = PlayValidMoves(board);
+            resBoards.Positions.Sort(Sort);
 
-            foreach (Board pos in succ.Positions)
+            foreach (Board resBoard in resBoards.Positions)
             {
-                int value = -AlphaBeta(pos, 1, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
             }
 
             alpha = -100000000;
 
-            foreach (Board pos in succ.Positions)
+            foreach (Board resBoard in resBoards.Positions)
             {
-                int value = -AlphaBeta(pos, 0, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
 
-                pos.Score = value;
+                resBoard.Score = value;
 
                 if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
                     bestMoves.Clear();
-                    bestMoves.Add(pos.LastMove);
+                    bestMoves.Add(resBoard.LastMove);
                 }
                 else if (value == alpha)
-                    bestMoves.Add(pos.LastMove);
+                    bestMoves.Add(resBoard.LastMove);
             }
 
             if (bestMoves.Count == 1)
@@ -87,50 +85,50 @@ namespace Advance
                     return bestMaterialMoves[0];
 
                 // Deeper search
-                return DeepSearch(board, depth);
+                return DeepSearchRoot(board, depth);
             }
         }
 
-        internal static MovingPiece DeepSearch(Board board, int depth)
+        internal static MovingPiece DeepSearchRoot(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             MovingPiece bestMove = new MovingPiece();
-            ResultBoards succ = GetSortValidMoves(board);
-            succ.Positions.Sort(Sort);
+            ResultBoards resBoards = PlayValidMoves(board);
+            resBoards.Positions.Sort(Sort);
 
-            foreach (Board pos in succ.Positions)
+            foreach (Board resBoard in resBoards.Positions)
             {
-                int value = -AlphaBeta(pos, 1, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
             }
 
             alpha = -100000000;
             depth--;
 
-            foreach (Board pos in succ.Positions)
+            foreach (Board resBoard in resBoards.Positions)
             {
-                int value = -AlphaBeta(pos, depth, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
 
-                pos.Score = value;
+                resBoard.Score = value;
 
                 if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
-                    bestMove = pos.LastMove;
+                    bestMove = resBoard.LastMove;
                 }
             }
 
             return bestMove;
         }
 
-        private static ResultBoards GetSortValidMoves(Board board)
+        private static ResultBoards PlayValidMoves(Board board)
         {
             ResultBoards succ = new ResultBoards
             {
@@ -159,7 +157,7 @@ namespace Advance
                         continue;
 
                     Evaluation.BoardEvaluation(newBoard);
-                    newBoard.Score = SideToMoveScore(newBoard.Score, newBoard.Player);
+                    newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     succ.Positions.Add(newBoard);
                 }
             }
@@ -175,7 +173,7 @@ namespace Advance
                     return AlphaBeta(board, 1, alpha, beta);
 
                 Evaluation.BoardEvaluation(board);
-                return SideToMoveScore(board.Score, board.Player);
+                return SideToMove(board.Score, board.Player);
             }
 
             List<Position> positions = EvaluateMoves(board);
