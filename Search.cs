@@ -31,14 +31,14 @@ namespace Advance
             return score;
         }
 
-        internal static MoveContent IterativeSearch(Board board, int depth)
+        internal static MoveContent ShallowSearch(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
-            List<MoveContent> bestMoves = new List<MoveContent>(depth);
-
+            List<MoveContent> bestMoves = new List<MoveContent>(30);
             ResultBoards succ = GetSortValidMoves(board);
+            succ.Positions.Sort(Sort);
 
             foreach (Board pos in succ.Positions)
             {
@@ -49,7 +49,66 @@ namespace Advance
             }
 
             alpha = -100000000;
+
+            foreach (Board pos in succ.Positions)
+            {
+                int value = -AlphaBeta(pos, 0, -beta, -alpha);
+
+                if (value >= 10000)
+                    return pos.LastMove;
+
+                pos.Score = value;
+
+                if (value > alpha || alpha == -100000000)
+                {
+                    alpha = value;
+                    bestMoves.Clear();
+                    bestMoves.Add(pos.LastMove);
+                }
+                else if (value == alpha)
+                    bestMoves.Add(pos.LastMove);
+            }
+
+            if (bestMoves.Count == 1)
+                return bestMoves[0];
+            else
+            {
+                List<MoveContent> bestMaterialMoves = new List<MoveContent>(30);
+
+                for (int i = 0; i < bestMoves.Count; i++)
+                {
+                    ValidMove dest = bestMoves[i].MovingPiece.DestPos;
+                    Square destSquare = board.Squares[dest.DestPos];
+                    if (destSquare.Piece != null)
+                        bestMaterialMoves.Add(bestMoves[i]);
+                }
+
+                if (bestMaterialMoves.Count == 1)
+                    return bestMaterialMoves[0];
+
+                // Deeper search
+                return DeepSearch(board, depth);
+            }
+        }
+
+        internal static MoveContent DeepSearch(Board board, int depth)
+        {
+            int alpha = -100000000;
+            const int beta = 100000000;
+
+            MoveContent bestMove = new MoveContent();
+            ResultBoards succ = GetSortValidMoves(board);
             succ.Positions.Sort(Sort);
+
+            foreach (Board pos in succ.Positions)
+            {
+                int value = -AlphaBeta(pos, 1, -beta, -alpha);
+
+                if (value >= 10000)
+                    return pos.LastMove;
+            }
+
+            alpha = -100000000;
             depth--;
 
             foreach (Board pos in succ.Positions)
@@ -61,39 +120,14 @@ namespace Advance
 
                 pos.Score = value;
 
-                if (value > alpha)
+                if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
-                    bestMoves.Clear();
-                    bestMoves.Add(pos.LastMove);
-                }
-                else if (value == alpha)
-                {
-                    bestMoves.Add(pos.LastMove);
+                    bestMove = pos.LastMove;
                 }
             }
 
-            if (bestMoves.Count == 1)
-                return bestMoves[0];
-            else
-            {
-                List<MoveContent> bestMoves2 = new List<MoveContent>(30);
-
-                for (int i = 0; i < bestMoves.Count; i++)
-                {
-                    ValidMove dest = bestMoves[i].MovingPiece.DestPos;
-                    Square destSquare = board.Squares[dest.DestPos];
-                    if (destSquare.Piece != null)
-                        bestMoves2.Add(bestMoves[i]);
-                }
-
-                if (bestMoves2.Count == 1)
-                    return bestMoves2[0];
-                
-                // Deeper search
-                // return Search7Eff.IterativeSearch(board, bestMoves, 3);
-                return Search7Acc.IterativeSearch(board, 3);
-            }
+            return bestMove;
         }
 
         private static ResultBoards GetSortValidMoves(Board board)
@@ -130,7 +164,6 @@ namespace Advance
                 }
             }
 
-            succ.Positions.Sort(Sort);
             return succ;
         }
 
@@ -146,28 +179,6 @@ namespace Advance
             }
 
             List<Position> positions = EvaluateMoves(board);
-
-            if (board.WhiteCheck || board.BlackCheck || positions.Count == 0)
-            {
-                if (SearchForMate(board.Player, board, ref board.BlackMate, ref board.WhiteMate, ref board.StaleMate))
-                {
-                    if (board.WhiteMate)
-                    {
-                        if (board.Player == PieceColor.White)
-                            return -10000 - depth;
-                        return 10000 + depth;
-                    }
-                    if (board.BlackMate)
-                    {
-                        if (board.Player == PieceColor.Black)
-                            return -10000 - depth;
-                        return 10000 + depth;
-                    }
-
-                    return 0;
-                }
-            }
-
             positions.Sort(Sort);
 
             foreach (Position move in positions)
@@ -230,70 +241,6 @@ namespace Advance
             }
 
             return positions;
-        }
-
-        internal static bool SearchForMate(PieceColor player, Board board, ref bool blackMate, ref bool whiteMate, ref bool staleMate)
-        {
-            bool foundNonCheckWhite = false;
-            bool foundNonCheckBlack = false;
-
-            for (int i = 0; i < Board.Size * Board.Size; i++)
-            {
-                Square square = board.Squares[i];
-
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
-                    continue;
-
-                if (square.Piece.PieceColor != player)
-                    continue;
-
-                foreach (ValidMove validMove in square.Piece.ValidMoves)
-                {
-                    Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, validMove);
-                    Moves.GetValidMoves(newBoard);
-
-                    if (newBoard.WhiteCheck == false)
-                        foundNonCheckWhite = true;
-                    else if (player == PieceColor.White)
-                        continue;
-
-                    if (newBoard.BlackCheck == false)
-                        foundNonCheckBlack = true;
-                    else if (player == PieceColor.Black)
-                        continue;
-                }
-            }
-
-            if (foundNonCheckWhite == false)
-            {
-                if (board.WhiteCheck)
-                {
-                    whiteMate = true;
-                    return true;
-                }
-                if (!board.BlackMate && player != PieceColor.Black)
-                {
-                    staleMate = true;
-                    return true;
-                }
-            }
-
-            if (foundNonCheckBlack == false)
-            {
-                if (board.BlackCheck)
-                {
-                    blackMate = true;
-                    return true;
-                }
-                if (!board.WhiteMate && player != PieceColor.White)
-                {
-                    staleMate = true;
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }
