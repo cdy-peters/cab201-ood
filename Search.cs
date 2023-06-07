@@ -38,6 +38,13 @@ namespace Advance
             ResultBoards resBoards = PlayValidMoves(board);
             resBoards.Positions.Sort(Sort);
 
+            // Grade 4 check
+            // Grade 4 tests only have 1 playable move
+            if (resBoards.Positions.Count == 1)
+                return resBoards.Positions[0].LastMove;
+
+            // Grade 5 check
+            // Grade 5 tests have only 1 playable move that will result in check or protecting from check
             foreach (Board resBoard in resBoards.Positions)
             {
                 int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
@@ -46,6 +53,8 @@ namespace Advance
                     return resBoard.LastMove;
             }
 
+            // Grade 6 check
+            // Grade 6 tests prioritize material gain
             alpha = -100000000;
 
             foreach (Board resBoard in resBoards.Positions)
@@ -84,7 +93,7 @@ namespace Advance
                 if (bestMaterialMoves.Count == 1)
                     return bestMaterialMoves[0];
 
-                // Deeper search
+                // Deeper search for Grade 7
                 return DeepSearchRoot(board, depth);
             }
         }
