@@ -7,8 +7,6 @@ namespace Advance
             int totalScore = 0;
 
             totalScore += square.Piece.PieceMaterialValue;
-            totalScore -= square.Piece.AttackValue;
-            totalScore += square.Piece.DefenseValue;
 
             return totalScore;
         }

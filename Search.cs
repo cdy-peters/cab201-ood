@@ -235,10 +235,7 @@ namespace Advance
                     if (destPiece != null && destPiece.PieceType != PieceType.Wall)
                     {
                         move.Score += destPiece.PieceMaterialValue;
-                        if (piece.PieceMaterialValue < destPiece.PieceMaterialValue)
-                            move.Score += destPiece.PieceMaterialValue - piece.PieceMaterialValue;
                     }
-                    move.Score += piece.PieceActionValue;
 
                     positions.Add(move);
                 }
