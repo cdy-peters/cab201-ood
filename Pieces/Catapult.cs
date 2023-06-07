@@ -39,6 +39,12 @@ namespace Advance
                     if (destPos == -1)
                         continue;
 
+                    // Check if destination square is in the correct row and column
+                    int destRow = destPos / Board.Size;
+                    int destCol = destPos % Board.Size;
+                    if (destRow != row + offsetY && destCol != col + offsetX)
+                        continue;
+
                     AddCapture(board, square, destPos);
                 }
 
@@ -61,7 +67,7 @@ namespace Advance
                     AddCapture(board, square, destPos);
                 }
         }
-
+        
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
