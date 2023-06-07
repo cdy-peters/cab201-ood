@@ -20,12 +20,14 @@ namespace Advance
 
         private static void WhiteZombie(Board board, Square square, int pos)
         {
+            int row = pos / Board.Size;
+            int col = pos % Board.Size;
             int destPos = pos;
 
-            foreach (int offset in offsets)
+            foreach (int offsetX in offsets)
             {
                 // Move
-                destPos = Moves.GetDestPos(pos, offset, -1);
+                destPos = Moves.GetDestPos(pos, offsetX, -1);
                 if (destPos == -1)
                     continue;
 
@@ -35,8 +37,14 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece == null && pos / Board.Size > 1)
                 {
-                    destPos = Moves.GetDestPos(pos, offset * 2, -2);
+                    destPos = Moves.GetDestPos(pos, offsetX * 2, -2);
                     if (destPos == -1)
+                        continue;
+                
+                    // Check if destination square is in the correct row and column
+                    int destRow = destPos / Board.Size;
+                    int destCol = destPos % Board.Size;
+                    if (destRow != row - 2 || destCol != col + offsetX * 2)
                         continue;
 
                     AddCapture(board, square, destPos);
@@ -46,12 +54,14 @@ namespace Advance
 
         private static void BlackZombie(Board board, Square square, int pos)
         {
+            int row = pos / Board.Size;
+            int col = pos % Board.Size;
             int destPos = pos;
 
-            foreach (int offset in offsets)
+            foreach (int offsetX in offsets)
             {
                 // Move
-                destPos = Moves.GetDestPos(pos, offset, 1);
+                destPos = Moves.GetDestPos(pos, offsetX, 1);
                 if (destPos == -1)
                     continue;
 
@@ -61,8 +71,14 @@ namespace Advance
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece == null && pos / Board.Size < Board.Size - 2)
                 {
-                    destPos = Moves.GetDestPos(pos, offset * 2, 2);
+                    destPos = Moves.GetDestPos(pos, offsetX * 2, 2);
                     if (destPos == -1)
+                        continue;
+
+                    // Check if destination square is in the correct row and column
+                    int destRow = destPos / Board.Size;
+                    int destCol = destPos % Board.Size;
+                    if (destRow != row + 2 || destCol != col + offsetX * 2)
                         continue;
 
                     AddCapture(board, square, destPos);
