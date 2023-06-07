@@ -86,7 +86,7 @@ namespace Advance
                 {
                     MoveDest dest = bestMoves[i].Dest;
                     Square destSquare = board.Squares[dest.Pos];
-                    if (destSquare.Piece != null)
+                    if (destSquare.Piece != null && destSquare.Piece.PieceType != PieceType.Wall)
                         bestMaterialMoves.Add(bestMoves[i]);
                 }
 
