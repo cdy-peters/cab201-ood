@@ -97,17 +97,20 @@ namespace Advance
                     return bestMaterialMoves[0];
                     
                 // Deeper search for Grade 7
-                return DeepSearchRoot(board, depth);
+                if (bestMaterialMoves.Count == 0)
+                    return DeepSearchRoot(board, bestMoves, depth);
+                else
+                    return DeepSearchRoot(board, bestMaterialMoves, depth);
             }
         }
 
-        internal static MovingPiece DeepSearchRoot(Board board, int depth)
+        internal static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             MovingPiece bestMove = new MovingPiece();
-            ResultBoards resBoards = PlayValidMoves(board);
+            ResultBoards resBoards = PlayBestMoves(board, bestMoves);
             resBoards.Positions.Sort(Sort);
 
             foreach (Board resBoard in resBoards.Positions)
@@ -172,6 +175,32 @@ namespace Advance
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     succ.Positions.Add(newBoard);
                 }
+            }
+
+            return succ;
+        }
+
+        private static ResultBoards PlayBestMoves(Board board, List<MovingPiece> bestMoves)
+        {
+            ResultBoards succ = new ResultBoards
+            {
+                Positions = new List<Board>(30)
+            };
+
+            foreach (MovingPiece bestMove in bestMoves)
+            {
+                Board newBoard = board.CopyBoard();
+                Board.MovePiece(newBoard, bestMove.SrcPos, bestMove.Dest);
+                Moves.GetValidMoves(newBoard);
+
+                if (newBoard.WhiteCheck && board.Player == PieceColor.White)
+                    continue;
+                if (newBoard.BlackCheck && board.Player == PieceColor.Black)
+                    continue;
+
+                Evaluation.BoardEvaluation(newBoard);
+                newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
+                succ.Positions.Add(newBoard);
             }
 
             return succ;
