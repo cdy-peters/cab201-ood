@@ -87,12 +87,15 @@ namespace Advance
                     MoveDest dest = bestMoves[i].Dest;
                     Square destSquare = board.Squares[dest.Pos];
                     if (destSquare.Piece != null && destSquare.Piece.PieceType != PieceType.Wall)
-                        bestMaterialMoves.Add(bestMoves[i]);
+                    {
+                        if (destSquare.Piece.PieceType != PieceType.Jester && destSquare.Piece.PieceColor != board.Player)
+                            bestMaterialMoves.Add(bestMoves[i]);
+                    }
                 }
 
                 if (bestMaterialMoves.Count == 1)
                     return bestMaterialMoves[0];
-
+                    
                 // Deeper search for Grade 7
                 return DeepSearchRoot(board, depth);
             }
