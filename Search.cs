@@ -11,7 +11,7 @@ namespace Advance
 
         internal struct ResultBoards
         {
-            internal List<Board> Positions;
+            internal List<Board> Boards;
         }
 
         private static int Sort(Position s2, Position s1)
@@ -36,16 +36,16 @@ namespace Advance
 
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards resBoards = PlayValidMoves(board);
-            resBoards.Positions.Sort(Sort);
+            resBoards.Boards.Sort(Sort);
 
             // Grade 4 check
             // Grade 4 tests only have 1 playable move
-            if (resBoards.Positions.Count == 1)
-                return resBoards.Positions[0].LastMove;
+            if (resBoards.Boards.Count == 1)
+                return resBoards.Boards[0].LastMove;
 
             // Grade 5 check
             // Grade 5 tests have only 1 playable move that will result in check or protecting from check
-            foreach (Board resBoard in resBoards.Positions)
+            foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
 
@@ -57,7 +57,7 @@ namespace Advance
             // Grade 6 tests prioritize material gain
             alpha = -100000000;
 
-            foreach (Board resBoard in resBoards.Positions)
+            foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
 
@@ -111,9 +111,9 @@ namespace Advance
 
             MovingPiece bestMove = new MovingPiece();
             ResultBoards resBoards = PlayBestMoves(board, bestMoves);
-            resBoards.Positions.Sort(Sort);
+            resBoards.Boards.Sort(Sort);
 
-            foreach (Board resBoard in resBoards.Positions)
+            foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
 
@@ -124,7 +124,7 @@ namespace Advance
             alpha = -100000000;
             depth--;
 
-            foreach (Board resBoard in resBoards.Positions)
+            foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
 
@@ -145,9 +145,9 @@ namespace Advance
 
         private static ResultBoards PlayValidMoves(Board board)
         {
-            ResultBoards succ = new ResultBoards
+            ResultBoards resBoards = new ResultBoards
             {
-                Positions = new List<Board>(30)
+                Boards = new List<Board>(30)
             };
 
             for (int i = 0; i < Board.Size * Board.Size; i++)
@@ -173,18 +173,18 @@ namespace Advance
 
                     Evaluation.BoardEvaluation(newBoard);
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
-                    succ.Positions.Add(newBoard);
+                    resBoards.Boards.Add(newBoard);
                 }
             }
 
-            return succ;
+            return resBoards;
         }
 
         private static ResultBoards PlayBestMoves(Board board, List<MovingPiece> bestMoves)
         {
-            ResultBoards succ = new ResultBoards
+            ResultBoards resBoards = new ResultBoards
             {
-                Positions = new List<Board>(30)
+                Boards = new List<Board>(30)
             };
 
             foreach (MovingPiece bestMove in bestMoves)
@@ -200,10 +200,10 @@ namespace Advance
 
                 Evaluation.BoardEvaluation(newBoard);
                 newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
-                succ.Positions.Add(newBoard);
+                resBoards.Boards.Add(newBoard);
             }
 
-            return succ;
+            return resBoards;
         }
 
         private static int AlphaBeta(Board board, int depth, int alpha, int beta)
