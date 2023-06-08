@@ -17,7 +17,7 @@ namespace Advance
         internal bool WhiteCheck = false;
         internal bool BlackCheck = false;
 
-        internal Board()
+        private Board()
         {
             Squares = new Square[Size * Size];
             for (int i = 0; i < Size * Size; i++)
@@ -67,43 +67,11 @@ namespace Advance
             }
         }
 
-        internal Board(Board board)
+        private Board(Square[] squares) : this()
         {
-            Squares = new Square[Size * Size];
-            for (int i = 0; i < Size * Size; i++)
-            {
-                ThreatenedByWhite[i] = board.ThreatenedByWhite[i];
-                ThreatenedByBlack[i] = board.ThreatenedByBlack[i];
-
-                if (board.Squares[i].Piece == null || board.Squares[i].Piece.PieceType == PieceType.Wall)
-                    Squares[i] = new Square(board.Squares[i].Piece);
-            }
-
-            Player = board.Player;
-            Score = board.Score;
-            LastMove = board.LastMove;
-
-            BlackCheck = board.BlackCheck;
-            WhiteCheck = board.WhiteCheck;
-        }
-
-        private Board(Square[] squares)
-        {
-            Squares = new Square[Size * Size];
             for (int i = 0; i < Size * Size; i++)
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
-
-            ThreatenedByWhite = new bool[Size * Size];
-            ThreatenedByBlack = new bool[Size * Size];
-        }
-
-        internal Board(int score) : this()
-        {
-            Score = score;
-
-            ThreatenedByWhite = new bool[Size * Size];
-            ThreatenedByBlack = new bool[Size * Size];
         }
 
         internal Board CopyBoard()
