@@ -33,12 +33,16 @@ namespace Advance
             }
         }
 
-        private static int DeepPieceEvaluation(Square square, int pos)
+        internal static int DeepPieceEvaluation(Square square, int pos)
         {
             int totalScore = 0;
 
             totalScore += square.Piece.PieceMaterialValue; // Add piece value
-            totalScore += square.Piece.ValidMoves.Count; // Add piece mobility
+            totalScore += square.Piece.ValidMoves.Count; // Encourage piece mobility
+            totalScore += square.Piece.DefenseValue; // Encourage defending pieces
+
+            if (square.Piece.DefenseValue < square.Piece.AttackValue)
+                totalScore -= ((square.Piece.AttackValue - square.Piece.DefenseValue) * 1000);
 
             return totalScore;
         }
