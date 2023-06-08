@@ -16,9 +16,6 @@ namespace Advance
 
         internal bool WhiteCheck = false;
         internal bool BlackCheck = false;
-        internal bool WhiteMate = false;
-        internal bool BlackMate = false;
-        internal bool StaleMate = false;
 
         internal Board()
         {
@@ -88,9 +85,6 @@ namespace Advance
 
             BlackCheck = board.BlackCheck;
             WhiteCheck = board.WhiteCheck;
-            BlackMate = board.BlackMate;
-            WhiteMate = board.WhiteMate;
-            StaleMate = board.StaleMate;
         }
 
         private Board(Square[] squares)
