@@ -32,41 +32,5 @@ namespace Advance
                     board.Score -= PieceEvaluation(square, i);
             }
         }
-
-        internal static int DeepPieceEvaluation(Square square, int pos)
-        {
-            int totalScore = 0;
-
-            totalScore += square.Piece.PieceMaterialValue; // Add piece value
-            totalScore += square.Piece.ValidMoves.Count; // Encourage piece mobility
-            totalScore += square.Piece.DefenseValue; // Encourage defending pieces
-
-            if (square.Piece.DefenseValue < square.Piece.AttackValue)
-                totalScore -= ((square.Piece.AttackValue - square.Piece.DefenseValue) * 1000);
-
-            return totalScore;
-        }
-
-        internal static void DeepBoardEvaluation(Board board)
-        {
-            board.Score = 0;
-
-            if (board.WhiteCheck)
-                board.Score -= 100;
-            if (board.BlackCheck)
-                board.Score += 100;
-
-            for (int i = 0; i < Board.Size * Board.Size; i++)
-            {
-                Square square = board.Squares[i];
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
-                    continue;
-
-                if (square.Piece.PieceColor == PieceColor.White)
-                    board.Score += DeepPieceEvaluation(square, i);
-                else
-                    board.Score -= DeepPieceEvaluation(square, i);
-            }
-        }
     }
 }
