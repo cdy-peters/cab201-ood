@@ -43,16 +43,6 @@ namespace Advance
             if (resBoards.Boards.Count == 1)
                 return resBoards.Boards[0].LastMove;
 
-            // Grade 5 check
-            // Grade 5 tests have only 1 playable move that will result in check or protecting from check
-            foreach (Board resBoard in resBoards.Boards)
-            {
-                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
-
-                if (value >= 10000)
-                    return resBoard.LastMove;
-            }
-
             // Grade 6 check
             // Grade 6 tests prioritize material gain
             alpha = -100000000;
@@ -112,14 +102,6 @@ namespace Advance
             MovingPiece bestMove = new MovingPiece();
             ResultBoards resBoards = PlayBestMoves(board, bestMoves);
             resBoards.Boards.Sort(Sort);
-
-            foreach (Board resBoard in resBoards.Boards)
-            {
-                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
-
-                if (value >= 10000)
-                    return resBoard.LastMove;
-            }
 
             alpha = -100000000;
             depth--;
