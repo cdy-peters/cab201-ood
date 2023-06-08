@@ -198,7 +198,7 @@ namespace Advance
                 if (newBoard.BlackCheck && board.Player == PieceColor.Black)
                     continue;
 
-                Evaluation.BoardEvaluation(newBoard);
+                Evaluation.DeepBoardEvaluation(newBoard);
                 newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                 resBoards.Boards.Add(newBoard);
             }
