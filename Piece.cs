@@ -20,15 +20,39 @@ namespace Advance
         General
     }
 
-    public struct ValidMove
+    public struct MoveDest
     {
-        internal int DestPos;
+        internal int Pos;
         internal bool IsWall;
 
-        internal ValidMove(int destPos, bool isWall = false)
+        internal MoveDest(int destPos, bool isWall = false)
         {
-            DestPos = destPos;
+            Pos = destPos;
             IsWall = isWall;
+        }
+    }
+
+    public struct MovingPiece
+    {
+        public PieceColor PieceColor;
+        public PieceType PieceType;
+        public int SrcPos;
+        public MoveDest Dest;
+
+        public MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
+        {
+            PieceColor = pieceColor;
+            PieceType = pieceType;
+            SrcPos = srcPos;
+            Dest = dest;
+        }
+
+        public MovingPiece(MovingPiece MovingPiece)
+        {
+            PieceColor = MovingPiece.PieceColor;
+            PieceType = MovingPiece.PieceType;
+            SrcPos = MovingPiece.SrcPos;
+            Dest = MovingPiece.Dest;
         }
     }
 
@@ -36,11 +60,11 @@ namespace Advance
     {
         internal PieceColor PieceColor;
         internal PieceType PieceType;
-        internal int PieceValue;
+        internal int PieceMaterialValue;
         internal int PieceActionValue;
         internal int AttackValue;
         internal int DefenseValue;
-        internal List<ValidMove> ValidMoves;
+        internal List<MoveDest> ValidMoves;
 
         internal static bool IsFriendlyPiece(Square square, Square destSquare)
         {
@@ -68,7 +92,7 @@ namespace Advance
         {
             PieceColor = piece.PieceColor;
             PieceType = piece.PieceType;
-            PieceValue = piece.PieceValue;
+            PieceMaterialValue = piece.PieceMaterialValue;
             PieceActionValue = piece.PieceActionValue;
             ValidMoves = piece.ValidMoves;
         }
@@ -77,7 +101,7 @@ namespace Advance
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
-            PieceValue = pieceType switch
+            PieceMaterialValue = pieceType switch
             {
                 PieceType.Wall => 0,
                 PieceType.Zombie => 100,
@@ -103,7 +127,7 @@ namespace Advance
                 PieceType.General => 1,
                 _ => 0
             };
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveDest>();
         }
 
         public new string ToString()

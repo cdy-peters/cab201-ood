@@ -6,11 +6,7 @@ namespace Advance
         {
             int totalScore = 0;
 
-            totalScore += square.Piece.PieceValue;
-            totalScore -= square.Piece.AttackValue;
-            totalScore += square.Piece.DefenseValue;
-
-            // ? Consider if a pawn is in a poor position
+            totalScore += square.Piece.PieceMaterialValue;
 
             return totalScore;
         }
@@ -20,9 +16,9 @@ namespace Advance
             board.Score = 0;
 
             if (board.WhiteCheck)
-                board.Score += 1000;
+                board.Score -= 100;
             if (board.BlackCheck)
-                board.Score -= 1000;
+                board.Score += 100;
 
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {

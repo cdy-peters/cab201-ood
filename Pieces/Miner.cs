@@ -73,11 +73,9 @@ namespace Advance
             Square destSquare = board.Squares[destPos];
 
             // Check if destination piece is protected by a sentinel
-            if (Moves.IsProtected(board, square, destPos))
-                return;
-
-            // Set destination square as threatened
-            Moves.SetThreat(board, square, destPos);
+            Piece? sentinel = Moves.IsProtected(board, square, destPos);
+            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
+                Moves.SetThreat(board, square, destPos);
 
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
@@ -88,17 +86,17 @@ namespace Advance
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
                 return;
             }
 
-            // Capture
-            if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+            // Capture only if not protected by a sentinel
+            if (sentinel == null && destSquare.Piece.PieceColor != square.Piece.PieceColor)
             {
                 // If destination piece is general, set check
                 Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new ValidMove(destPos, false));
+                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
             }
         }
     }

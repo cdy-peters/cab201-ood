@@ -11,7 +11,7 @@ namespace Advance
 
         internal struct ResultBoards
         {
-            internal List<Board> Positions;
+            internal List<Board> Boards;
         }
 
         private static int Sort(Position s2, Position s1)
@@ -24,58 +24,130 @@ namespace Advance
             return (s1.Score).CompareTo(s2.Score);
         }
 
-        private static int SideToMoveScore(int score, PieceColor color)
+        private static int SideToMove(int score, PieceColor color)
         {
-            if (color == PieceColor.Black)
-                return -score;
-            return score;
+            return color == PieceColor.Black ? -score : score;
         }
 
-        internal static MoveContent IterativeSearch(Board board, int depth)
+        internal static MovingPiece ShallowSearchRoot(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
-            MoveContent bestMove = new MoveContent();
+            List<MovingPiece> bestMoves = new List<MovingPiece>(30);
+            ResultBoards resBoards = PlayValidMoves(board);
+            resBoards.Boards.Sort(Sort);
 
-            ResultBoards succ = GetSortValidMoves(board);
+            // Grade 4 check
+            // Grade 4 tests only have 1 playable move
+            if (resBoards.Boards.Count == 1)
+                return resBoards.Boards[0].LastMove;
 
-            foreach (Board pos in succ.Positions)
+            // Grade 5 check
+            // Grade 5 tests have only 1 playable move that will result in check or protecting from check
+            foreach (Board resBoard in resBoards.Boards)
             {
-                int value = -AlphaBeta(pos, 1, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
             }
 
+            // Grade 6 check
+            // Grade 6 tests prioritize material gain
             alpha = -100000000;
-            succ.Positions.Sort(Sort);
-            depth--;
 
-            foreach (Board pos in succ.Positions)
+            foreach (Board resBoard in resBoards.Boards)
             {
-                int value = -AlphaBeta(pos, depth, -beta, -alpha);
+                int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
 
                 if (value >= 10000)
-                    return pos.LastMove;
+                    return resBoard.LastMove;
 
-                pos.Score = value;
+                resBoard.Score = value;
 
                 if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
-                    bestMove = pos.LastMove;
+                    bestMoves.Clear();
+                    bestMoves.Add(resBoard.LastMove);
+                }
+                else if (value == alpha)
+                    bestMoves.Add(resBoard.LastMove);
+            }
+
+            if (bestMoves.Count == 1)
+                return bestMoves[0];
+            else
+            {
+                List<MovingPiece> bestMaterialMoves = new List<MovingPiece>(30);
+
+                for (int i = 0; i < bestMoves.Count; i++)
+                {
+                    MoveDest dest = bestMoves[i].Dest;
+                    Square destSquare = board.Squares[dest.Pos];
+                    if (destSquare.Piece != null && destSquare.Piece.PieceType != PieceType.Wall)
+                    {
+                        if (destSquare.Piece.PieceType != PieceType.Jester && destSquare.Piece.PieceColor != board.Player)
+                            bestMaterialMoves.Add(bestMoves[i]);
+                    }
+                }
+
+                if (bestMaterialMoves.Count == 1)
+                    return bestMaterialMoves[0];
+                    
+                // Deeper search for Grade 7
+                if (bestMaterialMoves.Count == 0)
+                    return DeepSearchRoot(board, bestMoves, depth);
+                else
+                    return DeepSearchRoot(board, bestMaterialMoves, depth);
+            }
+        }
+
+        internal static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
+        {
+            int alpha = -100000000;
+            const int beta = 100000000;
+
+            MovingPiece bestMove = new MovingPiece();
+            ResultBoards resBoards = PlayBestMoves(board, bestMoves);
+            resBoards.Boards.Sort(Sort);
+
+            foreach (Board resBoard in resBoards.Boards)
+            {
+                int value = -AlphaBeta(resBoard, 1, -beta, -alpha);
+
+                if (value >= 10000)
+                    return resBoard.LastMove;
+            }
+
+            alpha = -100000000;
+            depth--;
+
+            foreach (Board resBoard in resBoards.Boards)
+            {
+                int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
+
+                if (value >= 10000)
+                    return resBoard.LastMove;
+
+                resBoard.Score = value;
+
+                if (value > alpha || alpha == -100000000)
+                {
+                    alpha = value;
+                    bestMove = resBoard.LastMove;
                 }
             }
 
             return bestMove;
         }
 
-        private static ResultBoards GetSortValidMoves(Board board)
+        private static ResultBoards PlayValidMoves(Board board)
         {
-            ResultBoards succ = new ResultBoards
+            ResultBoards resBoards = new ResultBoards
             {
-                Positions = new List<Board>(30)
+                Boards = new List<Board>(30)
             };
 
             for (int i = 0; i < Board.Size * Board.Size; i++)
@@ -88,10 +160,10 @@ namespace Advance
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
-                foreach (ValidMove validMove in square.Piece.ValidMoves)
+                foreach (MoveDest moveDest in square.Piece.ValidMoves)
                 {
                     Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, validMove);
+                    Board.MovePiece(newBoard, i, moveDest);
                     Moves.GetValidMoves(newBoard);
 
                     if (newBoard.WhiteCheck && board.Player == PieceColor.White)
@@ -100,13 +172,38 @@ namespace Advance
                         continue;
 
                     Evaluation.BoardEvaluation(newBoard);
-                    newBoard.Score = SideToMoveScore(newBoard.Score, newBoard.Player);
-                    succ.Positions.Add(newBoard);
+                    newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
+                    resBoards.Boards.Add(newBoard);
                 }
             }
 
-            succ.Positions.Sort(Sort);
-            return succ;
+            return resBoards;
+        }
+
+        private static ResultBoards PlayBestMoves(Board board, List<MovingPiece> bestMoves)
+        {
+            ResultBoards resBoards = new ResultBoards
+            {
+                Boards = new List<Board>(30)
+            };
+
+            foreach (MovingPiece bestMove in bestMoves)
+            {
+                Board newBoard = board.CopyBoard();
+                Board.MovePiece(newBoard, bestMove.SrcPos, bestMove.Dest);
+                Moves.GetValidMoves(newBoard);
+
+                if (newBoard.WhiteCheck && board.Player == PieceColor.White)
+                    continue;
+                if (newBoard.BlackCheck && board.Player == PieceColor.Black)
+                    continue;
+
+                Evaluation.BoardEvaluation(newBoard);
+                newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
+                resBoards.Boards.Add(newBoard);
+            }
+
+            return resBoards;
         }
 
         private static int AlphaBeta(Board board, int depth, int alpha, int beta)
@@ -117,38 +214,16 @@ namespace Advance
                     return AlphaBeta(board, 1, alpha, beta);
 
                 Evaluation.BoardEvaluation(board);
-                return SideToMoveScore(board.Score, board.Player);
+                return SideToMove(board.Score, board.Player);
             }
 
             List<Position> positions = EvaluateMoves(board);
-
-            if (board.WhiteCheck || board.BlackCheck || positions.Count == 0)
-            {
-                if (SearchForMate(board.Player, board, ref board.BlackMate, ref board.WhiteMate, ref board.StaleMate))
-                {
-                    if (board.WhiteMate)
-                    {
-                        if (board.Player == PieceColor.White)
-                            return -10000 - depth;
-                        return 10000 + depth;
-                    }
-                    if (board.BlackMate)
-                    {
-                        if (board.Player == PieceColor.Black)
-                            return -10000 - depth;
-                        return 10000 + depth;
-                    }
-
-                    return 0;
-                }
-            }
-
             positions.Sort(Sort);
 
             foreach (Position move in positions)
             {
                 Board newBoard = board.CopyBoard();
-                Board.MovePiece(newBoard, move.SrcPos, new ValidMove(move.DestPos));
+                Board.MovePiece(newBoard, move.SrcPos, new MoveDest(move.DestPos));
                 Moves.GetValidMoves(newBoard);
 
                 if (newBoard.WhiteCheck && board.Player == PieceColor.White)
@@ -181,94 +256,24 @@ namespace Advance
                 if (piece.PieceColor != board.Player)
                     continue;
 
-                foreach (ValidMove validMove in piece.ValidMoves)
+                foreach (MoveDest moveDest in piece.ValidMoves)
                 {
                     Position move = new Position();
                     move.SrcPos = i;
-                    move.DestPos = validMove.DestPos;
+                    move.DestPos = moveDest.Pos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
-                    // if (destPiece.PieceType == PieceType.Wall)
-                    //     continue;
 
-                    // ? Should walls go beyond this? what about miners moving to a wall?
-                    if (destPiece != null)
+                    if (destPiece != null && destPiece.PieceType != PieceType.Wall)
                     {
-                        move.Score += destPiece.PieceValue;
-                        if (piece.PieceValue < destPiece.PieceValue)
-                            move.Score += destPiece.PieceValue - piece.PieceValue;
+                        move.Score += destPiece.PieceMaterialValue;
                     }
-                    move.Score += piece.PieceActionValue;
 
                     positions.Add(move);
                 }
             }
 
             return positions;
-        }
-
-        internal static bool SearchForMate(PieceColor player, Board board, ref bool blackMate, ref bool whiteMate, ref bool staleMate)
-        {
-            bool foundNonCheckWhite = false;
-            bool foundNonCheckBlack = false;
-
-            for (int i = 0; i < Board.Size * Board.Size; i++)
-            {
-                Square square = board.Squares[i];
-
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
-                    continue;
-
-                if (square.Piece.PieceColor != player)
-                    continue;
-
-                foreach (ValidMove validMove in square.Piece.ValidMoves)
-                {
-                    Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, validMove);
-                    Moves.GetValidMoves(newBoard);
-
-                    if (newBoard.WhiteCheck == false)
-                        foundNonCheckWhite = true;
-                    else if (player == PieceColor.White)
-                        continue;
-
-                    if (newBoard.BlackCheck == false)
-                        foundNonCheckBlack = true;
-                    else if (player == PieceColor.Black)
-                        continue;
-                }
-            }
-
-            if (foundNonCheckWhite == false)
-            {
-                if (board.WhiteCheck)
-                {
-                    whiteMate = true;
-                    return true;
-                }
-                if (!board.BlackMate && player != PieceColor.Black)
-                {
-                    staleMate = true;
-                    return true;
-                }
-            }
-
-            if (foundNonCheckBlack == false)
-            {
-                if (board.BlackCheck)
-                {
-                    blackMate = true;
-                    return true;
-                }
-                if (!board.WhiteMate && player != PieceColor.White)
-                {
-                    staleMate = true;
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

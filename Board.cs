@@ -8,7 +8,7 @@ namespace Advance
 
         internal PieceColor Player;
         internal int Score = 0;
-        internal MoveContent LastMove;
+        internal MovingPiece LastMove;
         internal Square[] Squares;
 
         internal bool[] ThreatenedByWhite = new bool[Size * Size];
@@ -27,7 +27,7 @@ namespace Advance
             for (int i = 0; i < Size * Size; i++)
                 Squares[i] = new Square();
 
-            LastMove = new MoveContent();
+            LastMove = new MovingPiece();
 
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
@@ -93,7 +93,7 @@ namespace Advance
 
             Player = board.Player;
             Score = board.Score;
-            LastMove = new MoveContent(board.LastMove);
+            LastMove = board.LastMove;
 
             BlackCheck = board.BlackCheck;
             WhiteCheck = board.WhiteCheck;
@@ -109,8 +109,6 @@ namespace Advance
             for (int i = 0; i < Size * Size; i++)
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
-
-            LastMove = new MoveContent();
 
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
@@ -136,34 +134,29 @@ namespace Advance
             return newBoard;
         }
 
-        internal static void MovePiece(Board board, int srcPos, ValidMove validMove)
+        internal static void MovePiece(Board board, int srcPos, MoveDest moveDest)
         {
-            int destPos = validMove.DestPos;
-
-            // TODO: Refactor this method
+            int destPos = moveDest.Pos;
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
-            board.LastMove = new MoveContent();
-            board.LastMove.MovingPiece = new PieceMoving(srcPiece.PieceColor, srcPiece.PieceType, srcPos, validMove);
+            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, moveDest);
 
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
-            // Builder move
-            if (srcPiece.PieceType == PieceType.Builder)
+            // Builder move (wall)
+            if (srcPiece.PieceType == PieceType.Builder && moveDest.IsWall)
             {
-                if (validMove.IsWall)
-                {
-                    board.Squares[destPos].Piece = new Piece(PieceType.Wall);
-                    return;
-                }
+                board.Squares[destPos].Piece = new Piece(PieceType.Wall);
+                return;
             }
 
             // Catapult move
             if (srcPiece.PieceType == PieceType.Catapult)
             {
-                // check if destpos is a square away
-                if (Math.Abs(srcPos - destPos) == 1 || Math.Abs(srcPos - destPos) == Size)
+                // Check for move or shot
+                int diff = Math.Abs(srcPos - destPos);
+                if (diff == 1 || diff == Size)
                 {
                     board.Squares[srcPos].Piece = null!;
                     board.Squares[destPos].Piece = srcPiece;
@@ -171,13 +164,6 @@ namespace Advance
                 }
 
                 board.Squares[destPos].Piece = null!;
-                return;
-            }
-
-            if (srcPiece.PieceType != PieceType.Jester || destPiece == null)
-            {
-                board.Squares[srcPos].Piece = null!;
-                board.Squares[destPos].Piece = srcPiece;
                 return;
             }
 
@@ -189,13 +175,18 @@ namespace Advance
                     // Swap pieces
                     board.Squares[srcPos].Piece = destPiece;
                     board.Squares[destPos].Piece = srcPiece;
+                    return;
                 }
                 else if (destPiece.PieceColor != PieceColor.None)
                 {
                     // Change color of destination piece
                     board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
+                    return;
                 }
             }
+
+            board.Squares[srcPos].Piece = null!;
+            board.Squares[destPos].Piece = srcPiece;
         }
 
         public override string ToString()

@@ -16,7 +16,7 @@ namespace Advance
                 if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
 
-                square.Piece.ValidMoves = new List<ValidMove>();
+                square.Piece.ValidMoves = new List<MoveDest>();
 
                 switch (square.Piece.PieceType)
                 {
@@ -91,21 +91,17 @@ namespace Advance
         {
             if (square.Piece.PieceType == PieceType.Jester)
                 return;
-                
+
             if (square.Piece.PieceColor == PieceColor.White)
                 board.ThreatenedByWhite[destPos] = true;
             else
                 board.ThreatenedByBlack[destPos] = true;
         }
 
-        internal static bool IsProtected(Board board, Square square, int destPos)
+        internal static Piece? IsProtected(Board board, Square square, int destPos)
         {
             if (square.Piece.PieceType == PieceType.Jester)
-                return false;
-            
-            Square destSquare = board.Squares[destPos];
-            if (destSquare.Piece == null || destSquare.Piece.PieceType == PieceType.Wall)
-                return false;
+                return null;
 
             int[] offsets = { -1, 0, 1 };
 
@@ -123,11 +119,11 @@ namespace Advance
                     if (tempSquare.Piece == null)
                         continue;
 
-                    if (tempSquare.Piece.PieceColor != square.Piece.PieceColor && tempSquare.Piece.PieceType == PieceType.Sentinel)
-                        return true;
+                    if (tempSquare.Piece.PieceType == PieceType.Sentinel && tempSquare.Piece.PieceColor != square.Piece.PieceColor)
+                        return tempSquare.Piece;
                 }
 
-            return false;
+            return null;
         }
 
         internal static void IsGeneralInCheck(Board board, int destPos)
