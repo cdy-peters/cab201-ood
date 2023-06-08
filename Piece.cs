@@ -104,13 +104,13 @@ namespace Advance
             PieceMaterialValue = pieceType switch
             {
                 PieceType.Wall => 0,
-                PieceType.Zombie => 100,
-                PieceType.Builder => 200,
-                PieceType.Jester => 300,
-                PieceType.Miner => 400,
-                PieceType.Sentinel => 500,
-                PieceType.Catapult => 600,
-                PieceType.Dragon => 700,
+                PieceType.Zombie => 1,
+                PieceType.Builder => 2,
+                PieceType.Jester => 3,
+                PieceType.Miner => 4,
+                PieceType.Sentinel => 5,
+                PieceType.Catapult => 6,
+                PieceType.Dragon => 7,
                 PieceType.General => 10000,
                 _ => 0
             };
