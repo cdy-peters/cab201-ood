@@ -1,11 +1,11 @@
 namespace Advance
 {
-    public class Game
+    internal class Game
     {
         internal static PieceColor PlayerColor;
         internal Board Board;
 
-        public Game(string player, string srcFile, string destFile)
+        internal Game(string player, string srcFile, string destFile)
         {
             PlayerColor = player == "white" ? PieceColor.White : PieceColor.Black;
             string boardStr = FileIO.LoadFile(srcFile);

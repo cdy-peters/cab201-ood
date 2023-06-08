@@ -9,7 +9,7 @@ namespace Advance
             internal int Score;
         }
 
-        internal struct ResultBoards
+        private struct ResultBoards
         {
             internal List<Board> Boards;
         }
@@ -91,7 +91,7 @@ namespace Advance
             }
         }
 
-        internal static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
+        private static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
