@@ -23,9 +23,10 @@ namespace Advance
         internal Board()
         {
             Squares = new Square[Size * Size];
-
             for (int i = 0; i < Size * Size; i++)
                 Squares[i] = new Square();
+
+            Player = Game.PlayerColor;
 
             LastMove = new MovingPiece();
 
@@ -35,8 +36,6 @@ namespace Advance
 
         internal Board(string boardStr) : this()
         {
-            Player = Game.PlayerColor;
-
             for (int i = 0; i < Size * Size; i++)
             {
                 char c = boardStr[i];
@@ -53,10 +52,7 @@ namespace Advance
                 else
                 {
                     pieceColor = Char.IsUpper(c) ? PieceColor.White : PieceColor.Black;
-
-                    c = Char.ToLower(c);
-
-                    pieceType = c switch
+                    pieceType = Char.ToLower(c) switch
                     {
                         'z' => PieceType.Zombie,
                         'b' => PieceType.Builder,
@@ -66,7 +62,7 @@ namespace Advance
                         'c' => PieceType.Catapult,
                         'd' => PieceType.Dragon,
                         'g' => PieceType.General,
-                        _ => throw new ArgumentException("An invalid character was found in the board string.")
+                        _ => throw new ArgumentException("An invalid piece was found in the board string.")
                     };
                 }
 
@@ -77,18 +73,13 @@ namespace Advance
         internal Board(Board board)
         {
             Squares = new Square[Size * Size];
-
-            for (int i = 0; i < Size * Size; i++)
-                if (board.Squares[i].Piece == null || board.Squares[i].Piece.PieceType == PieceType.Wall)
-                    Squares[i] = new Square(board.Squares[i].Piece);
-
-            ThreatenedByWhite = new bool[Size * Size];
-            ThreatenedByBlack = new bool[Size * Size];
-
             for (int i = 0; i < Size * Size; i++)
             {
                 ThreatenedByWhite[i] = board.ThreatenedByWhite[i];
                 ThreatenedByBlack[i] = board.ThreatenedByBlack[i];
+
+                if (board.Squares[i].Piece == null || board.Squares[i].Piece.PieceType == PieceType.Wall)
+                    Squares[i] = new Square(board.Squares[i].Piece);
             }
 
             Player = board.Player;
@@ -105,7 +96,6 @@ namespace Advance
         private Board(Square[] squares)
         {
             Squares = new Square[Size * Size];
-
             for (int i = 0; i < Size * Size; i++)
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
@@ -185,6 +175,7 @@ namespace Advance
                 }
             }
 
+            // Generic move
             board.Squares[srcPos].Piece = null!;
             board.Squares[destPos].Piece = srcPiece;
         }

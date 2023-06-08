@@ -70,10 +70,13 @@ namespace Advance
         {
             if (destSquare.Piece == null)
                 return false;
+
             if (destSquare.Piece.PieceColor == PieceColor.None)
                 return false;
+
             if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
                 return true;
+
             return false;
         }
 
@@ -81,10 +84,13 @@ namespace Advance
         {
             if (destSquare.Piece == null)
                 return false;
+
             if (destSquare.Piece.PieceColor == PieceColor.None)
                 return false;
+
             if (square.Piece.PieceColor != destSquare.Piece.PieceColor)
                 return true;
+                
             return false;
         }
 

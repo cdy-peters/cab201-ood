@@ -6,10 +6,10 @@ namespace Advance
         {
             if (pos < 0 || pos >= Board.Size * Board.Size)
                 return;
+
             Square square = board.Squares[pos];
 
             int[] offsets = { -1, 0, 1 };
-
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {

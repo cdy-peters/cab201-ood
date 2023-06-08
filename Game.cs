@@ -2,8 +2,8 @@ namespace Advance
 {
     public class Game
     {
-        internal static PieceColor PlayerColor { get; private set; }
-        internal Board? Board { get; }
+        internal static PieceColor PlayerColor;
+        internal Board Board;
 
         public Game(string player, string srcFile, string destFile)
         {
@@ -11,7 +11,6 @@ namespace Advance
             string boardStr = FileIO.LoadFile(srcFile);
 
             Board = new Board(boardStr);
-
             Moves.GetValidMoves(Board);
 
             MovingPiece bestMove = Search.ShallowSearchRoot(Board, 3);

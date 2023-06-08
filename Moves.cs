@@ -4,9 +4,6 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board)
         {
-            board.WhiteCheck = false;
-            board.BlackCheck = false;
-
             int whiteGeneralPos = -1;
             int blackGeneralPos = -1;
 
@@ -47,6 +44,8 @@ namespace Advance
                         else
                             blackGeneralPos = i;
                         break;
+                    default:
+                        break;
                 }
             }
 
@@ -60,6 +59,7 @@ namespace Advance
 
             if (IsOutOfBounds(destPos, offsetX, offsetY))
                 return -1;
+
             return destPos;
         }
 
@@ -104,8 +104,8 @@ namespace Advance
                 return null;
 
             int[] offsets = { -1, 0, 1 };
-
             foreach (int offsetY in offsets)
+            {
                 foreach (int offsetX in offsets)
                 {
                     if (Math.Abs(offsetX) == Math.Abs(offsetY))
@@ -122,6 +122,7 @@ namespace Advance
                     if (tempSquare.Piece.PieceType == PieceType.Sentinel && tempSquare.Piece.PieceColor != square.Piece.PieceColor)
                         return tempSquare.Piece;
                 }
+            }
 
             return null;
         }

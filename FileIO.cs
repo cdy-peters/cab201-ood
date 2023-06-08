@@ -7,8 +7,7 @@ namespace Advance
             if (args.Length == 0)
                 throw new System.ArgumentException("No arguments provided");
 
-            args[0] = args[0].ToLower();
-            switch (args[0])
+            switch (args[0].ToLower())
             {
                 case "white":
                 case "black":

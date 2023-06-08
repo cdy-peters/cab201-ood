@@ -4,10 +4,10 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board, Square square, int pos)
         {
-            int[] offsets = { -2, -1, 1, 2 };
             int row = pos / Board.Size;
             int col = pos % Board.Size;
 
+            int[] offsets = { -2, -1, 1, 2 };
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {

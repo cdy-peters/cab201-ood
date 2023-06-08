@@ -50,7 +50,6 @@ namespace Advance
             foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
-
                 if (value >= 10000)
                     return resBoard.LastMove;
 
@@ -77,10 +76,8 @@ namespace Advance
                     MoveDest dest = bestMoves[i].Dest;
                     Square destSquare = board.Squares[dest.Pos];
                     if (destSquare.Piece != null && destSquare.Piece.PieceType != PieceType.Wall)
-                    {
                         if (destSquare.Piece.PieceType != PieceType.Jester && destSquare.Piece.PieceColor != board.Player)
                             bestMaterialMoves.Add(bestMoves[i]);
-                    }
                 }
 
                 if (bestMaterialMoves.Count == 1)
@@ -109,7 +106,6 @@ namespace Advance
             foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
-
                 if (value >= 10000)
                     return resBoard.LastMove;
 
@@ -135,10 +131,8 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
-
                 if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
                     continue;
-
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
@@ -231,10 +225,8 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Piece piece = board.Squares[i].Piece;
-
                 if (piece == null || piece.PieceType == PieceType.Wall)
                     continue;
-
                 if (piece.PieceColor != board.Player)
                     continue;
 
@@ -245,11 +237,8 @@ namespace Advance
                     move.DestPos = moveDest.Pos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
-
                     if (destPiece != null && destPiece.PieceType != PieceType.Wall)
-                    {
                         move.Score += destPiece.PieceMaterialValue;
-                    }
 
                     positions.Add(move);
                 }

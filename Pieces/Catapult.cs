@@ -4,14 +4,11 @@ namespace Advance
     {
         internal static void GetValidMoves(Board board, Square square, int pos)
         {
-            // ? Possible refactor?
-
             int row = pos / Board.Size;
             int col = pos % Board.Size;
 
             // Moving
             int[] offsets = { -1, 0, 1 };
-
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {
@@ -28,7 +25,6 @@ namespace Advance
             // Shooting
             // Cardinal directions
             offsets = new int[] { -3, 0, 3 };
-
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {
@@ -50,7 +46,6 @@ namespace Advance
 
             // Diagonal directions
             offsets = new int[] { -2, 2 };
-
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {

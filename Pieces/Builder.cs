@@ -5,7 +5,6 @@ namespace Advance
         internal static void GetValidMoves(Board board, Square square, int pos)
         {
             int[] offsets = { -1, 0, 1 };
-
             foreach (int offsetY in offsets)
                 foreach (int offsetX in offsets)
                 {
