@@ -67,17 +67,15 @@ namespace Advance
                     AddCapture(board, square, destPos);
                 }
         }
-        
+
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
 
             // Check if destination piece is protected by a sentinel
-            if (Moves.IsProtected(board, square, destPos))
-                return;
-
-            // Set destination square as threatened
-            Moves.SetThreat(board, square, destPos);
+            Piece? sentinel = Moves.IsProtected(board, square, destPos);
+            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
+                Moves.SetThreat(board, square, destPos);
 
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
@@ -100,11 +98,9 @@ namespace Advance
                 return;
 
             // Check if destination piece is protected by a sentinel
-            if (Moves.IsProtected(board, square, destPos))
-                return;
-
-            // Set destination square as threatened
-            Moves.SetThreat(board, square, destPos);
+            Piece? sentinel = Moves.IsProtected(board, square, destPos);
+            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
+                Moves.SetThreat(board, square, destPos);
 
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
@@ -112,8 +108,8 @@ namespace Advance
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
-            // Add capture
-            if (Piece.IsEnemyPiece(square, destSquare))
+            // Capture only if not protected by a sentinel
+            if (sentinel == null && Piece.IsEnemyPiece(square, destSquare))
             {
                 // If destination piece is general, set check
                 Moves.IsGeneralInCheck(board, destPos);
