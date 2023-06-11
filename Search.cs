@@ -78,9 +78,9 @@ namespace Advance
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a valid move played.
 
-            /// Returns a new movingPiece object if there are no moves.
+  
             if (resBoards.Boards.Count == 0)
-                return new MovingPiece();
+                throw new Exception("No valid moves found.");
 
             /// Returns the last move if there is only one move.
             if (resBoards.Boards.Count == 1)

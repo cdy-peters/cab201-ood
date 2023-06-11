@@ -42,15 +42,6 @@ namespace Advance
         internal bool IsWall;
 
         /// <summary>
-        /// Creates a new move destination, instantiated with an invalid move.
-        /// </summary>
-        public MoveDest()
-        {
-            Pos = -1;
-            IsWall = false;
-        }
-
-        /// <summary>
         /// Creates a new move destination.
         /// </summary>
         internal MoveDest(int destPos, bool isWall = false)
@@ -84,17 +75,6 @@ namespace Advance
         /// The destination of the move.
         /// </summary>
         internal MoveDest Dest;
-
-        /// <summary>
-        /// Creates a new moving piece, instantiated with an invalid move.
-        /// </summary>
-        public MovingPiece()
-        {
-            PieceColor = PieceColor.None;
-            PieceType = null;
-            SrcPos = -1;
-            Dest = new MoveDest();
-        }
 
         /// <summary>
         /// Creates a new moving piece.
