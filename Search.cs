@@ -78,7 +78,7 @@ namespace Advance
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a valid move played.
 
-  
+
             if (resBoards.Boards.Count == 0)
                 throw new Exception("No valid moves found.");
 
@@ -95,7 +95,7 @@ namespace Advance
             /// Iterate through each board and evaluate it.
             foreach (Board resBoard in resBoards.Boards)
             {
-                int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
+                int value = -Quiesce(resBoard, -beta, -alpha);
                 if (value >= 10000) /// If the resulting board is a checkmate.
                     return resBoard.LastMove;
 
@@ -271,15 +271,7 @@ namespace Advance
         private static int AlphaBeta(Board board, int depth, int alpha, int beta)
         {
             if (depth == 0)
-            {
-                /// If the last move was a possible winning move, continue the search until a 'quiet' position is found.
-                if (board.WhiteCheck || board.BlackCheck)
-                    return AlphaBeta(board, 1, alpha, beta);
-
-                /// Return the score of the board.
-                Evaluation.BoardEvaluation(board);
-                return SideToMove(board.Score, board.Player);
-            }
+                return Quiesce(board, alpha, beta);
 
             // Evaluate the moves on the board, sorting them by the score.
             List<Position> positions = EvaluateMoves(board);
@@ -348,6 +340,25 @@ namespace Advance
             }
 
             return positions;
+        }
+
+        /// <summary>
+        /// Performs a quiescence search on the board to capture captures and check for winning moves if necessary.
+        /// Otherwise, evaluates the board position directly.
+        /// </summary>
+        /// <param name="board">The current board state.</param>
+        /// <param name="alpha">The alpha value for alpha-beta pruning.</param>
+        /// <param name="beta">The beta value for alpha-beta pruning.</param>
+        /// <returns>The score of the board after the quiescence search or direct evaluation.</returns>
+        private static int Quiesce(Board board, int alpha, int beta)
+        {
+            /// If the last move was a possible winning move, continue the search until a 'quiet' position is found.
+            if (board.WhiteCheck || board.BlackCheck)
+                return AlphaBeta(board, 1, alpha, beta);
+
+            /// Return the score of the board.
+            Evaluation.BoardEvaluation(board);
+            return SideToMove(board.Score, board.Player);
         }
     }
 }
