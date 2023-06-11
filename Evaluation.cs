@@ -18,7 +18,6 @@ namespace Advance
             totalScore += square.Piece.PieceMaterialValue;
             if (deep)
             {
-                totalScore += square.Piece.ValidMoves.Count;
                 totalScore += square.Piece.DefenseValue;
                 totalScore -= square.Piece.AttackValue;
             }
