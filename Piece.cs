@@ -59,7 +59,7 @@ namespace Advance
     internal struct MovingPiece
     {
         internal PieceColor PieceColor;
-        internal PieceType PieceType;
+        internal PieceType ?PieceType;
         internal int SrcPos;
         internal MoveDest Dest;
 
@@ -68,6 +68,8 @@ namespace Advance
         /// </summary>
         public MovingPiece()
         {
+            PieceColor = PieceColor.None;
+            PieceType = null;
             SrcPos = -1;
             Dest = new MoveDest();
         }
