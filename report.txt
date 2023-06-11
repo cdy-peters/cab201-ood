@@ -1,0 +1,70 @@
+Introduction:
+This report provides a comprehensive overview of the developed Advance engine, detailing the process of generating moves, searching, and
+evaluation moves.
+
+Board Representation:
+The program accepts three command-line arguments, a player colour (white or black) which a move will be determined for, a source file containing
+the starting board and a destination file the updated board will be written to. When the program is run, the passed in command line arguments are
+validated, given valid arguments, a game object is instantiated. Upon receiving the board string, the engine creates a board object, representing
+the initial board state. The board stores a one-dimensional array of Square structures which later hold the piece objects. Upon receiving the
+board string, the string is iterated through via a for loop, each character of the string used to determine the piece type and colour, the index
+being used to update the corresponding square with a relevant Piece overload to store the piece details.
+
+Move Generation:
+To determine valid moves, the engine iterates through each piece on the board. For every piece, the engine iteratively gets each possible move
+for that given piece’s type and position on the board. The move is subsequently validated, ensuring that the move is playable. The move is then
+added along with updating one of two boolean lists that tell which squares are threatened by each colour, this is necessary for determining the
+general moves. Handling the general differs from the rest of the pieces. When iterating through each piece, if the piece is a general the index
+is stored. Once all pieces have been analysed then the valid moves for the general are determined as to ensure a move that would put itself in
+check isn’t added, as this move would result in a loss.
+
+Searching for the Best Move:
+The search algorithm implemented in the engine aims to find the best move by performing a series of search iterations. It starts with a shallow
+search to find any immediate best moves either by putting the opposition in check, protecting itself from check or by gaining a material
+advantage. If no move fulfils the prior, a deeper search is performed to determine the best move to make considering the opponents best move and
+following best move to make.
+
+Shallow Search:
+In the shallow search, the engine generates a series of boards, each representing the board state after one valid move is played. Each move is
+evaluated, assigning a score to each board, depicting the most advantageous player. The evaluation assumes a zero sum game, where each player
+starts at zero. The higher or lower the value is (from zero) the better the material advantage is for white or black, respectively. The resulting
+boards are sorted by score, on the assumption that a better move will typically have the greatest advantage. 
+
+After having been sorted, the boards are iterated over, where a more in-depth evaluation is done on each board after possible quiescence.
+Quiescence ensures that when searching for the best move, the search ends in a “quiet” position. In other words, ensuring that what could be a
+valuable move, such as a check, isn’t pointless due to, for example, the enemy being able to safely capture the piece. A quiesce search is
+performed using the Alpha-beta pruning algorithm, described later. After a quiescence search is performed, if necessary, and a more in-depth
+evaluation is done, considering the potential of a given piece (attacking or defending), the score is compared with the best current score. If
+the score is greater, then the board had a better move, the move made is added to a list of best moves after having been cleared. If the score is
+equal then the move is also added to the list of best moves.
+
+After all boards are iterated over, the best moves retrieved are analysed. If there is one best move, that move is returned from the search
+method. In the case there are multiple moves a new list for the best material moves is made only including moves that result in a material
+advantage. Again, if there is only one move, it is returned. If there are no moves, or multiple moves a deeper search is performed on the best
+moves or the best material moves, respectively.
+
+Deeper Search:
+The deeper search is nearly identical to the shallow search with one difference. The deeper search will use alpha-beta pruning, looking three
+moves ahead. A score representing such is used to determine the best move. A list of best moves is not used, as moves of equal score mean they
+have equivalent gain on the board as a result, following a deeper search, only a single move is returned.
+
+Alpha-Beta Pruning:
+Alpha-beta pruning is an algorithm used in game tree search algorithms to reduce the number of nodes that need to be evaluated. This is an
+improvement on the min-max algorithm which will search through every possible node even when not necessary. The Alpha-beta pruning algorithm
+maintains lower and upper bounds (alpha and beta) of the best move's score.
+
+During the search, as the engine explores different moves, it updates the alpha and beta values. If the current node's value falls outside the
+range defined by alpha and beta, the search in that branch is terminated, as the opponent would never allow the engine to reach that position,
+assuming the opponent were to make the best move. This allows for pruning of branches in the search tree that are irrelevant, significantly
+improving the efficiency of the algorithm.
+
+Conclusion:
+The chess-like engine developed for the "Advance" game offers a robust framework for analysing game states and generating optimal moves. By
+leveraging an effective board representation system and implementing an efficient search algorithm, the engine can evaluate various move options
+and select the most favourable one.
+
+Further enhancements and optimizations can be explored to improve the engine's performance and reliability in the future. These may include more
+reliable move ordering techniques, more reliable board evaluations or implementation that improve searching speed.
+
+Overall, the engine demonstrates the potential for developing intelligent game-playing systems and lays the foundation for further advancements
+in decision-making algorithms.
