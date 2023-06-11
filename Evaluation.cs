@@ -9,17 +9,17 @@ namespace Advance
         /// Evaluates the score of a piece.
         /// </summary>
         /// <param name="square">The square that the piece is on</param>
-        /// <param name="pos">The position of the piece in the game.</param>
+        /// <param name="deep">Whether to evaluate the piece deeply</param>
         /// <returns>The score of the piece</returns>
-        private static int PieceEvaluation(Square square, int pos, bool deep)
+        private static int PieceEvaluation(Piece piece, bool deep)
         {
             int totalScore = 0;
 
-            totalScore += square.Piece.PieceMaterialValue;
+            totalScore += piece.PieceMaterialValue;
             if (deep)
             {
-                totalScore += square.Piece.DefenseValue;
-                totalScore -= square.Piece.AttackValue;
+                totalScore += piece.DefenseValue;
+                totalScore -= piece.AttackValue;
             }
 
             return totalScore;
@@ -29,6 +29,7 @@ namespace Advance
         /// Evaluates the score of a board as a zero sum result.
         /// </summary>
         /// <param name="board">The board to evaluate</param>
+        /// <param name="deep">Whether to evaluate the board deeply</param>
         internal static void BoardEvaluation(Board board, bool deep)
         {
             board.Score = 0;
@@ -42,29 +43,15 @@ namespace Advance
             /// Calculate the score of each piece on the board.
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
-                Square square = board.Squares[i];
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
+                Piece piece = board.Squares[i].Piece;
+                if (piece == null || piece.PieceType == PieceType.Wall)
                     continue;
 
-                if (square.Piece.PieceColor == PieceColor.White)
-                    board.Score += PieceEvaluation(square, i, deep);
+                if (piece.PieceColor == PieceColor.White)
+                    board.Score += PieceEvaluation(piece, deep);
                 else
-                    board.Score -= PieceEvaluation(square, i, deep);
+                    board.Score -= PieceEvaluation(piece, deep);
             }
-        }
-
-        internal static int DeepPieceEvaluation(Square square, int pos)
-        {
-            int totalScore = 0;
-
-            totalScore += square.Piece.PieceMaterialValue; // Add piece value
-            totalScore += square.Piece.ValidMoves.Count; // Encourage piece mobility
-            totalScore += square.Piece.DefenseValue; // Encourage defending pieces
-
-            if (square.Piece.DefenseValue < square.Piece.AttackValue)
-                totalScore -= ((square.Piece.AttackValue - square.Piece.DefenseValue) * 1000);
-
-            return totalScore;
         }
     }
 }
