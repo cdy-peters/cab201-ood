@@ -1,5 +1,8 @@
 namespace Advance
 {
+    /// <summary>
+    /// Enumeration of the possible colors of a piece.
+    /// </summary>
     internal enum PieceColor
     {
         None,
@@ -7,6 +10,9 @@ namespace Advance
         Black
     }
 
+    /// <summary>
+    /// Enumeration of the possible types of pieces.
+    /// </summary>
     internal enum PieceType
     {
         Wall,
@@ -20,17 +26,26 @@ namespace Advance
         General
     }
 
+    /// <summary>
+    /// Structure representing the destination of a move.
+    /// </summary>
     internal struct MoveDest
     {
         internal int Pos;
         internal bool IsWall;
 
+        /// <summary>
+        /// Creates a new move destination, instantiated with an invalid move.
+        /// </summary>
         public MoveDest()
         {
             Pos = -1;
             IsWall = false;
         }
 
+        /// <summary>
+        /// Creates a new move destination.
+        /// </summary>
         internal MoveDest(int destPos, bool isWall = false)
         {
             Pos = destPos;
@@ -38,6 +53,9 @@ namespace Advance
         }
     }
 
+    /// <summary>
+    /// Structure representing a moving piece.
+    /// </summary>
     internal struct MovingPiece
     {
         internal PieceColor PieceColor;
@@ -45,12 +63,22 @@ namespace Advance
         internal int SrcPos;
         internal MoveDest Dest;
 
+        /// <summary>
+        /// Creates a new moving piece, instantiated with an invalid move.
+        /// </summary>
         public MovingPiece()
         {
             SrcPos = -1;
             Dest = new MoveDest();
         }
 
+        /// <summary>
+        /// Creates a new moving piece.
+        /// </summary>
+        /// <param name="pieceColor">The color of the piece to move</param>
+        /// <param name="pieceType">The type of piece to move</param>
+        /// <param name="srcPos">The position of the piece to move</param>
+        /// <param name="dest">The destination of the piece to move</param>
         internal MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
         {
             PieceColor = pieceColor;
@@ -59,6 +87,10 @@ namespace Advance
             Dest = dest;
         }
 
+        /// <summary>
+        /// Creates a copy of a moving piece.
+        /// </summary>
+        /// <param name="MovingPiece">The moving piece to copy</param>
         internal MovingPiece(MovingPiece MovingPiece)
         {
             PieceColor = MovingPiece.PieceColor;
@@ -68,6 +100,9 @@ namespace Advance
         }
     }
 
+    /// <summary>
+    /// Class representing a piece.
+    /// </summary>
     internal class Piece
     {
         internal PieceColor PieceColor;
@@ -78,43 +113,11 @@ namespace Advance
         internal int DefenseValue;
         internal List<MoveDest> ValidMoves;
 
-        internal static bool IsFriendlyPiece(Square square, Square destSquare)
-        {
-            if (destSquare.Piece == null)
-                return false;
-
-            if (destSquare.Piece.PieceColor == PieceColor.None)
-                return false;
-
-            if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
-                return true;
-
-            return false;
-        }
-
-        internal static bool IsEnemyPiece(Square square, Square destSquare)
-        {
-            if (destSquare.Piece == null)
-                return false;
-
-            if (destSquare.Piece.PieceColor == PieceColor.None)
-                return false;
-
-            if (square.Piece.PieceColor != destSquare.Piece.PieceColor)
-                return true;
-                
-            return false;
-        }
-
-        internal Piece(Piece piece)
-        {
-            PieceColor = piece.PieceColor;
-            PieceType = piece.PieceType;
-            PieceMaterialValue = piece.PieceMaterialValue;
-            PieceActionValue = piece.PieceActionValue;
-            ValidMoves = piece.ValidMoves;
-        }
-
+        /// <summary>
+        /// Creates a new piece.
+        /// </summary>
+        /// <param name="pieceType">The type of piece to create</param>
+        /// <param name="pieceColor">The color of the piece to create</param>
         internal Piece(PieceType pieceType, PieceColor pieceColor = PieceColor.None)
         {
             PieceColor = pieceColor;
@@ -146,6 +149,59 @@ namespace Advance
                 _ => 0
             };
             ValidMoves = new List<MoveDest>();
+        }
+
+        /// <summary>
+        /// Creates a copy of a piece.
+        /// </summary>
+        /// <param name="piece">The piece to copy</param>
+        internal Piece(Piece piece)
+        {
+            PieceColor = piece.PieceColor;
+            PieceType = piece.PieceType;
+            PieceMaterialValue = piece.PieceMaterialValue;
+            PieceActionValue = piece.PieceActionValue;
+            ValidMoves = piece.ValidMoves;
+        }
+
+        /// <summary>
+        /// Checks if the destination square is the same as the moving piece.
+        /// </summary>
+        /// <param name="square">The square of the moving piece</param>
+        /// <param name="destSquare">The destination square of the moving piece</param>
+        /// <returns>True if the destination square is the same as the moving piece, false otherwise.</returns>
+        internal static bool IsFriendlyPiece(Square square, Square destSquare)
+        {
+            if (destSquare.Piece == null)
+                return false;
+
+            if (destSquare.Piece.PieceColor == PieceColor.None)
+                return false;
+
+            if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the destination square is an enemy piece.
+        /// </summary>
+        /// <param name="square">The square of the moving piece</param>
+        /// <param name="destSquare">The destination square of the moving piece</param>
+        /// <returns>True if the destination square is an enemy piece, false otherwise.</returns>
+        internal static bool IsEnemyPiece(Square square, Square destSquare)
+        {
+            if (destSquare.Piece == null)
+                return false;
+
+            if (destSquare.Piece.PieceColor == PieceColor.None)
+                return false;
+
+            if (square.Piece.PieceColor != destSquare.Piece.PieceColor)
+                return true;
+
+            return false;
         }
     }
 }

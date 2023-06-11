@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the jester piece.
+    /// </summary>
     internal static class Jester
     {
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the jester piece. Jesters can move to any adjacent square and can swap with friendly pieces. Jesters cannot capture pieces but can convert enemy pieces to friendly pieces.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the jester is on.</param>
+        /// <param name="pos">The position of the jester.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             int[] offsets = { -1, 0, 1 };
             foreach (int offsetY in offsets)
@@ -10,7 +19,7 @@ namespace Advance
                 {
                     if (offsetX == 0 && offsetY == 0)
                         continue;
-                        
+
                     int destPos = Moves.GetDestPos(pos, offsetX, offsetY);
                     if (destPos == -1)
                         continue;
@@ -21,6 +30,12 @@ namespace Advance
                 }
         }
 
+        /// <summary>
+        /// Validates and adds a move to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the jester is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

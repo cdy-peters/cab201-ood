@@ -1,10 +1,22 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the zombie piece.
+    /// </summary>
     internal static class Zombie
     {
+        /// <summary>
+        /// The offsets for the zombie piece.
+        /// </summary>
         private static int[] offsets = { -1, 0, 1 };
 
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the zombie piece. Zombies can move and capture any of the three squares in front of them, if those squares are empty, zombies can capture the square beyond the empty square in the same direction.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the zombie is on.</param>
+        /// <param name="pos">The position of the zombie.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             if (square.Piece.PieceColor == PieceColor.White)
             {
@@ -18,6 +30,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Gets the moves for the white zombie piece. Zombies can move and capture any of the three squares in front of them, if those squares are empty, zombies can capture the square beyond the empty square in the same direction.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the zombie is on.</param>
+        /// <param name="pos">The position of the zombie.</param>
         private static void WhiteZombie(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
@@ -52,6 +70,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Gets the moves for the black zombie piece. Zombies can move and capture any of the three squares in front of them, if those squares are empty, zombies can capture the square beyond the empty square in the same direction.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the zombie is on.</param>
+        /// <param name="pos">The position of the zombie.</param>
         private static void BlackZombie(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
@@ -86,6 +110,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Validates and adds a move (not a capture) to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the zombie is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
@@ -118,6 +148,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Validates and adds a capture to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the zombie is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddCapture(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

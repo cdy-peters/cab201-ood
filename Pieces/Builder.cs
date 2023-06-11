@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the builder piece.
+    /// </summary>
     internal static class Builder
     {
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the builder piece. Builders can move, capture or build on any adjacent square.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the builder is on.</param>
+        /// <param name="pos">The position of the builder.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             int[] offsets = { -1, 0, 1 };
             foreach (int offsetY in offsets)
@@ -19,6 +28,12 @@ namespace Advance
                 }
         }
 
+        /// <summary>
+        /// Validates and adds a move to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the builder is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

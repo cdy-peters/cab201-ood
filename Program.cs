@@ -1,7 +1,14 @@
 ﻿namespace Advance;
 
+/// <summary>
+/// The main program.
+/// </summary>
 internal static class Program
 {
+    /// <summary>
+    /// The main entry point for the program.
+    /// </summary>
+    /// <param name="args">The command line arguments.</param>
     private static void Main(string[] args)
     {
         FileIO.ValidateArgs(args);

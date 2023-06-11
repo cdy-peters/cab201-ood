@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the catapult piece.
+    /// </summary>
     internal static class Catapult
     {
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the catapult piece. Catapults can move one square in the cardinal directions can capture three squares away in any direction without moving.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the catapult is on.</param>
+        /// <param name="pos">The position of the catapult.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
             int col = pos % Board.Size;
@@ -63,6 +72,12 @@ namespace Advance
                 }
         }
 
+        /// <summary>
+        /// Validates and adds a move (not a capture) to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the catapult is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
@@ -86,6 +101,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Validates and adds a capture to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the catapult is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddCapture(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

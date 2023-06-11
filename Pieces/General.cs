@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the general piece.
+    /// </summary>
     internal static class General
     {
-        internal static void GetValidMoves(Board board, int pos)
+        /// <summary>
+        /// Gets the moves for the general piece. Generals can move and capture any adjacent square that would not put them in check.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the general is on.</param>
+        /// <param name="pos">The position of the general.</param>
+        internal static void GetMoves(Board board, int pos)
         {
             if (pos < 0 || pos >= Board.Size * Board.Size)
                 return;
@@ -24,6 +33,12 @@ namespace Advance
                 }
         }
 
+        /// <summary>
+        /// Validates and adds a move to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the general is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

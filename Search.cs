@@ -2,6 +2,9 @@ namespace Advance
 {
     internal static class Search
     {
+        /// <summary>
+        /// Structure representing a move and it's score.
+        /// </summary>
         private struct Position
         {
             internal int SrcPos;
@@ -9,73 +12,98 @@ namespace Advance
             internal int Score;
         }
 
+        /// <summary>
+        /// Structure representing a list of boards.
+        /// </summary>
         private struct ResultBoards
         {
             internal List<Board> Boards;
         }
 
+        /// <summary>
+        /// Comparison function for sorting the moves by the score.
+        /// </summary>
         private static int Sort(Position s2, Position s1)
         {
             return (s1.Score).CompareTo(s2.Score);
         }
 
+        /// <summary>
+        /// Comparison function for sorting the boards by the score.
+        /// </summary>
         private static int Sort(Board s2, Board s1)
         {
             return (s1.Score).CompareTo(s2.Score);
         }
 
+        /// <summary>
+        /// Returns the score relative to the side moving. This is necessary for a zero sum evaluation.
+        /// </summary>
+        /// <param name="score">The score of the piece</param>
+        /// <param name="color">The color of the piece</param>
+        /// <returns>The score relative to the side moving. Positive for a white piece, negative for a black piece.</returns>
         private static int SideToMove(int score, PieceColor color)
         {
             return color == PieceColor.Black ? -score : score;
         }
 
+        /// <summary>
+        /// The root for a shallow search of the board. Each valid move is played and the resulting board is evaluated.
+        /// </summary>
+        /// <param name="board">The board to search.</param>
+        /// <param name="depth">The depth of the search for the deep search.</param>
+        /// <returns>The best move or null if there are no valid moves.</returns>
         internal static MovingPiece ShallowSearchRoot(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
-            ResultBoards resBoards = PlayValidMoves(board);
+            ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a valid move played.
 
-            // If there are no moves
+            /// Returns a new movingPiece object if there are no moves.
             if (resBoards.Boards.Count == 0)
                 return new MovingPiece();
 
-            // Grade 4 check
-            // Grade 4 tests only have 1 playable move
+            /// Returns the last move if there is only one move.
             if (resBoards.Boards.Count == 1)
                 return resBoards.Boards[0].LastMove;
-                
+
+            /// Move ordering
             resBoards.Boards.Sort(Sort);
 
-            // Grade 6 check
             // Grade 6 tests prioritize material gain
             alpha = -100000000;
 
+            /// Iterate through each board and evaluate it.
             foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, 0, -beta, -alpha);
-                if (value >= 10000)
+                if (value >= 10000) /// If the resulting board is a checkmate.
                     return resBoard.LastMove;
 
                 resBoard.Score = value;
 
+                /// If the move is better than the previous move.
                 if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
                     bestMoves.Clear();
                     bestMoves.Add(resBoard.LastMove);
                 }
+                /// If the move is equal to the previous move.
                 else if (value == alpha)
                     bestMoves.Add(resBoard.LastMove);
             }
 
+            /// Returns the best move if there is only one move.
             if (bestMoves.Count == 1)
                 return bestMoves[0];
             else
             {
                 List<MovingPiece> bestMaterialMoves = new List<MovingPiece>(30);
 
+                /// Iterate through each move, adding only moves that capture pieces.
                 for (int i = 0; i < bestMoves.Count; i++)
                 {
                     MoveDest dest = bestMoves[i].Dest;
@@ -85,10 +113,11 @@ namespace Advance
                             bestMaterialMoves.Add(bestMoves[i]);
                 }
 
+                /// Returns the best move if there is only one move.
                 if (bestMaterialMoves.Count == 1)
                     return bestMaterialMoves[0];
-                    
-                // Deeper search for Grade 7
+
+                /// Deeper search of there are multiple moves.
                 if (bestMaterialMoves.Count == 0)
                     return DeepSearchRoot(board, bestMoves, depth);
                 else
@@ -96,13 +125,20 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// The root for a deep search of the board. Each of the equally best moves is played and the resulting board is evaluated.
+        /// </summary>
+        /// <param name="board">The board to search.</param>
+        /// <param name="bestMoves">The best moves to play.</param>
+        /// <param name="depth">The depth of the search.</param>
+        /// <returns>The best move or null if there are no valid moves.</returns>
         private static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             MovingPiece bestMove = new MovingPiece();
-            ResultBoards resBoards = PlayBestMoves(board, bestMoves);
+            ResultBoards resBoards = PlayBestMoves(board, bestMoves); /// Get a list of boards, each with a best move played.
             resBoards.Boards.Sort(Sort);
 
             alpha = -100000000;
@@ -111,11 +147,12 @@ namespace Advance
             foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
-                if (value >= 10000)
+                if (value >= 10000) /// If the resulting board is a checkmate.
                     return resBoard.LastMove;
 
                 resBoard.Score = value;
 
+                /// If the move is better than the previous move.
                 if (value > alpha || alpha == -100000000)
                 {
                     alpha = value;
@@ -126,6 +163,11 @@ namespace Advance
             return bestMove;
         }
 
+        /// <summary>
+        /// Plays all the valid moves on the board and returns a list of boards with the valid moves played.
+        /// </summary>
+        /// <param name="board">The board to play the valid moves on.</param>
+        /// <returns>A list of boards each with a valid move played.</returns>
         private static ResultBoards PlayValidMoves(Board board)
         {
             ResultBoards resBoards = new ResultBoards
@@ -133,6 +175,7 @@ namespace Advance
                 Boards = new List<Board>(30)
             };
 
+            /// Iterate through each piece of the moving player.
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
@@ -143,15 +186,18 @@ namespace Advance
 
                 foreach (MoveDest moveDest in square.Piece.ValidMoves)
                 {
+                    /// Create a new board and make a move.
                     Board newBoard = board.CopyBoard();
                     Board.MovePiece(newBoard, i, moveDest);
                     Moves.GetValidMoves(newBoard);
 
+                    /// Check if a move puts the moving player in check.
                     if (newBoard.WhiteCheck && board.Player == PieceColor.White)
                         continue;
                     if (newBoard.BlackCheck && board.Player == PieceColor.Black)
                         continue;
 
+                    /// Evaluate the board.
                     Evaluation.BoardEvaluation(newBoard);
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     resBoards.Boards.Add(newBoard);
@@ -161,6 +207,12 @@ namespace Advance
             return resBoards;
         }
 
+        /// <summary>
+        /// Plays all the best moves on the board and returns a list of boards with the best moves played.
+        /// </summary>
+        /// <param name="board">The board to play the best moves on.</param>
+        /// <param name="bestMoves">The best moves to play.</param>
+        /// <returns>A list of boards each with a best move played.</returns>
         private static ResultBoards PlayBestMoves(Board board, List<MovingPiece> bestMoves)
         {
             ResultBoards resBoards = new ResultBoards
@@ -168,17 +220,21 @@ namespace Advance
                 Boards = new List<Board>(30)
             };
 
+            /// Iterate through each best move.
             foreach (MovingPiece bestMove in bestMoves)
             {
+                /// Create a new board and make a move.
                 Board newBoard = board.CopyBoard();
                 Board.MovePiece(newBoard, bestMove.SrcPos, bestMove.Dest);
                 Moves.GetValidMoves(newBoard);
 
+                /// Check if a move puts the moving player in check.
                 if (newBoard.WhiteCheck && board.Player == PieceColor.White)
                     continue;
                 if (newBoard.BlackCheck && board.Player == PieceColor.Black)
                     continue;
 
+                /// Evaluate the board.
                 Evaluation.BoardEvaluation(newBoard);
                 newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                 resBoards.Boards.Add(newBoard);
@@ -187,35 +243,53 @@ namespace Advance
             return resBoards;
         }
 
+        /// <summary>
+        /// The alpha-beta pruning algorithm. This is a recursive algorithm that searches the board for the best move by iterating through the tree of moves.
+        /// </summary>
+        /// <param name="board">The board to search.</param>
+        /// <param name="depth">The depth of the search.</param>
+        /// <param name="alpha">The alpha value.</param>
+        /// <param name="beta">The beta value.</param>
+        /// <returns>The score of the board.</returns>
         private static int AlphaBeta(Board board, int depth, int alpha, int beta)
         {
             if (depth == 0)
             {
+                /// If the last move was a possible winning move, continue the search until a 'quiet' position is found.
                 if (board.WhiteCheck || board.BlackCheck)
                     return AlphaBeta(board, 1, alpha, beta);
 
+                /// Return the score of the board.
                 Evaluation.BoardEvaluation(board);
                 return SideToMove(board.Score, board.Player);
             }
 
+            // Evaluate the moves on the board, sorting them by the score.
             List<Position> positions = EvaluateMoves(board);
             positions.Sort(Sort);
 
+            /// Iterate through each move.
             foreach (Position move in positions)
             {
+                /// Create a new board and make a move.
                 Board newBoard = board.CopyBoard();
                 Board.MovePiece(newBoard, move.SrcPos, new MoveDest(move.DestPos));
                 Moves.GetValidMoves(newBoard);
 
+                /// Check if a move puts the moving player in check.
                 if (newBoard.WhiteCheck && board.Player == PieceColor.White)
                     continue;
                 if (newBoard.BlackCheck && board.Player == PieceColor.Black)
                     continue;
 
+                /// Recursively call the algorithm to have the next player make a move.
                 int value = -AlphaBeta(newBoard, depth - 1, -beta, -alpha);
 
+                /// If the move is worse than the previous move, don't consider it.
                 if (value >= beta)
                     return beta; // beta-cutoff
+
+                /// If the move is better than the previous move, update the alpha value.
                 if (value > alpha)
                     alpha = value;
             }
@@ -223,10 +297,16 @@ namespace Advance
             return alpha;
         }
 
+        /// <summary>
+        /// Evaluates the moves on the board and returns a list of moves sorted by the score.
+        /// </summary>
+        /// <param name="board">The board to evaluate.</param>
+        /// <returns>A list of moves sorted by the score.</returns>
         private static List<Position> EvaluateMoves(Board board)
         {
             List<Position> positions = new List<Position>();
 
+            /// Iterate through each piece of the moving player.
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Piece piece = board.Squares[i].Piece;
@@ -235,6 +315,7 @@ namespace Advance
                 if (piece.PieceColor != board.Player)
                     continue;
 
+                /// Iterate through each valid move of the piece.
                 foreach (MoveDest moveDest in piece.ValidMoves)
                 {
                     Position move = new Position();

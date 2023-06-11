@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the dragon piece.
+    /// </summary>
     internal static class Dragon
     {
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the dragon piece. Dragons can move in any direction any number of squares without jumping over other pieces, but cannot capture pieces in the adjacent squares.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the dragon is on.</param>
+        /// <param name="pos">The position of the dragon.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             int destPos;
 
@@ -135,6 +144,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Validates and adds a move (not a capture) to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the dragon is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
@@ -150,6 +165,12 @@ namespace Advance
                 square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
         }
 
+        /// <summary>
+        /// Validates and adds a capture to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the dragon is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddCapture(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];

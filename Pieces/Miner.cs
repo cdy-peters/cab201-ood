@@ -1,8 +1,17 @@
 namespace Advance
 {
+    /// <summary>
+    /// Class containing the logic for getting valid moves for the miner piece.
+    /// </summary>
     internal static class Miner
     {
-        internal static void GetValidMoves(Board board, Square square, int pos)
+        /// <summary>
+        /// Gets the moves for the miner piece. Miners can move and capture (including walls) any number of squares in the cardinal directions without jumping over other pieces.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the miner is on.</param>
+        /// <param name="pos">The position of the miner.</param>
+        internal static void GetMoves(Board board, Square square, int pos)
         {
             int row = pos / Board.Size;
             int col = pos % Board.Size;
@@ -68,6 +77,12 @@ namespace Advance
             }
         }
 
+        /// <summary>
+        /// Validates and adds a move to the list of valid moves.
+        /// </summary>
+        /// <param name="board">The board to examine.</param>
+        /// <param name="square">The square that the miner is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
