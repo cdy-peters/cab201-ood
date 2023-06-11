@@ -36,12 +36,17 @@ namespace Advance
 
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards resBoards = PlayValidMoves(board);
-            resBoards.Boards.Sort(Sort);
+
+            // If there are no moves
+            if (resBoards.Boards.Count == 0)
+                return new MovingPiece();
 
             // Grade 4 check
             // Grade 4 tests only have 1 playable move
             if (resBoards.Boards.Count == 1)
                 return resBoards.Boards[0].LastMove;
+                
+            resBoards.Boards.Sort(Sort);
 
             // Grade 6 check
             // Grade 6 tests prioritize material gain

@@ -1,13 +1,13 @@
 namespace Advance
 {
-    public enum PieceColor
+    internal enum PieceColor
     {
         None,
         White,
         Black
     }
 
-    public enum PieceType
+    internal enum PieceType
     {
         Wall,
         Zombie,
@@ -20,10 +20,16 @@ namespace Advance
         General
     }
 
-    public struct MoveDest
+    internal struct MoveDest
     {
         internal int Pos;
         internal bool IsWall;
+
+        public MoveDest()
+        {
+            Pos = -1;
+            IsWall = false;
+        }
 
         internal MoveDest(int destPos, bool isWall = false)
         {
@@ -32,14 +38,20 @@ namespace Advance
         }
     }
 
-    public struct MovingPiece
+    internal struct MovingPiece
     {
-        public PieceColor PieceColor;
-        public PieceType PieceType;
-        public int SrcPos;
-        public MoveDest Dest;
+        internal PieceColor PieceColor;
+        internal PieceType PieceType;
+        internal int SrcPos;
+        internal MoveDest Dest;
 
-        public MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
+        public MovingPiece()
+        {
+            SrcPos = -1;
+            Dest = new MoveDest();
+        }
+
+        internal MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
@@ -47,7 +59,7 @@ namespace Advance
             Dest = dest;
         }
 
-        public MovingPiece(MovingPiece MovingPiece)
+        internal MovingPiece(MovingPiece MovingPiece)
         {
             PieceColor = MovingPiece.PieceColor;
             PieceType = MovingPiece.PieceType;

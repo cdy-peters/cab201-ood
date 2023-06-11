@@ -14,7 +14,7 @@ namespace Advance
             Moves.GetValidMoves(Board);
 
             MovingPiece bestMove = Search.ShallowSearchRoot(Board, 3);
-            if (bestMove.SrcPos == 0 && bestMove.Dest.Pos == 0)
+            if (bestMove.SrcPos == -1 && bestMove.Dest.Pos == -1)
                 throw new Exception("No valid moves found");
 
             Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
