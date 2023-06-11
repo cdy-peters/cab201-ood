@@ -78,7 +78,6 @@ namespace Advance
             List<MovingPiece> bestMoves = new List<MovingPiece>(30);
             ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a valid move played.
 
-
             if (resBoards.Boards.Count == 0)
                 throw new Exception("No valid moves found.");
 
@@ -89,7 +88,7 @@ namespace Advance
             /// Move ordering
             resBoards.Boards.Sort(Sort);
 
-            // Grade 6 tests prioritize material gain
+            // Search moves
             alpha = -100000000;
 
             /// Iterate through each board and evaluate it.
