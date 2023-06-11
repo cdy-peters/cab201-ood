@@ -215,7 +215,7 @@ namespace Advance
                         continue;
 
                     /// Evaluate the board.
-                    Evaluation.BoardEvaluation(newBoard);
+                    Evaluation.BoardEvaluation(newBoard, false);
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     resBoards.Boards.Add(newBoard);
                 }
@@ -252,7 +252,7 @@ namespace Advance
                     continue;
 
                 /// Evaluate the board.
-                Evaluation.BoardEvaluation(newBoard);
+                Evaluation.BoardEvaluation(newBoard, true);
                 newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                 resBoards.Boards.Add(newBoard);
             }
@@ -357,7 +357,7 @@ namespace Advance
                 return AlphaBeta(board, 1, alpha, beta);
 
             /// Return the score of the board.
-            Evaluation.BoardEvaluation(board);
+            Evaluation.BoardEvaluation(board, false);
             return SideToMove(board.Score, board.Player);
         }
     }

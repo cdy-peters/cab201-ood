@@ -11,11 +11,17 @@ namespace Advance
         /// <param name="square">The square that the piece is on</param>
         /// <param name="pos">The position of the piece in the game.</param>
         /// <returns>The score of the piece</returns>
-        private static int PieceEvaluation(Square square, int pos)
+        private static int PieceEvaluation(Square square, int pos, bool deep)
         {
             int totalScore = 0;
 
             totalScore += square.Piece.PieceMaterialValue;
+            if (deep)
+            {
+                totalScore += square.Piece.ValidMoves.Count;
+                totalScore += square.Piece.DefenseValue;
+                totalScore -= square.Piece.AttackValue;
+            }
 
             return totalScore;
         }
@@ -24,7 +30,7 @@ namespace Advance
         /// Evaluates the score of a board as a zero sum result.
         /// </summary>
         /// <param name="board">The board to evaluate</param>
-        internal static void BoardEvaluation(Board board)
+        internal static void BoardEvaluation(Board board, bool deep)
         {
             board.Score = 0;
 
@@ -42,10 +48,24 @@ namespace Advance
                     continue;
 
                 if (square.Piece.PieceColor == PieceColor.White)
-                    board.Score += PieceEvaluation(square, i);
+                    board.Score += PieceEvaluation(square, i, deep);
                 else
-                    board.Score -= PieceEvaluation(square, i);
+                    board.Score -= PieceEvaluation(square, i, deep);
             }
+        }
+
+        internal static int DeepPieceEvaluation(Square square, int pos)
+        {
+            int totalScore = 0;
+
+            totalScore += square.Piece.PieceMaterialValue; // Add piece value
+            totalScore += square.Piece.ValidMoves.Count; // Encourage piece mobility
+            totalScore += square.Piece.DefenseValue; // Encourage defending pieces
+
+            if (square.Piece.DefenseValue < square.Piece.AttackValue)
+                totalScore -= ((square.Piece.AttackValue - square.Piece.DefenseValue) * 1000);
+
+            return totalScore;
         }
     }
 }
