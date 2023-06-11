@@ -20,13 +20,8 @@ namespace Advance
         private Board()
         {
             Squares = new Square[Size * Size];
-            for (int i = 0; i < Size * Size; i++)
-                Squares[i] = new Square();
-
             Player = Game.PlayerColor;
-
             LastMove = new MovingPiece();
-
             ThreatenedByWhite = new bool[Size * Size];
             ThreatenedByBlack = new bool[Size * Size];
         }
@@ -36,9 +31,7 @@ namespace Advance
             for (int i = 0; i < Size * Size; i++)
             {
                 char c = boardStr[i];
-                PieceColor pieceColor;
-                PieceType pieceType;
-
+                
                 if (c == '.')
                     continue;
                 else if (c == '#')
@@ -46,23 +39,20 @@ namespace Advance
                     Squares[i].Piece = new Piece(PieceType.Wall);
                     continue;
                 }
-                else
-                {
-                    pieceColor = Char.IsUpper(c) ? PieceColor.White : PieceColor.Black;
-                    pieceType = Char.ToLower(c) switch
-                    {
-                        'z' => PieceType.Zombie,
-                        'b' => PieceType.Builder,
-                        'm' => PieceType.Miner,
-                        'j' => PieceType.Jester,
-                        's' => PieceType.Sentinel,
-                        'c' => PieceType.Catapult,
-                        'd' => PieceType.Dragon,
-                        'g' => PieceType.General,
-                        _ => throw new ArgumentException("An invalid piece was found in the board string.")
-                    };
-                }
 
+                PieceColor pieceColor = Char.IsUpper(c) ? PieceColor.White : PieceColor.Black;
+                PieceType pieceType = Char.ToLower(c) switch
+                {
+                    'z' => PieceType.Zombie,
+                    'b' => PieceType.Builder,
+                    'm' => PieceType.Miner,
+                    'j' => PieceType.Jester,
+                    's' => PieceType.Sentinel,
+                    'c' => PieceType.Catapult,
+                    'd' => PieceType.Dragon,
+                    'g' => PieceType.General,
+                    _ => throw new ArgumentException("An invalid piece was found in the board string.")
+                };
                 Squares[i].Piece = new Piece(pieceType, pieceColor);
             }
         }
