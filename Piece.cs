@@ -135,10 +135,5 @@ namespace Advance
             };
             ValidMoves = new List<MoveDest>();
         }
-
-        public new string ToString()
-        {
-            return $"Piece: {PieceColor} {PieceType}";
-        }
     }
 }

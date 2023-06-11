@@ -4,8 +4,6 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Advance");
-
         FileIO.ValidateArgs(args);
         if (args[0] == "name")
         {
@@ -15,6 +13,6 @@ internal static class Program
 
         Game game = new Game(player: args[0], srcFile: args[1], destFile: args[2]);
 
-        Console.WriteLine(game);
+        // Console.WriteLine(game);
     }
 }
