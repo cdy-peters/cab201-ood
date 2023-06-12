@@ -8,7 +8,7 @@ namespace Advance
         /// <summary>
         /// The offsets for the zombie piece.
         /// </summary>
-        private static int[] offsets = { -1, 0, 1 };
+        private static int[] offsets = { -1, 1 };
 
         /// <summary>
         /// Gets the moves for the zombie piece. Zombies can move and capture any of the three squares in front of them, if those squares are empty, zombies can capture the square beyond the empty square in the same direction.
@@ -21,12 +21,16 @@ namespace Advance
             if (square.Piece.PieceColor == PieceColor.White)
             {
                 if (pos / Board.Size > 0)
+                {
                     WhiteZombie(board, square, pos);
+                }
             }
             else
             {
                 if (pos / Board.Size < Board.Size - 1)
+                {
                     BlackZombie(board, square, pos);
+                }
             }
         }
 
@@ -42,31 +46,39 @@ namespace Advance
             int col = pos % Board.Size;
             int destPos = pos;
 
+            // 1 square move
+            destPos = Moves.GetDestPos(pos, 0, -1);
+            if (destPos != -1)
+            {
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+
+                    // 2 square move
+                    if (row == Board.Size - 2)
+                    {
+                        destPos = Moves.GetDestPos(pos, 0, -2);
+                        if (destPos != -1)
+                        {
+                            destSquare = board.Squares[destPos];
+                            if (destSquare.Piece == null)
+                                AddMove(board, square, destPos);
+                        }
+                    }
+                }
+            }
+
+            // Capture
             foreach (int offsetX in offsets)
             {
-                // Move
                 destPos = Moves.GetDestPos(pos, offsetX, -1);
                 if (destPos == -1)
                     continue;
 
-                AddMove(board, square, destPos);
-
-                // Kill
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece == null && pos / Board.Size > 1)
-                {
-                    destPos = Moves.GetDestPos(pos, offsetX * 2, -2);
-                    if (destPos == -1)
-                        continue;
-
-                    // Check if destination square is in the correct row and column
-                    int destRow = destPos / Board.Size;
-                    int destCol = destPos % Board.Size;
-                    if (destRow != row - 2 || destCol != col + offsetX * 2)
-                        continue;
-
+                if (destSquare.Piece != null && destSquare.Piece.PieceColor == PieceColor.Black)
                     AddCapture(board, square, destPos);
-                }
             }
         }
 
@@ -82,31 +94,40 @@ namespace Advance
             int col = pos % Board.Size;
             int destPos = pos;
 
+            // 1 square move
+            destPos = Moves.GetDestPos(pos, 0, 1);
+            if (destPos != -1)
+            {
+                Square destSquare = board.Squares[destPos];
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+
+                    // 2 square move
+                    if (row == 1)
+                    {
+                        destPos = Moves.GetDestPos(pos, 0, 2);
+                        if (destPos != -1)
+                        {
+                            destSquare = board.Squares[destPos];
+                            if (destSquare.Piece == null)
+                                AddMove(board, square, destPos);
+                        }
+                    }
+
+                }
+            }
+
+            // Capture
             foreach (int offsetX in offsets)
             {
-                // Move
                 destPos = Moves.GetDestPos(pos, offsetX, 1);
                 if (destPos == -1)
                     continue;
 
-                AddMove(board, square, destPos);
-
-                // Kill
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece == null && pos / Board.Size < Board.Size - 2)
-                {
-                    destPos = Moves.GetDestPos(pos, offsetX * 2, 2);
-                    if (destPos == -1)
-                        continue;
-
-                    // Check if destination square is in the correct row and column
-                    int destRow = destPos / Board.Size;
-                    int destCol = destPos % Board.Size;
-                    if (destRow != row + 2 || destCol != col + offsetX * 2)
-                        continue;
-
+                if (destSquare.Piece != null && destSquare.Piece.PieceColor == PieceColor.White)
                     AddCapture(board, square, destPos);
-                }
             }
         }
 
