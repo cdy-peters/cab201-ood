@@ -29,7 +29,7 @@ namespace Advance
             Board = new Board(boardStr);
             Moves.GetValidMoves(Board);
 
-            MovingPiece bestMove = Search.ShallowSearchRoot(Board, 3);
+            MovingPiece bestMove = Search.AlphaBetaRoot(Board, 3);
 
             Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
 

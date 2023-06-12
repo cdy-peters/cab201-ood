@@ -65,96 +65,19 @@ namespace Advance
         }
 
         /// <summary>
-        /// The root for a shallow search of the board. Each valid move is played and the resulting board is evaluated.
-        /// </summary>
-        /// <param name="board">The board to search.</param>
-        /// <param name="depth">The depth of the search for the deep search.</param>
-        /// <returns>The best move or null if there are no valid moves.</returns>
-        internal static MovingPiece ShallowSearchRoot(Board board, int depth)
-        {
-            int alpha = -100000000;
-            const int beta = 100000000;
-
-            List<MovingPiece> bestMoves = new List<MovingPiece>(30);
-            ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a valid move played.
-
-            if (resBoards.Boards.Count == 0)
-                throw new Exception("No valid moves found.");
-
-            /// Returns the last move if there is only one move.
-            if (resBoards.Boards.Count == 1)
-                return resBoards.Boards[0].LastMove;
-
-            /// Move ordering
-            resBoards.Boards.Sort(Sort);
-
-            // Search moves
-            alpha = -100000000;
-
-            /// Iterate through each board and evaluate it.
-            foreach (Board resBoard in resBoards.Boards)
-            {
-                int value = -Quiesce(resBoard, -beta, -alpha);
-                if (value >= 10000) /// If the resulting board is a checkmate.
-                    return resBoard.LastMove;
-
-                resBoard.Score = value;
-
-                /// If the move is better than the previous move.
-                if (value > alpha || alpha == -100000000)
-                {
-                    alpha = value;
-                    bestMoves.Clear();
-                    bestMoves.Add(resBoard.LastMove);
-                }
-                /// If the move is equal to the previous move.
-                else if (value == alpha)
-                    bestMoves.Add(resBoard.LastMove);
-            }
-
-            /// Returns the best move if there is only one move.
-            if (bestMoves.Count == 1)
-                return bestMoves[0];
-            else
-            {
-                List<MovingPiece> bestMaterialMoves = new List<MovingPiece>(30);
-
-                /// Iterate through each move, adding only moves that capture pieces.
-                for (int i = 0; i < bestMoves.Count; i++)
-                {
-                    MoveDest dest = bestMoves[i].Dest;
-                    Square destSquare = board.Squares[dest.Pos];
-                    if (destSquare.Piece != null)
-                        if (destSquare.Piece.PieceColor != board.Player)
-                            bestMaterialMoves.Add(bestMoves[i]);
-                }
-
-                /// Returns the best move if there is only one move.
-                if (bestMaterialMoves.Count == 1)
-                    return bestMaterialMoves[0];
-
-                /// Deeper search of there are multiple moves.
-                if (bestMaterialMoves.Count == 0)
-                    return DeepSearchRoot(board, bestMoves, depth);
-                else
-                    return DeepSearchRoot(board, bestMaterialMoves, depth);
-            }
-        }
-
-        /// <summary>
         /// The root for a deep search of the board. Each of the equally best moves is played and the resulting board is evaluated.
         /// </summary>
         /// <param name="board">The board to search.</param>
         /// <param name="bestMoves">The best moves to play.</param>
         /// <param name="depth">The depth of the search.</param>
         /// <returns>The best move or null if there are no valid moves.</returns>
-        private static MovingPiece DeepSearchRoot(Board board, List<MovingPiece> bestMoves, int depth)
+        internal static MovingPiece AlphaBetaRoot(Board board, int depth)
         {
             int alpha = -100000000;
             const int beta = 100000000;
 
             MovingPiece bestMove = new MovingPiece();
-            ResultBoards resBoards = PlayBestMoves(board, bestMoves); /// Get a list of boards, each with a best move played.
+            ResultBoards resBoards = PlayValidMoves(board); /// Get a list of boards, each with a best move played.
             resBoards.Boards.Sort(Sort);
 
             alpha = -100000000;
@@ -218,42 +141,6 @@ namespace Advance
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     resBoards.Boards.Add(newBoard);
                 }
-            }
-
-            return resBoards;
-        }
-
-        /// <summary>
-        /// Plays all the best moves on the board and returns a list of boards with the best moves played.
-        /// </summary>
-        /// <param name="board">The board to play the best moves on.</param>
-        /// <param name="bestMoves">The best moves to play.</param>
-        /// <returns>A list of boards each with a best move played.</returns>
-        private static ResultBoards PlayBestMoves(Board board, List<MovingPiece> bestMoves)
-        {
-            ResultBoards resBoards = new ResultBoards
-            {
-                Boards = new List<Board>(30)
-            };
-
-            /// Iterate through each best move.
-            foreach (MovingPiece bestMove in bestMoves)
-            {
-                /// Create a new board and make a move.
-                Board newBoard = board.CopyBoard();
-                Board.MovePiece(newBoard, bestMove.SrcPos, bestMove.Dest);
-                Moves.GetValidMoves(newBoard);
-
-                /// Check if a move puts the moving player in check.
-                if (newBoard.WhiteCheck && board.Player == PieceColor.White)
-                    continue;
-                if (newBoard.BlackCheck && board.Player == PieceColor.Black)
-                    continue;
-
-                /// Evaluate the board.
-                Evaluation.BoardEvaluation(newBoard, true);
-                newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
-                resBoards.Boards.Add(newBoard);
             }
 
             return resBoards;
