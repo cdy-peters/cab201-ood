@@ -44,7 +44,7 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Piece piece = board.Squares[i].Piece;
-                if (piece == null || piece.PieceType == PieceType.Wall)
+                if (piece == null)
                     continue;
 
                 if (piece.PieceColor == PieceColor.White)

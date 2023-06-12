@@ -3,7 +3,7 @@ namespace Advance
     /// <summary>
     /// Class containing the logic for getting valid moves for the dragon piece.
     /// </summary>
-    internal static class Dragon
+    internal static class Queen
     {
         /// <summary>
         /// Gets the moves for the dragon piece. Dragons can move in any direction any number of squares without jumping over other pieces, but cannot capture pieces in the adjacent squares.
@@ -175,11 +175,6 @@ namespace Advance
         {
             Square destSquare = board.Squares[destPos];
 
-            // Check if destination piece is protected by a sentinel
-            Piece? sentinel = Moves.IsProtected(board, square, destPos);
-            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
-                Moves.SetThreat(board, square, destPos);
-
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
@@ -193,14 +188,10 @@ namespace Advance
                 return;
             }
 
-            // Capture only if not protected by a sentinel
-            if (sentinel == null && Piece.IsEnemyPiece(square, destSquare))
-            {
-                // If destination piece is general, set check
-                Moves.IsGeneralInCheck(board, destPos);
+            // If destination piece is general, set check
+            Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
-            }
+            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
         }
     }
 }

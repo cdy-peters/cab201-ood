@@ -3,7 +3,7 @@ namespace Advance
     /// <summary>
     /// Class containing the logic for getting valid moves for the zombie piece.
     /// </summary>
-    internal static class Zombie
+    internal static class Pawn
     {
         /// <summary>
         /// The offsets for the zombie piece.
@@ -120,11 +120,6 @@ namespace Advance
         {
             Square destSquare = board.Squares[destPos];
 
-            // Check if destination piece is protected by a sentinel
-            Piece? sentinel = Moves.IsProtected(board, square, destPos);
-            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
-                Moves.SetThreat(board, square, destPos);
-
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
@@ -138,14 +133,10 @@ namespace Advance
                 return;
             }
 
-            // Capture only if not protected by a sentinel
-            if (sentinel == null && Piece.IsEnemyPiece(square, destSquare))
-            {
-                // Check if the general is in check
-                Moves.IsGeneralInCheck(board, destPos);
+            // Check if the general is in check
+            Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
-            }
+            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
         }
 
         /// <summary>
@@ -160,26 +151,17 @@ namespace Advance
             if (destSquare.Piece == null)
                 return;
 
-            // Check if destination piece is protected by a sentinel
-            Piece? sentinel = Moves.IsProtected(board, square, destPos);
-            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
-                Moves.SetThreat(board, square, destPos);
-
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
-            // Capture only if not protected by a sentinel
-            if (sentinel == null && Piece.IsEnemyPiece(square, destSquare))
-            {
-                // If destination piece is general, set check
-                Moves.IsGeneralInCheck(board, destPos);
+            // If destination piece is general, set check
+            Moves.IsGeneralInCheck(board, destPos);
 
-                // Add move
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
-            }
+            // Add move
+            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
         }
     }
 }

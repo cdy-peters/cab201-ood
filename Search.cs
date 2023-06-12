@@ -124,8 +124,8 @@ namespace Advance
                 {
                     MoveDest dest = bestMoves[i].Dest;
                     Square destSquare = board.Squares[dest.Pos];
-                    if (destSquare.Piece != null && destSquare.Piece.PieceType != PieceType.Wall)
-                        if (destSquare.Piece.PieceType != PieceType.Jester && destSquare.Piece.PieceColor != board.Player)
+                    if (destSquare.Piece != null)
+                        if (destSquare.Piece.PieceColor != board.Player)
                             bestMaterialMoves.Add(bestMoves[i]);
                 }
 
@@ -195,7 +195,7 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Square square = board.Squares[i];
-                if (square.Piece == null || square.Piece.PieceType == PieceType.Wall)
+                if (square.Piece == null)
                     continue;
                 if (square.Piece.PieceColor != board.Player)
                     continue;
@@ -318,7 +318,7 @@ namespace Advance
             for (int i = 0; i < Board.Size * Board.Size; i++)
             {
                 Piece piece = board.Squares[i].Piece;
-                if (piece == null || piece.PieceType == PieceType.Wall)
+                if (piece == null)
                     continue;
                 if (piece.PieceColor != board.Player)
                     continue;
@@ -331,7 +331,7 @@ namespace Advance
                     move.DestPos = moveDest.Pos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
-                    if (destPiece != null && destPiece.PieceType != PieceType.Wall)
+                    if (destPiece != null)
                         move.Score += destPiece.PieceMaterialValue;
 
                     positions.Add(move);

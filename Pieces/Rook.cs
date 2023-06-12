@@ -3,7 +3,7 @@ namespace Advance
     /// <summary>
     /// Class containing the logic for getting valid moves for the miner piece.
     /// </summary>
-    internal static class Miner
+    internal static class Rook
     {
         /// <summary>
         /// Gets the moves for the miner piece. Miners can move and capture (including walls) any number of squares in the cardinal directions without jumping over other pieces.
@@ -87,11 +87,6 @@ namespace Advance
         {
             Square destSquare = board.Squares[destPos];
 
-            // Check if destination piece is protected by a sentinel
-            Piece? sentinel = Moves.IsProtected(board, square, destPos);
-            if (sentinel != null && sentinel.PieceColor == square.Piece.PieceColor) // Protected by friendly sentinel
-                Moves.SetThreat(board, square, destPos);
-
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
@@ -105,14 +100,10 @@ namespace Advance
                 return;
             }
 
-            // Capture only if not protected by a sentinel
-            if (sentinel == null && destSquare.Piece.PieceColor != square.Piece.PieceColor)
-            {
-                // If destination piece is general, set check
-                Moves.IsGeneralInCheck(board, destPos);
+            // If destination piece is general, set check
+            Moves.IsGeneralInCheck(board, destPos);
 
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
-            }
+            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
         }
     }
 }

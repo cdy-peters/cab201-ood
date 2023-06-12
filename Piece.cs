@@ -5,7 +5,6 @@ namespace Advance
     /// </summary>
     internal enum PieceColor
     {
-        None,
         White,
         Black
     }
@@ -15,15 +14,12 @@ namespace Advance
     /// </summary>
     internal enum PieceType
     {
-        Wall,
-        Zombie,
-        Builder,
-        Jester,
-        Miner,
-        Sentinel,
-        Catapult,
-        Dragon,
-        General
+        Pawn,
+        Bishop,
+        Knight,
+        Rook,
+        Queen,
+        King
     }
 
     /// <summary>
@@ -149,34 +145,28 @@ namespace Advance
         /// </summary>
         /// <param name="pieceType">The type of piece to create</param>
         /// <param name="pieceColor">The color of the piece to create</param>
-        internal Piece(PieceType pieceType, PieceColor pieceColor = PieceColor.None)
+        internal Piece(PieceType pieceType, PieceColor pieceColor)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
             PieceMaterialValue = pieceType switch
             {
-                PieceType.Wall => 0,
-                PieceType.Zombie => 1,
-                PieceType.Builder => 2,
-                PieceType.Jester => 3,
-                PieceType.Miner => 4,
-                PieceType.Sentinel => 5,
-                PieceType.Catapult => 6,
-                PieceType.Dragon => 7,
-                PieceType.General => 10000,
+                PieceType.Pawn => 1,
+                PieceType.Bishop => 2,
+                PieceType.Knight => 3,
+                PieceType.Rook => 4,
+                PieceType.Queen => 5,
+                PieceType.King => 10000,
                 _ => 0
             };
             PieceActionValue = pieceType switch
             {
-                PieceType.Wall => 0,
-                PieceType.Zombie => 8,
-                PieceType.Builder => 7,
-                PieceType.Jester => 6,
-                PieceType.Miner => 5,
-                PieceType.Sentinel => 4,
-                PieceType.Catapult => 3,
-                PieceType.Dragon => 2,
-                PieceType.General => 1,
+                PieceType.Pawn => 6,
+                PieceType.Bishop => 5,
+                PieceType.Knight => 4,
+                PieceType.Rook => 3,
+                PieceType.Queen => 2,
+                PieceType.King => 1,
                 _ => 0
             };
             ValidMoves = new List<MoveDest>();
@@ -206,9 +196,6 @@ namespace Advance
             if (destSquare.Piece == null)
                 return false;
 
-            if (destSquare.Piece.PieceColor == PieceColor.None)
-                return false;
-
             if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
                 return true;
 
@@ -224,9 +211,6 @@ namespace Advance
         internal static bool IsEnemyPiece(Square square, Square destSquare)
         {
             if (destSquare.Piece == null)
-                return false;
-
-            if (destSquare.Piece.PieceColor == PieceColor.None)
                 return false;
 
             if (square.Piece.PieceColor != destSquare.Piece.PieceColor)

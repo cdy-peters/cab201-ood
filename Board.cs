@@ -10,7 +10,7 @@ namespace Advance
         /// <summary>
         /// The size of the board.
         /// </summary>
-        internal const int Size = 9;
+        internal const int Size = 8;
 
         /// <summary>
         /// The current player color.
@@ -76,23 +76,16 @@ namespace Advance
 
                 if (c == '.')
                     continue;
-                else if (c == '#')
-                {
-                    Squares[i].Piece = new Piece(PieceType.Wall);
-                    continue;
-                }
 
                 PieceColor pieceColor = Char.IsUpper(c) ? PieceColor.White : PieceColor.Black;
                 PieceType pieceType = Char.ToLower(c) switch
                 {
-                    'z' => PieceType.Zombie,
-                    'b' => PieceType.Builder,
-                    'm' => PieceType.Miner,
-                    'j' => PieceType.Jester,
-                    's' => PieceType.Sentinel,
-                    'c' => PieceType.Catapult,
-                    'd' => PieceType.Dragon,
-                    'g' => PieceType.General,
+                    'p' => PieceType.Pawn,
+                    'b' => PieceType.Bishop,
+                    'n' => PieceType.Knight,
+                    'r' => PieceType.Rook,
+                    'q' => PieceType.Queen,
+                    'k' => PieceType.King,
                     _ => throw new ArgumentException("An invalid piece was found in the board string.")
                 };
                 Squares[i].Piece = new Piece(pieceType, pieceColor);
@@ -142,48 +135,6 @@ namespace Advance
 
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
-            // Builder 
-            if (srcPiece.PieceType == PieceType.Builder && moveDest.IsWall)
-            {
-                board.Squares[destPos].Piece = new Piece(PieceType.Wall);
-                return;
-            }
-
-            // Catapult move/shot
-            if (srcPiece.PieceType == PieceType.Catapult)
-            {
-                // Check if the catapult is moving
-                int diff = Math.Abs(srcPos - destPos);
-                if (diff == 1 || diff == Size)
-                {
-                    board.Squares[srcPos].Piece = null!;
-                    board.Squares[destPos].Piece = srcPiece;
-                    return;
-                }
-
-                board.Squares[destPos].Piece = null!;
-                return;
-            }
-
-            // Jester abilities
-            if (srcPiece.PieceType == PieceType.Jester && (destPiece != null))
-            {
-                /// Swap friendly pieces
-                if (destPiece.PieceColor == srcPiece.PieceColor)
-                {
-                    board.Squares[srcPos].Piece = destPiece;
-                    board.Squares[destPos].Piece = srcPiece;
-                    return;
-                }
-
-                /// Convert enemy piece
-                if (destPiece.PieceColor != PieceColor.None)
-                {
-                    board.Squares[destPos].Piece.PieceColor = srcPiece.PieceColor;
-                    return;
-                }
-            }
-
             // Generic move
             board.Squares[srcPos].Piece = null!;
             board.Squares[destPos].Piece = srcPiece;
@@ -208,16 +159,13 @@ namespace Advance
                 PieceType type = square.Piece.PieceType;
                 PieceColor color = square.Piece.PieceColor;
 
-                if (type == PieceType.Wall)
-                    boardStr += "#";
-                else
-                {
-                    char c = type.ToString()[0];
-                    if (color == PieceColor.Black)
-                        c = Char.ToLower(c);
 
-                    boardStr += c;
-                }
+                char c = type.ToString()[0];
+                if (color == PieceColor.Black)
+                    c = Char.ToLower(c);
+
+                boardStr += c;
+
             }
 
             return Regex.Replace(boardStr, $".{{{Size}}}", "$0\n");

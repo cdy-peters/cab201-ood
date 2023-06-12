@@ -49,11 +49,11 @@ namespace Advance
         private static void ValidateFile(string boardStr)
         {
             /// Check if the board contains invalid characters
-            if (!System.Text.RegularExpressions.Regex.IsMatch(boardStr, @"^[ZBMJSDCGzbmjsdcg\.#]+$"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(boardStr, @"^[PBNRQKpbnrqk\.]+$"))
                 throw new System.ArgumentException("Invalid characters in file");
 
             /// Check if the board contains the correct number of characters
-            if (boardStr.Length != 81)
+            if (boardStr.Length != 64)
                 throw new System.ArgumentException("Invalid number of characters in file");
         }
 
