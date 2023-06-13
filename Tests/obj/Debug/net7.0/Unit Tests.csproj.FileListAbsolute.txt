@@ -1,0 +1,6 @@
+/Users/cody/Documents/Chess/Tests/bin/Debug/net7.0/CoverletSourceRootsMapping
+/Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Unit Tests.csproj.AssemblyReference.cache
+/Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Unit Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Unit Tests.AssemblyInfoInputs.cache
+/Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Unit Tests.AssemblyInfo.cs
+/Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Unit Tests.csproj.CoreCompileInputs.cache
