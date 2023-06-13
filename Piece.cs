@@ -1,4 +1,4 @@
-namespace Advance
+namespace Chess
 {
     /// <summary>
     /// Enumeration of the possible colors of a piece.

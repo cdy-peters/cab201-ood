@@ -1,4 +1,4 @@
-namespace Advance
+namespace Chess
 {
     /// <summary>
     /// Class containing the logic for getting valid moves for the zombie piece.

@@ -1,4 +1,4 @@
-namespace Advance
+namespace Chess
 {
     /// <summary>
     /// Structure representing a square on the board.

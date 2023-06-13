@@ -1,4 +1,4 @@
-namespace Advance
+namespace Chess
 {
     /// <summary>
     /// Class containing the logic for searching the board for the best move.

@@ -1,4 +1,4 @@
-﻿namespace Advance;
+﻿namespace Chess;
 
 /// <summary>
 /// The main program.
