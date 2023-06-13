@@ -14,11 +14,13 @@ namespace Engine
         internal Game()
         {
             Board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-            Moves.GetValidMoves(Board);
+            //Moves.GetValidMoves(Board);
 
-            MovingPiece bestMove = Search.AlphaBetaRoot(Board, 3);
+            //MovingPiece bestMove = Search.AlphaBetaRoot(Board, 3);
 
-            Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
+            //Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
+
+            Console.WriteLine(Board.ToFEN(Board));
         }
 
         /// <returns>A string representation of the move made and the resulting board.</returns>

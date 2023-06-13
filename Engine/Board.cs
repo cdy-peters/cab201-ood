@@ -20,6 +20,16 @@ namespace Engine
         internal bool WhiteCheck = false;
         internal bool BlackCheck = false;
 
+        internal bool WhiteCastleKingSide = true;
+        internal bool WhiteCastleQueenSide = true;
+        internal bool BlackCastleKingSide = true;
+        internal bool BlackCastleQueenSide = true;
+
+        internal int EnPassant = -1;
+
+        internal int HalfMoveClock = 0;
+        internal int FullMoves = 1;
+
         /// <summary>
         /// Creates a new Board.
         /// </summary>
@@ -138,6 +148,7 @@ namespace Engine
         {
             string fen = "";
 
+            // Get pieces
             int emptySquares = 0;
             for (int i = 0; i < Size * Size; i++)
             {
@@ -181,14 +192,38 @@ namespace Engine
             if (emptySquares > 0)
                 fen += emptySquares;
 
+            // Get color
             fen += " ";
             fen += board.Player == PieceColor.White ? "w" : "b";
-            fen += " ";
 
-            // TODO: Add castling
-            // TODO: Add en passant
-            // TODO: Add halfmove clock
-            // TODO: Add fullmove number
+            // Get Castling
+            fen += " ";
+            if (board.WhiteCastleKingSide)
+                fen += "K";
+            if (board.WhiteCastleQueenSide)
+                fen += "Q";
+            if (board.BlackCastleKingSide)
+                fen += "k";
+            if (board.BlackCastleQueenSide)
+                fen += "q";
+            if (!board.WhiteCastleKingSide && !board.WhiteCastleQueenSide && !board.BlackCastleKingSide && !board.BlackCastleQueenSide)
+                fen += "-";
+
+            // Get En Passant
+            fen += " ";
+            if (board.EnPassant == -1)
+                fen += "-";
+            else
+                fen += board.EnPassant; // TODO: Convert to algebraic notation
+
+            // Get Halfmove Clock
+            fen += " ";
+            fen += board.HalfMoveClock;
+
+            // Get Fullmove Number
+            fen += " ";
+            fen += board.FullMoves;
+            
 
             return fen;
         }
