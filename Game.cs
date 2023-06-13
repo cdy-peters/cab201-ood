@@ -16,24 +16,16 @@ namespace Advance
         internal Board Board;
 
         /// <summary>
-        /// Creates a new Game with the source file and makes the best move, outputting the resulting board to the destination file.
+        /// Creates a new Game and makes the best move.
         /// </summary>
-        /// <param name="player">The player color.</param>
-        /// <param name="srcFile">The source file.</param>
-        /// <param name="destFile">The destination file.</param>
-        internal Game(string player, string srcFile, string destFile)
+        internal Game()
         {
-            PlayerColor = player == "white" ? PieceColor.White : PieceColor.Black;
-            string boardStr = FileIO.LoadFile(srcFile);
-
-            Board = new Board(boardStr);
+            Board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             Moves.GetValidMoves(Board);
 
             MovingPiece bestMove = Search.AlphaBetaRoot(Board, 3);
 
             Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
-
-            FileIO.SaveFile(destFile, Board.ToString());
         }
 
         /// <returns>A string representation of the move made and the resulting board.</returns>

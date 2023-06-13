@@ -67,15 +67,24 @@ namespace Advance
         /// <summary>
         /// Creates a Board from a string.
         /// </summary>
-        /// <param name="boardStr">The string to create the Board from.</param>
-        internal Board(string boardStr) : this()
+        /// <param name="fen">The FEN string to create the Board from.</param>
+        internal Board(string fen) : this() // ! Currently assumes a valid FEN string
         {
-            for (int i = 0; i < Size * Size; i++)
+            // Set pieces
+            int idx = 0;
+            foreach (char c in fen)
             {
-                char c = boardStr[i];
+                if (idx >= Size * Size)
+                    break;
 
-                if (c == '.')
+                if (c == '/')
                     continue;
+
+                if (Char.IsDigit(c))
+                {
+                    idx += (int)Char.GetNumericValue(c);
+                    continue;
+                }
 
                 PieceColor pieceColor = Char.IsUpper(c) ? PieceColor.White : PieceColor.Black;
                 PieceType pieceType = Char.ToLower(c) switch
@@ -88,8 +97,21 @@ namespace Advance
                     'k' => PieceType.King,
                     _ => throw new ArgumentException("An invalid piece was found in the board string.")
                 };
-                Squares[i].Piece = new Piece(pieceType, pieceColor);
+                Squares[idx++].Piece = new Piece(pieceType, pieceColor);
             }
+
+            // Set color
+            if (fen.Contains(" w "))
+                Player = PieceColor.White;
+            else if (fen.Contains(" b "))
+                Player = PieceColor.Black;
+            else
+                throw new ArgumentException("An invalid player was found in the board string.");
+
+            // TODO: Set castling
+            // TODO: Set en passant
+            // TODO: Set halfmove clock
+            // TODO: Set fullmove number
         }
 
         /// <summary>
@@ -141,6 +163,64 @@ namespace Advance
         }
 
         /// <summary>
+        /// Converts the Board to a FEN string.
+        /// </summary>
+        /// <param name="board">The Board to convert.</param>
+        internal static string ToFEN(Board board)
+        {
+            string fen = "";
+
+            int emptySquares = 0;
+            for (int i = 0; i < Size * Size; i++)
+            {
+                if (i % Size == 0 && i != 0)
+                {
+                    if (emptySquares > 0)
+                    {
+                        fen += emptySquares;
+                        emptySquares = 0;
+                    }
+                    fen += "/";
+                }
+
+                if (board.Squares[i].Piece == null)
+                {
+                    emptySquares++;
+                    continue;
+                }
+
+                if (emptySquares > 0)
+                {
+                    fen += emptySquares;
+                    emptySquares = 0;
+                }
+
+                PieceType type = board.Squares[i].Piece.PieceType;
+                PieceColor color = board.Squares[i].Piece.PieceColor;
+
+                char c = type.ToString()[0];
+                if (color == PieceColor.Black)
+                    c = Char.ToLower(c);
+
+                fen += c;
+            }
+
+            if (emptySquares > 0)
+                fen += emptySquares;
+
+            fen += " ";
+            fen += board.Player == PieceColor.White ? "w" : "b";
+            fen += " ";
+
+            // TODO: Add castling
+            // TODO: Add en passant
+            // TODO: Add halfmove clock
+            // TODO: Add fullmove number
+
+            return fen;
+        }
+
+        /// <summary>
         /// Converts the Board to a string.
         /// </summary>
         /// <returns>A string representation of the Board.</returns>
@@ -158,7 +238,6 @@ namespace Advance
 
                 PieceType type = square.Piece.PieceType;
                 PieceColor color = square.Piece.PieceColor;
-
 
                 char c = type.ToString()[0];
                 if (color == PieceColor.Black)
