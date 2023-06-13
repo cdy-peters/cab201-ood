@@ -273,7 +273,7 @@ namespace Engine
             return fen;
         }
 
-        private string FromAN(string an)
+        private static string FromAN(string an)
         {
             int file = an[0] - 97;
             int rank = an[1] - 49;
@@ -281,7 +281,7 @@ namespace Engine
             return (rank * Size + file).ToString();
         }
 
-        private string ToAN(int pos)
+        private static string ToAN(int pos)
         {
             int file = pos % Size;
             int rank = pos / Size;

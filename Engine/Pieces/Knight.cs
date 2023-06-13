@@ -49,7 +49,10 @@ namespace Engine
 
             // Add attack/defense values
             if (Piece.IsFriendlyPiece(square, destSquare))
+            {
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
+                return;
+            }
             else if (Piece.IsEnemyPiece(square, destSquare))
                 square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
