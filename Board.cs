@@ -197,8 +197,13 @@ namespace Advance
 
                 PieceType type = board.Squares[i].Piece.PieceType;
                 PieceColor color = board.Squares[i].Piece.PieceColor;
+                char c;
 
-                char c = type.ToString()[0];
+                if (type == PieceType.Knight)
+                    c = 'N';
+                else
+                    c = type.ToString()[0];
+
                 if (color == PieceColor.Black)
                     c = Char.ToLower(c);
 
@@ -238,8 +243,13 @@ namespace Advance
 
                 PieceType type = square.Piece.PieceType;
                 PieceColor color = square.Piece.PieceColor;
+                char c;
 
-                char c = type.ToString()[0];
+                if (type == PieceType.Knight)
+                    c = 'N';
+                else
+                    c = type.ToString()[0];
+
                 if (color == PieceColor.Black)
                     c = Char.ToLower(c);
 
