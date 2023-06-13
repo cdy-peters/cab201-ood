@@ -5,14 +5,7 @@ namespace Engine
     /// </summary>
     internal class Game
     {
-        /// <summary>
-        /// The color of the player making a move.
-        /// </summary>
         internal static PieceColor PlayerColor;
-
-        /// <summary>
-        /// The game board.
-        /// </summary>
         internal Board Board;
 
         /// <summary>

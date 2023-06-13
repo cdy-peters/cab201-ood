@@ -10,19 +10,9 @@ namespace Engine
         /// </summary>
         private struct Position
         {
-            /// <summary>
-            /// The source position of the move.
-            /// </summary>
             internal int SrcPos;
-
-            /// <summary>
-            /// The destination position of the move.
-            /// </summary>
             internal int DestPos;
 
-            /// <summary>
-            /// The score associated with the move.
-            /// </summary>
             internal int Score;
         }
 
@@ -31,9 +21,6 @@ namespace Engine
         /// </summary>
         private struct ResultBoards
         {
-            /// <summary>
-            /// The list of boards.
-            /// </summary>
             internal List<Board> Boards;
         }
 

@@ -27,14 +27,7 @@ namespace Engine
     /// </summary>
     internal struct MoveDest
     {
-        /// <summary>
-        /// The position of the move destination.
-        /// </summary>
         internal int Pos;
-
-        /// <summary>
-        /// Indicates whether the move destination is a wall.
-        /// </summary>
         internal bool IsWall;
 
         /// <summary>
@@ -52,24 +45,10 @@ namespace Engine
     /// </summary>
     internal struct MovingPiece
     {
-        /// <summary>
-        /// The color of the piece.
-        /// </summary>
         internal PieceColor PieceColor;
-
-        /// <summary>
-        /// The type of the piece.
-        /// </summary>
         internal PieceType? PieceType;
 
-        /// <summary>
-        /// The source position of the move.
-        /// </summary>
         internal int SrcPos;
-
-        /// <summary>
-        /// The destination of the move.
-        /// </summary>
         internal MoveDest Dest;
 
         /// <summary>
@@ -105,39 +84,14 @@ namespace Engine
     /// </summary>
     internal class Piece
     {
-        /// <summary>
-        /// The color of the piece.
-        /// </summary>
         internal PieceColor PieceColor;
-
-        /// <summary>
-        /// The type of the piece.
-        /// </summary>
         internal PieceType PieceType;
 
-        /// <summary>
-        /// The material value of the piece.
-        /// </summary>
         internal int PieceMaterialValue;
-
-        /// <summary>
-        /// The action value of the piece.
-        /// </summary>
         internal int PieceActionValue;
-
-        /// <summary>
-        /// The attack value of the piece.
-        /// </summary>
         internal int AttackValue;
-
-        /// <summary>
-        /// The defense value of the piece.
-        /// </summary>
         internal int DefenseValue;
 
-        /// <summary>
-        /// The list of valid moves for the piece.
-        /// </summary>
         internal List<MoveDest> ValidMoves;
 
         /// <summary>

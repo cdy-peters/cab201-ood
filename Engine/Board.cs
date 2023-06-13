@@ -7,49 +7,17 @@ namespace Engine
     /// </summary>
     internal class Board
     {
-        /// <summary>
-        /// The size of the board.
-        /// </summary>
         internal const int Size = 8;
 
-        /// <summary>
-        /// The current player color.
-        /// </summary>
         internal PieceColor Player;
-
-        /// <summary>
-        /// The current score of the game.
-        /// </summary>
         internal int Score = 0;
-
-        /// <summary>
-        /// The last move made on the board.
-        /// </summary>
         internal MovingPiece LastMove;
-
-        /// <summary>
-        /// An array representing the squares on the board.
-        /// </summary>
         internal Square[] Squares;
 
-        /// <summary>
-        /// An array indicating the squares threatened by white pieces.
-        /// </summary>
         internal bool[] ThreatenedByWhite = new bool[Size * Size];
-
-        /// <summary>
-        /// An array indicating the squares threatened by black pieces.
-        /// </summary>
         internal bool[] ThreatenedByBlack = new bool[Size * Size];
 
-        /// <summary>
-        /// Indicates whether the white player is in check.
-        /// </summary>
         internal bool WhiteCheck = false;
-
-        /// <summary>
-        /// Indicates whether the black player is in check.
-        /// </summary>
         internal bool BlackCheck = false;
 
         /// <summary>

@@ -5,9 +5,6 @@ namespace Engine
     /// </summary>
     internal static class Pawn
     {
-        /// <summary>
-        /// The offsets for the zombie piece.
-        /// </summary>
         private static int[] offsets = { -1, 1 };
 
         /// <summary>

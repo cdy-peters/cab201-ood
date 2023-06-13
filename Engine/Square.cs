@@ -5,9 +5,6 @@ namespace Engine
     /// </summary>
     internal struct Square
     {
-        /// <summary>
-        /// The piece on the square.
-        /// </summary>
         internal Piece Piece;
 
         /// <summary>
