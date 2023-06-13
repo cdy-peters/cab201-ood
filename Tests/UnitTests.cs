@@ -6,10 +6,12 @@ namespace UnitTests;
 public class FunctionalityTests
 {
     [TestMethod]
-    public void InitialBoardIO()
+    public void StartingBoardIO()
     {
-        string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        Board board = new Board(fen);
-        Assert.AreEqual(Board.ToFEN(board), fen);
+        string fenIn = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        Board board = new Board(fenIn);
+
+        string fenOut = board.ToFEN();
+        Assert.AreEqual(fenIn, fenOut);
     }
 }

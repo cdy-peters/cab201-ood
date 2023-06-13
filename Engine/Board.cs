@@ -190,7 +190,7 @@ namespace Engine
         /// Converts the Board to a FEN string.
         /// </summary>
         /// <param name="board">The Board to convert.</param>
-        internal string ToFEN(Board board)
+        internal string ToFEN()
         {
             string fen = "";
 
@@ -208,7 +208,7 @@ namespace Engine
                     fen += "/";
                 }
 
-                if (board.Squares[i].Piece == null)
+                if (this.Squares[i].Piece == null)
                 {
                     emptySquares++;
                     continue;
@@ -220,8 +220,8 @@ namespace Engine
                     emptySquares = 0;
                 }
 
-                PieceType type = board.Squares[i].Piece.PieceType;
-                PieceColor color = board.Squares[i].Piece.PieceColor;
+                PieceType type = this.Squares[i].Piece.PieceType;
+                PieceColor color = this.Squares[i].Piece.PieceColor;
                 char c;
 
                 if (type == PieceType.Knight)
@@ -240,35 +240,35 @@ namespace Engine
 
             // Get color
             fen += " ";
-            fen += board.Player == PieceColor.White ? "w" : "b";
+            fen += this.Player == PieceColor.White ? "w" : "b";
 
             // Get Castling
             fen += " ";
-            if (board.WhiteCastleKingSide)
+            if (this.WhiteCastleKingSide)
                 fen += "K";
-            if (board.WhiteCastleQueenSide)
+            if (this.WhiteCastleQueenSide)
                 fen += "Q";
-            if (board.BlackCastleKingSide)
+            if (this.BlackCastleKingSide)
                 fen += "k";
-            if (board.BlackCastleQueenSide)
+            if (this.BlackCastleQueenSide)
                 fen += "q";
-            if (!board.WhiteCastleKingSide && !board.WhiteCastleQueenSide && !board.BlackCastleKingSide && !board.BlackCastleQueenSide)
+            if (!this.WhiteCastleKingSide && !this.WhiteCastleQueenSide && !this.BlackCastleKingSide && !this.BlackCastleQueenSide)
                 fen += "-";
 
             // Get En Passant
             fen += " ";
-            if (board.EnPassant == -1)
+            if (this.EnPassant == -1)
                 fen += "-";
             else
-                fen += ToAN(board.EnPassant);
+                fen += ToAN(this.EnPassant);
 
             // Get Halfmove Clock
             fen += " ";
-            fen += board.HalfMoveClock;
+            fen += this.HalfMoveClock;
 
             // Get Fullmove Number
             fen += " ";
-            fen += board.FullMoves;
+            fen += this.FullMoves;
 
             return fen;
         }

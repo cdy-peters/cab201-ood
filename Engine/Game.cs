@@ -20,7 +20,7 @@ namespace Engine
 
             //Board.MovePiece(Board, bestMove.SrcPos, bestMove.Dest);
 
-            Console.WriteLine(Board.ToFEN(Board));
+            Console.WriteLine(Board.ToFEN());
         }
 
         /// <returns>A string representation of the move made and the resulting board.</returns>
