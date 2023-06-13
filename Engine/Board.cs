@@ -48,19 +48,24 @@ namespace Engine
         /// <param name="fen">The FEN string to create the Board from.</param>
         internal Board(string fen) : this() // ! Currently assumes a valid FEN string
         {
+            int charIdx = 0;
+
             // Set pieces
-            int idx = 0;
-            foreach (char c in fen)
+            int squareIdx = 0;
+            while (fen[charIdx] != ' ')
             {
-                if (idx >= Size * Size)
-                    break;
+                char c = fen[charIdx];
 
                 if (c == '/')
+                {
+                    charIdx++;
                     continue;
+                }
 
                 if (Char.IsDigit(c))
                 {
-                    idx += (int)Char.GetNumericValue(c);
+                    squareIdx += (int)Char.GetNumericValue(c);
+                    charIdx++;
                     continue;
                 }
 
@@ -75,21 +80,62 @@ namespace Engine
                     'k' => PieceType.King,
                     _ => throw new ArgumentException("An invalid piece was found in the board string.")
                 };
-                Squares[idx++].Piece = new Piece(pieceType, pieceColor);
+                Squares[squareIdx++].Piece = new Piece(pieceType, pieceColor);
+                charIdx++;
             }
+            charIdx++;
 
             // Set color
-            if (fen.Contains(" w "))
-                Player = PieceColor.White;
-            else if (fen.Contains(" b "))
-                Player = PieceColor.Black;
-            else
-                throw new ArgumentException("An invalid player was found in the board string.");
+            Player = fen[charIdx] switch
+            {
+                'w' => PieceColor.White,
+                'b' => PieceColor.Black,
+                _ => throw new ArgumentException("An invalid player was found in the board string.")
+            };
 
-            // TODO: Set castling
-            // TODO: Set en passant
-            // TODO: Set halfmove clock
-            // TODO: Set fullmove number
+            // Set castling
+            charIdx += 2;
+            while (fen[charIdx] != ' ')
+            {
+                char c = fen[charIdx];
+
+                switch (c)
+                {
+                    case 'K':
+                        WhiteCastleKingSide = true;
+                        break;
+                    case 'Q':
+                        WhiteCastleQueenSide = true;
+                        break;
+                    case 'k':
+                        BlackCastleKingSide = true;
+                        break;
+                    case 'q':
+                        BlackCastleQueenSide = true;
+                        break;
+                    case '-':
+                        break;
+                    default:
+                        throw new ArgumentException("An invalid castling was found in the board string.");
+                }
+
+                charIdx++;
+            }
+
+            // Set en passant
+            charIdx++;
+            if (fen[charIdx] != '-')
+                EnPassant = int.Parse(FromAN(fen.Substring(charIdx++, 2)));
+            else
+                EnPassant = -1;
+
+            // Set halfmove clock
+            charIdx += 2;
+            HalfMoveClock = int.Parse(fen.Substring(charIdx, 1));
+
+            // Set fullmove number
+            charIdx += 2;
+            FullMoves = int.Parse(fen.Substring(charIdx, 1));
         }
 
         /// <summary>
@@ -144,7 +190,7 @@ namespace Engine
         /// Converts the Board to a FEN string.
         /// </summary>
         /// <param name="board">The Board to convert.</param>
-        internal static string ToFEN(Board board)
+        internal string ToFEN(Board board)
         {
             string fen = "";
 
@@ -214,7 +260,7 @@ namespace Engine
             if (board.EnPassant == -1)
                 fen += "-";
             else
-                fen += board.EnPassant; // TODO: Convert to algebraic notation
+                fen += ToAN(board.EnPassant);
 
             // Get Halfmove Clock
             fen += " ";
@@ -223,9 +269,24 @@ namespace Engine
             // Get Fullmove Number
             fen += " ";
             fen += board.FullMoves;
-            
 
             return fen;
+        }
+
+        private string FromAN(string an)
+        {
+            int file = an[0] - 97;
+            int rank = an[1] - 49;
+
+            return (rank * Size + file).ToString();
+        }
+
+        private string ToAN(int pos)
+        {
+            int file = pos % Size;
+            int rank = pos / Size;
+
+            return $"{(char)(file + 97)}{rank + 1}";
         }
 
         /// <summary>
