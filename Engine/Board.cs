@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Chess
+namespace Engine
 {
     /// <summary>
     /// Class representing the board.

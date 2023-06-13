@@ -1,0 +1,15 @@
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.csproj.AssemblyReference.cache
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.GeneratedMSBuildEditorConfig.editorconfig
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.AssemblyInfoInputs.cache
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.AssemblyInfo.cs
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.csproj.CoreCompileInputs.cache
+/Users/cody/Documents/Chess/Engine/bin/Debug/net7.0/Engine
+/Users/cody/Documents/Chess/Engine/bin/Debug/net7.0/Engine.deps.json
+/Users/cody/Documents/Chess/Engine/bin/Debug/net7.0/Engine.runtimeconfig.json
+/Users/cody/Documents/Chess/Engine/bin/Debug/net7.0/Engine.dll
+/Users/cody/Documents/Chess/Engine/bin/Debug/net7.0/Engine.pdb
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.dll
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/refint/Engine.dll
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.pdb
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/Engine.genruntimeconfig.cache
+/Users/cody/Documents/Chess/Engine/obj/Debug/net7.0/ref/Engine.dll

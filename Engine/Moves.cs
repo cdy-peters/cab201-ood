@@ -1,4 +1,4 @@
-namespace Chess
+namespace Engine
 {
     /// <summary>
     /// Class containing the logic for getting valid moves for each piece.

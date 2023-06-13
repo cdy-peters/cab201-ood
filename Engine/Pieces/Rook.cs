@@ -1,25 +1,28 @@
-namespace Chess
+namespace Engine
 {
     /// <summary>
-    /// Class containing the logic for getting valid moves for the dragon piece.
+    /// Class containing the logic for getting valid moves for the miner piece.
     /// </summary>
-    internal static class Bishop
+    internal static class Rook
     {
         /// <summary>
-        /// Gets the moves for the dragon piece. Dragons can move in any direction any number of squares without jumping over other pieces, but cannot capture pieces in the adjacent squares.
+        /// Gets the moves for the miner piece. Miners can move and capture (including walls) any number of squares in the cardinal directions without jumping over other pieces.
         /// </summary>
         /// <param name="board">The board to examine.</param>
-        /// <param name="square">The square that the dragon is on.</param>
-        /// <param name="pos">The position of the dragon.</param>
+        /// <param name="square">The square that the miner is on.</param>
+        /// <param name="pos">The position of the miner.</param>
         internal static void GetMoves(Board board, Square square, int pos)
         {
-            int destPos;
+            int row = pos / Board.Size;
+            int col = pos % Board.Size;
 
-            // Up Left
-            destPos = pos;
-            while (destPos >= Board.Size && destPos % Board.Size != 0)
+            // Up
+            int destPos = pos;
+            while (row > 0)
             {
-                destPos -= Board.Size + 1;
+                destPos -= Board.Size;
+                if (destPos < 0)
+                    break;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -37,11 +40,13 @@ namespace Chess
                     break;
             }
 
-            // Up Right
+            // Down
             destPos = pos;
-            while (destPos >= Board.Size && destPos % Board.Size != Board.Size - 1)
+            while (row < Board.Size - 1)
             {
-                destPos -= Board.Size - 1;
+                destPos += Board.Size;
+                if (destPos >= Board.Size * Board.Size)
+                    break;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -59,11 +64,13 @@ namespace Chess
                     break;
             }
 
-            // Down Left
+            // Left
             destPos = pos;
-            while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != 0)
+            while (col > 0)
             {
-                destPos += Board.Size - 1;
+                destPos--;
+                if (destPos % Board.Size >= Board.Size - 1 || destPos < 0)
+                    break;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -81,11 +88,13 @@ namespace Chess
                     break;
             }
 
-            // Down Right
+            // Right
             destPos = pos;
-            while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != Board.Size - 1)
+            while (col < Board.Size - 1)
             {
-                destPos += Board.Size + 1;
+                destPos++;
+                if (destPos % Board.Size <= 0)
+                    break;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -108,7 +117,7 @@ namespace Chess
         /// Validates and adds a move to the list of valid moves.
         /// </summary>
         /// <param name="board">The board to examine.</param>
-        /// <param name="square">The square that the dragon is on.</param>
+        /// <param name="square">The square that the miner is on.</param>
         /// <param name="destPos">The position of the destination square.</param>
         private static void AddMove(Board board, Square square, int destPos)
         {

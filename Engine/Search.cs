@@ -1,4 +1,4 @@
-namespace Chess
+namespace Engine
 {
     /// <summary>
     /// Class containing the logic for searching the board for the best move.

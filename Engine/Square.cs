@@ -1,4 +1,4 @@
-namespace Chess
+namespace Engine
 {
     /// <summary>
     /// Structure representing a square on the board.

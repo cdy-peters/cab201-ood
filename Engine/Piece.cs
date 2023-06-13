@@ -1,4 +1,4 @@
-namespace Chess
+namespace Engine
 {
     /// <summary>
     /// Enumeration of the possible colors of a piece.
