@@ -24,10 +24,19 @@ namespace Advance
                 if (destPos < 0)
                     break;
 
-                AddMove(board, square, destPos);
-
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece != null)
+
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+                    continue;
+                }
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+                {
+                    AddMove(board, square, destPos);
+                    break;
+                }
+                else
                     break;
             }
 
@@ -39,10 +48,19 @@ namespace Advance
                 if (destPos >= Board.Size * Board.Size)
                     break;
 
-                AddMove(board, square, destPos);
-
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece != null)
+
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+                    continue;
+                }
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+                {
+                    AddMove(board, square, destPos);
+                    break;
+                }
+                else
                     break;
             }
 
@@ -54,10 +72,19 @@ namespace Advance
                 if (destPos % Board.Size >= Board.Size - 1 || destPos < 0)
                     break;
 
-                AddMove(board, square, destPos);
-
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece != null)
+
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+                    continue;
+                }
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+                {
+                    AddMove(board, square, destPos);
+                    break;
+                }
+                else
                     break;
             }
 
@@ -69,10 +96,19 @@ namespace Advance
                 if (destPos % Board.Size <= 0)
                     break;
 
-                AddMove(board, square, destPos);
-
                 Square destSquare = board.Squares[destPos];
-                if (destSquare.Piece != null)
+
+                if (destSquare.Piece == null)
+                {
+                    AddMove(board, square, destPos);
+                    continue;
+                }
+                else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
+                {
+                    AddMove(board, square, destPos);
+                    break;
+                }
+                else
                     break;
             }
         }
