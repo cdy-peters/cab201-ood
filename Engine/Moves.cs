@@ -107,21 +107,6 @@ namespace Engine
         }
 
         /// <summary>
-        /// Sets threat on a square.
-        /// </summary>
-        /// <param name="board">The board to set the threatened squares on</param>
-        /// <param name="square">The square of the moving piece.</param>
-        /// <param name="destPos">The destination position of the moving piece.</param>
-        internal static void SetThreat(Board board, Square square, int destPos)
-        {
-            /// Sets the square of the destination position to threatened.
-            if (square.Piece.PieceColor == PieceColor.White)
-                board.ThreatenedByWhite[destPos] = true;
-            else
-                board.ThreatenedByBlack[destPos] = true;
-        }
-
-        /// <summary>
         /// Validates and adds a move to the list of valid moves.
         /// </summary>
         /// <param name="board">The board to examine.</param>
@@ -150,6 +135,15 @@ namespace Engine
                     else
                         board.BlackCheck = true;
                 }
+            }
+
+            /// Sets the square of the destination position to threatened.
+            if (square.Piece.PieceType != PieceType.Pawn)
+            {
+                if (square.Piece.PieceColor == PieceColor.White)
+                    board.ThreatenedByWhite[destPos] = true;
+                else
+                    board.ThreatenedByBlack[destPos] = true;
             }
 
             square.Piece.ValidMoves.Add(destPos);
