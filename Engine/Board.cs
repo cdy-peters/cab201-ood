@@ -283,7 +283,7 @@ namespace Engine
             return fen;
         }
 
-        private static int FromAN(string an)
+        internal static int FromAN(string an)
         {
             int file = an[0] - 'a';
             int rank = 8 - (an[1] - '1') - 1;
@@ -291,7 +291,7 @@ namespace Engine
             return rank * 8 + file;
         }
 
-        private static string ToAN(int pos)
+        internal static string ToAN(int pos)
         {
             int file = pos % 8;
             int rank = 8 - (pos / 8) - 1;

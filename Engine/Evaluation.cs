@@ -18,6 +18,11 @@ namespace Engine
             totalScore += piece.DefenseValue;
             totalScore -= piece.AttackValue;
 
+            if (piece.DefenseValue < piece.AttackValue)
+                totalScore -= ((piece.AttackValue - piece.DefenseValue) * 10);
+
+            totalScore += piece.ValidMoves.Count;
+
             return totalScore;
         }
 
@@ -31,9 +36,9 @@ namespace Engine
 
             /// Penalty for being in check.
             if (board.WhiteCheck)
-                board.Score -= 100;
+                board.Score -= 70;
             if (board.BlackCheck)
-                board.Score += 100;
+                board.Score += 70;
 
             /// Calculate the score of each piece on the board.
             for (int i = 0; i < 64; i++)

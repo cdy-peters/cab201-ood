@@ -87,21 +87,21 @@ namespace Engine
             PieceType = pieceType;
             PieceMaterialValue = pieceType switch
             {
-                PieceType.Pawn => 1,
-                PieceType.Bishop => 2,
-                PieceType.Knight => 3,
-                PieceType.Rook => 4,
-                PieceType.Queen => 5,
-                PieceType.King => 10000,
+                PieceType.Pawn => 100,
+                PieceType.Bishop => 325,
+                PieceType.Knight => 320,
+                PieceType.Rook => 500,
+                PieceType.Queen => 975,
+                PieceType.King => 32767,
                 _ => 0
             };
             PieceActionValue = pieceType switch
             {
                 PieceType.Pawn => 6,
-                PieceType.Bishop => 5,
-                PieceType.Knight => 4,
-                PieceType.Rook => 3,
-                PieceType.Queen => 2,
+                PieceType.Bishop => 3,
+                PieceType.Knight => 3,
+                PieceType.Rook => 2,
+                PieceType.Queen => 1,
                 PieceType.King => 1,
                 _ => 0
             };

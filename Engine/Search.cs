@@ -73,7 +73,7 @@ namespace Engine
             foreach (Board resBoard in resBoards.Boards)
             {
                 int value = -AlphaBeta(resBoard, depth, -beta, -alpha);
-                if (value >= 10000) /// If the resulting board is a checkmate.
+                if (value >= 32767) /// If the resulting board is a checkmate.
                     return resBoard.LastMove;
 
                 resBoard.Score = value;
@@ -206,7 +206,12 @@ namespace Engine
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
                     if (destPiece != null)
+                    {
                         move.Score += destPiece.PieceMaterialValue;
+                        if (piece.PieceMaterialValue < destPiece.PieceMaterialValue)
+                            move.Score += destPiece.PieceMaterialValue - piece.PieceMaterialValue;
+                    }
+                    move.Score += piece.PieceActionValue;
 
                     positions.Add(move);
                 }
