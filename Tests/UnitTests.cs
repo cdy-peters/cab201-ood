@@ -42,6 +42,6 @@ public class FunctionalityTests
         }
 
         if (failures.Count > 0)
-            Assert.Fail($"{failures.Count}/800 tests failed\n" + string.Join("\n\n", failures));
+            Assert.Fail($"{failures.Count}/{lines.Length} tests failed\n" + string.Join("\n\n", failures));
     }
 }
