@@ -122,20 +122,37 @@ namespace Engine
         }
 
         /// <summary>
-        /// Checks if the piece at the destination is a general piece and sets the check flag.
+        /// Validates and adds a move to the list of valid moves.
         /// </summary>
         /// <param name="board">The board to examine.</param>
-        /// <param name="destPos">The destination position to check.</param>
-        internal static void IsGeneralInCheck(Board board, int destPos)
+        /// <param name="square">The square that the sentinel is on.</param>
+        /// <param name="destPos">The position of the destination square.</param>
+        internal static void AddMove(Board board, Square square, int destPos)
         {
             Square destSquare = board.Squares[destPos];
-            if (destSquare.Piece.PieceType != PieceType.King)
-                return;
 
-            if (destSquare.Piece.PieceColor == PieceColor.White)
-                board.WhiteCheck = true;
-            else
-                board.BlackCheck = true;
+            if (destSquare.Piece != null)
+            {
+                // Add attack/defense values
+                if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
+                {
+                    square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
+                    return;
+                }
+                else
+                    square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
+
+                // Set check flag
+                if (destSquare.Piece.PieceType == PieceType.King)
+                {
+                    if (destSquare.Piece.PieceColor == PieceColor.White)
+                        board.WhiteCheck = true;
+                    else
+                        board.BlackCheck = true;
+                }
+            }
+
+            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

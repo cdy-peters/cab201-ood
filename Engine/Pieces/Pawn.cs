@@ -50,7 +50,7 @@ namespace Engine
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
 
                     // 2 square move
                     if (row == 8 - 2)
@@ -60,7 +60,7 @@ namespace Engine
                         {
                             destSquare = board.Squares[destPos];
                             if (destSquare.Piece == null)
-                                AddMove(board, square, destPos);
+                                Moves.AddMove(board, square, destPos);
                         }
                     }
                 }
@@ -98,7 +98,7 @@ namespace Engine
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
 
                     // 2 square move
                     if (row == 1)
@@ -108,7 +108,7 @@ namespace Engine
                         {
                             destSquare = board.Squares[destPos];
                             if (destSquare.Piece == null)
-                                AddMove(board, square, destPos);
+                                Moves.AddMove(board, square, destPos);
                         }
                     }
 
@@ -129,38 +129,6 @@ namespace Engine
         }
 
         /// <summary>
-        /// Validates and adds a move (not a capture) to the list of valid moves.
-        /// </summary>
-        /// <param name="board">The board to examine.</param>
-        /// <param name="square">The square that the zombie is on.</param>
-        /// <param name="destPos">The position of the destination square.</param>
-        private static void AddMove(Board board, Square square, int destPos)
-        {
-            Square destSquare = board.Squares[destPos];
-
-            // Add attack/defense values
-            if (Piece.IsFriendlyPiece(square, destSquare))
-            {
-                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
-                return;
-            }
-            else if (Piece.IsEnemyPiece(square, destSquare))
-                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
-
-            // Add move
-            if (destSquare.Piece == null)
-            {
-                square.Piece.ValidMoves.Add(destPos);
-                return;
-            }
-
-            // Check if the general is in check
-            Moves.IsGeneralInCheck(board, destPos);
-
-            square.Piece.ValidMoves.Add(destPos);
-        }
-
-        /// <summary>
         /// Validates and adds a capture to the list of valid moves.
         /// </summary>
         /// <param name="board">The board to examine.</param>
@@ -173,16 +141,22 @@ namespace Engine
                 return;
 
             // Add attack/defense values
-            if (Piece.IsFriendlyPiece(square, destSquare))
+            if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
             {
                 square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
                 return;
             }
-            else if (Piece.IsEnemyPiece(square, destSquare))
+            else
                 square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
 
-            // If destination piece is general, set check
-            Moves.IsGeneralInCheck(board, destPos);
+            // Set check flag
+            if (destSquare.Piece.PieceType == PieceType.King)
+            {
+                if (destSquare.Piece.PieceColor == PieceColor.White)
+                    board.WhiteCheck = true;
+                else
+                    board.BlackCheck = true;
+            }
 
             // Add move
             square.Piece.ValidMoves.Add(destPos);

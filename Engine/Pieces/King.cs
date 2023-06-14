@@ -29,54 +29,22 @@ namespace Engine
                     if (destPos == -1)
                         continue;
 
-                    AddMove(board, square, destPos);
+                    // Check if the destination square is threatened
+                    if (square.Piece.PieceColor == PieceColor.White)
+                    {
+                        if (board.ThreatenedByBlack[destPos])
+                            continue;
+                    }
+                    else
+                    {
+                        if (board.ThreatenedByWhite[destPos])
+                            continue;
+                    }
+
+                    Moves.AddMove(board, square, destPos);
                 }
 
             Castle(board);
-        }
-
-        /// <summary>
-        /// Validates and adds a move to the list of valid moves.
-        /// </summary>
-        /// <param name="board">The board to examine.</param>
-        /// <param name="square">The square that the general is on.</param>
-        /// <param name="destPos">The position of the destination square.</param>
-        private static void AddMove(Board board, Square square, int destPos)
-        {
-            Square destSquare = board.Squares[destPos];
-
-            // Add attack/defense values
-            if (Piece.IsFriendlyPiece(square, destSquare))
-            {
-                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
-                return;
-            }
-            else if (Piece.IsEnemyPiece(square, destSquare))
-                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
-
-            // Check if the destination square is threatened
-            if (square.Piece.PieceColor == PieceColor.White)
-            {
-                if (board.ThreatenedByBlack[destPos])
-                    return;
-            }
-            else
-            {
-                if (board.ThreatenedByWhite[destPos])
-                    return;
-            }
-
-            // Add move
-            if (destSquare.Piece == null)
-            {
-                square.Piece.ValidMoves.Add(destPos);
-                return;
-            }
-
-            // If destination piece is general, set check
-            Moves.IsGeneralInCheck(board, destPos);
-
-            square.Piece.ValidMoves.Add(destPos);
         }
 
         private static void Castle(Board board)

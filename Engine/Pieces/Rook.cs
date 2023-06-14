@@ -28,12 +28,12 @@ namespace Engine
 
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     continue;
                 }
                 else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     break;
                 }
                 else
@@ -52,12 +52,12 @@ namespace Engine
 
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     continue;
                 }
                 else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     break;
                 }
                 else
@@ -76,12 +76,12 @@ namespace Engine
 
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     continue;
                 }
                 else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     break;
                 }
                 else
@@ -100,46 +100,17 @@ namespace Engine
 
                 if (destSquare.Piece == null)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     continue;
                 }
                 else if (destSquare.Piece.PieceColor != square.Piece.PieceColor)
                 {
-                    AddMove(board, square, destPos);
+                    Moves.AddMove(board, square, destPos);
                     break;
                 }
                 else
                     break;
             }
-        }
-
-        /// <summary>
-        /// Validates and adds a move to the list of valid moves.
-        /// </summary>
-        /// <param name="board">The board to examine.</param>
-        /// <param name="square">The square that the miner is on.</param>
-        /// <param name="destPos">The position of the destination square.</param>
-        private static void AddMove(Board board, Square square, int destPos)
-        {
-            Square destSquare = board.Squares[destPos];
-
-            // Add attack/defense values
-            if (Piece.IsFriendlyPiece(square, destSquare))
-                square.Piece.DefenseValue += destSquare.Piece.PieceActionValue;
-            else if (Piece.IsEnemyPiece(square, destSquare))
-                square.Piece.AttackValue += destSquare.Piece.PieceActionValue;
-
-            // Add move
-            if (destSquare.Piece == null)
-            {
-                square.Piece.ValidMoves.Add(destPos);
-                return;
-            }
-
-            // If destination piece is general, set check
-            Moves.IsGeneralInCheck(board, destPos);
-
-            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

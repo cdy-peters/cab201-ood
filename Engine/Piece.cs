@@ -120,39 +120,5 @@ namespace Engine
             PieceActionValue = piece.PieceActionValue;
             ValidMoves = piece.ValidMoves;
         }
-
-        /// <summary>
-        /// Checks if the destination square is the same as the moving piece.
-        /// </summary>
-        /// <param name="square">The square of the moving piece</param>
-        /// <param name="destSquare">The destination square of the moving piece</param>
-        /// <returns>True if the destination square is the same as the moving piece, false otherwise.</returns>
-        internal static bool IsFriendlyPiece(Square square, Square destSquare)
-        {
-            if (destSquare.Piece == null)
-                return false;
-
-            if (square.Piece.PieceColor == destSquare.Piece.PieceColor)
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the destination square is an enemy piece.
-        /// </summary>
-        /// <param name="square">The square of the moving piece</param>
-        /// <param name="destSquare">The destination square of the moving piece</param>
-        /// <returns>True if the destination square is an enemy piece, false otherwise.</returns>
-        internal static bool IsEnemyPiece(Square square, Square destSquare)
-        {
-            if (destSquare.Piece == null)
-                return false;
-
-            if (square.Piece.PieceColor != destSquare.Piece.PieceColor)
-                return true;
-
-            return false;
-        }
     }
 }
