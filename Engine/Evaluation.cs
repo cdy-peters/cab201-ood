@@ -9,18 +9,14 @@ namespace Engine
         /// Evaluates the score of a piece.
         /// </summary>
         /// <param name="square">The square that the piece is on</param>
-        /// <param name="deep">Whether to evaluate the piece deeply</param>
         /// <returns>The score of the piece</returns>
-        private static int PieceEvaluation(Piece piece, bool deep)
+        private static int PieceEvaluation(Piece piece)
         {
             int totalScore = 0;
 
             totalScore += piece.PieceMaterialValue;
-            if (deep)
-            {
-                totalScore += piece.DefenseValue;
-                totalScore -= piece.AttackValue;
-            }
+            totalScore += piece.DefenseValue;
+            totalScore -= piece.AttackValue;
 
             return totalScore;
         }
@@ -29,8 +25,7 @@ namespace Engine
         /// Evaluates the score of a board as a zero sum result.
         /// </summary>
         /// <param name="board">The board to evaluate</param>
-        /// <param name="deep">Whether to evaluate the board deeply</param>
-        internal static void BoardEvaluation(Board board, bool deep)
+        internal static void BoardEvaluation(Board board)
         {
             board.Score = 0;
 
@@ -41,16 +36,16 @@ namespace Engine
                 board.Score += 100;
 
             /// Calculate the score of each piece on the board.
-            for (int i = 0; i < Board.Size * Board.Size; i++)
+            for (int i = 0; i < 64; i++)
             {
                 Piece piece = board.Squares[i].Piece;
                 if (piece == null)
                     continue;
 
                 if (piece.PieceColor == PieceColor.White)
-                    board.Score += PieceEvaluation(piece, deep);
+                    board.Score += PieceEvaluation(piece);
                 else
-                    board.Score -= PieceEvaluation(piece, deep);
+                    board.Score -= PieceEvaluation(piece);
             }
         }
     }

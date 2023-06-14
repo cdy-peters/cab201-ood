@@ -17,14 +17,14 @@ namespace Engine
         {
             if (square.Piece.PieceColor == PieceColor.White)
             {
-                if (pos / Board.Size > 0)
+                if (pos / 8 > 0)
                 {
                     WhiteZombie(board, square, pos);
                 }
             }
             else
             {
-                if (pos / Board.Size < Board.Size - 1)
+                if (pos / 8 < 8 - 1)
                 {
                     BlackZombie(board, square, pos);
                 }
@@ -39,8 +39,8 @@ namespace Engine
         /// <param name="pos">The position of the zombie.</param>
         private static void WhiteZombie(Board board, Square square, int pos)
         {
-            int row = pos / Board.Size;
-            int col = pos % Board.Size;
+            int row = pos / 8;
+            int col = pos % 8;
             int destPos = pos;
 
             // 1 square move
@@ -53,7 +53,7 @@ namespace Engine
                     AddMove(board, square, destPos);
 
                     // 2 square move
-                    if (row == Board.Size - 2)
+                    if (row == 8 - 2)
                     {
                         destPos = Moves.GetDestPos(pos, 0, -2);
                         if (destPos != -1)
@@ -87,8 +87,8 @@ namespace Engine
         /// <param name="pos">The position of the zombie.</param>
         private static void BlackZombie(Board board, Square square, int pos)
         {
-            int row = pos / Board.Size;
-            int col = pos % Board.Size;
+            int row = pos / 8;
+            int col = pos % 8;
             int destPos = pos;
 
             // 1 square move
@@ -150,14 +150,14 @@ namespace Engine
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+                square.Piece.ValidMoves.Add(destPos);
                 return;
             }
 
             // Check if the general is in check
             Moves.IsGeneralInCheck(board, destPos);
 
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Engine
             Moves.IsGeneralInCheck(board, destPos);
 
             // Add move
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

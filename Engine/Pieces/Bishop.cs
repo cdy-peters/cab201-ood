@@ -17,9 +17,9 @@ namespace Engine
 
             // Up Left
             destPos = pos;
-            while (destPos >= Board.Size && destPos % Board.Size != 0)
+            while (destPos >= 8 && destPos % 8 != 0)
             {
-                destPos -= Board.Size + 1;
+                destPos -= 8 + 1;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -39,9 +39,9 @@ namespace Engine
 
             // Up Right
             destPos = pos;
-            while (destPos >= Board.Size && destPos % Board.Size != Board.Size - 1)
+            while (destPos >= 8 && destPos % 8 != 8 - 1)
             {
-                destPos -= Board.Size - 1;
+                destPos -= 8 - 1;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -61,9 +61,9 @@ namespace Engine
 
             // Down Left
             destPos = pos;
-            while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != 0)
+            while (destPos < 64 - 8 && destPos % 8 != 0)
             {
-                destPos += Board.Size - 1;
+                destPos += 8 - 1;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -83,9 +83,9 @@ namespace Engine
 
             // Down Right
             destPos = pos;
-            while (destPos < Board.Size * Board.Size - Board.Size && destPos % Board.Size != Board.Size - 1)
+            while (destPos < 64 - 8 && destPos % 8 != 8 - 1)
             {
-                destPos += Board.Size + 1;
+                destPos += 8 + 1;
 
                 Square destSquare = board.Squares[destPos];
 
@@ -123,14 +123,14 @@ namespace Engine
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+                square.Piece.ValidMoves.Add(destPos);
                 return;
             }
 
             // If destination piece is general, set check
             Moves.IsGeneralInCheck(board, destPos);
 
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

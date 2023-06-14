@@ -102,7 +102,7 @@ namespace Engine
             };
 
             /// Iterate through each piece of the moving player.
-            for (int i = 0; i < Board.Size * Board.Size; i++)
+            for (int i = 0; i < 64; i++)
             {
                 Square square = board.Squares[i];
                 if (square.Piece == null)
@@ -110,11 +110,11 @@ namespace Engine
                 if (square.Piece.PieceColor != board.Player)
                     continue;
 
-                foreach (MoveDest moveDest in square.Piece.ValidMoves)
+                foreach (int destPos in square.Piece.ValidMoves)
                 {
                     /// Create a new board and make a move.
                     Board newBoard = board.CopyBoard();
-                    Board.MovePiece(newBoard, i, moveDest);
+                    Board.MovePiece(newBoard, i, destPos);
                     Moves.GetValidMoves(newBoard);
 
                     /// Check if a move puts the moving player in check.
@@ -124,7 +124,7 @@ namespace Engine
                         continue;
 
                     /// Evaluate the board.
-                    Evaluation.BoardEvaluation(newBoard, false);
+                    Evaluation.BoardEvaluation(newBoard);
                     newBoard.Score = SideToMove(newBoard.Score, newBoard.Player);
                     resBoards.Boards.Add(newBoard);
                 }
@@ -155,7 +155,7 @@ namespace Engine
             {
                 /// Create a new board and make a move.
                 Board newBoard = board.CopyBoard();
-                Board.MovePiece(newBoard, move.SrcPos, new MoveDest(move.DestPos));
+                Board.MovePiece(newBoard, move.SrcPos, move.DestPos);
                 Moves.GetValidMoves(newBoard);
 
                 /// Check if a move puts the moving player in check.
@@ -189,7 +189,7 @@ namespace Engine
             List<Position> positions = new List<Position>();
 
             /// Iterate through each piece of the moving player.
-            for (int i = 0; i < Board.Size * Board.Size; i++)
+            for (int i = 0; i < 64; i++)
             {
                 Piece piece = board.Squares[i].Piece;
                 if (piece == null)
@@ -198,11 +198,11 @@ namespace Engine
                     continue;
 
                 /// Iterate through each valid move of the piece.
-                foreach (MoveDest moveDest in piece.ValidMoves)
+                foreach (int destPos in piece.ValidMoves)
                 {
                     Position move = new Position();
                     move.SrcPos = i;
-                    move.DestPos = moveDest.Pos;
+                    move.DestPos = destPos;
 
                     Piece destPiece = board.Squares[move.DestPos].Piece;
                     if (destPiece != null)
@@ -230,7 +230,7 @@ namespace Engine
                 return AlphaBeta(board, 1, alpha, beta);
 
             /// Return the score of the board.
-            Evaluation.BoardEvaluation(board, false);
+            Evaluation.BoardEvaluation(board);
             return SideToMove(board.Score, board.Player);
         }
     }

@@ -23,24 +23,6 @@ namespace Engine
     }
 
     /// <summary>
-    /// Structure representing the destination of a move.
-    /// </summary>
-    internal struct MoveDest
-    {
-        internal int Pos;
-        internal bool IsWall;
-
-        /// <summary>
-        /// Creates a new move destination.
-        /// </summary>
-        internal MoveDest(int destPos, bool isWall = false)
-        {
-            Pos = destPos;
-            IsWall = isWall;
-        }
-    }
-
-    /// <summary>
     /// Structure representing a moving piece.
     /// </summary>
     internal struct MovingPiece
@@ -49,7 +31,7 @@ namespace Engine
         internal PieceType? PieceType;
 
         internal int SrcPos;
-        internal MoveDest Dest;
+        internal int DestPos;
 
         /// <summary>
         /// Creates a new moving piece.
@@ -58,12 +40,12 @@ namespace Engine
         /// <param name="pieceType">The type of piece to move</param>
         /// <param name="srcPos">The position of the piece to move</param>
         /// <param name="dest">The destination of the piece to move</param>
-        internal MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, MoveDest dest)
+        internal MovingPiece(PieceColor pieceColor, PieceType pieceType, int srcPos, int destPos)
         {
             PieceColor = pieceColor;
             PieceType = pieceType;
             SrcPos = srcPos;
-            Dest = dest;
+            DestPos = destPos;
         }
 
         /// <summary>
@@ -75,7 +57,7 @@ namespace Engine
             PieceColor = MovingPiece.PieceColor;
             PieceType = MovingPiece.PieceType;
             SrcPos = MovingPiece.SrcPos;
-            Dest = MovingPiece.Dest;
+            DestPos = MovingPiece.DestPos;
         }
     }
 
@@ -92,7 +74,7 @@ namespace Engine
         internal int AttackValue;
         internal int DefenseValue;
 
-        internal List<MoveDest> ValidMoves;
+        internal List<int> ValidMoves;
 
         /// <summary>
         /// Creates a new piece.
@@ -123,7 +105,7 @@ namespace Engine
                 PieceType.King => 1,
                 _ => 0
             };
-            ValidMoves = new List<MoveDest>();
+            ValidMoves = new List<int>();
         }
 
         /// <summary>

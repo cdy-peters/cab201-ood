@@ -26,7 +26,7 @@ namespace Engine
         /// <returns>A string representation of the move made and the resulting board.</returns>
         public override string ToString()
         {
-            return $"Moving {Board!.LastMove.SrcPos} to {Board.LastMove.Dest.Pos}\n{Board}";
+            return $"Moving {Board!.LastMove.SrcPos} to {Board.LastMove.DestPos}\n{Board}";
         }
     }
 }

@@ -13,14 +13,14 @@ namespace Engine
         /// <param name="pos">The position of the miner.</param>
         internal static void GetMoves(Board board, Square square, int pos)
         {
-            int row = pos / Board.Size;
-            int col = pos % Board.Size;
+            int row = pos / 8;
+            int col = pos % 8;
 
             // Up
             int destPos = pos;
             while (row > 0)
             {
-                destPos -= Board.Size;
+                destPos -= 8;
                 if (destPos < 0)
                     break;
 
@@ -42,10 +42,10 @@ namespace Engine
 
             // Down
             destPos = pos;
-            while (row < Board.Size - 1)
+            while (row < 8 - 1)
             {
-                destPos += Board.Size;
-                if (destPos >= Board.Size * Board.Size)
+                destPos += 8;
+                if (destPos >= 64)
                     break;
 
                 Square destSquare = board.Squares[destPos];
@@ -69,7 +69,7 @@ namespace Engine
             while (col > 0)
             {
                 destPos--;
-                if (destPos % Board.Size >= Board.Size - 1 || destPos < 0)
+                if (destPos % 8 >= 8 - 1 || destPos < 0)
                     break;
 
                 Square destSquare = board.Squares[destPos];
@@ -90,10 +90,10 @@ namespace Engine
 
             // Right
             destPos = pos;
-            while (col < Board.Size - 1)
+            while (col < 8 - 1)
             {
                 destPos++;
-                if (destPos % Board.Size <= 0)
+                if (destPos % 8 <= 0)
                     break;
 
                 Square destSquare = board.Squares[destPos];
@@ -132,14 +132,14 @@ namespace Engine
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+                square.Piece.ValidMoves.Add(destPos);
                 return;
             }
 
             // If destination piece is general, set check
             Moves.IsGeneralInCheck(board, destPos);
 
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

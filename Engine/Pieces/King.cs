@@ -13,7 +13,7 @@ namespace Engine
         /// <param name="pos">The position of the general.</param>
         internal static void GetMoves(Board board, int pos)
         {
-            if (pos < 0 || pos >= Board.Size * Board.Size)
+            if (pos < 0 || pos >= 64)
                 return;
 
             Square square = board.Squares[pos];
@@ -69,14 +69,14 @@ namespace Engine
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+                square.Piece.ValidMoves.Add(destPos);
                 return;
             }
 
             // If destination piece is general, set check
             Moves.IsGeneralInCheck(board, destPos);
 
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
 
         private static void Castle(Board board)
@@ -91,14 +91,14 @@ namespace Engine
                 {
                     if (board.Squares[61].Piece == null && board.Squares[62].Piece == null)
                         if (!board.ThreatenedByBlack[61] && !board.ThreatenedByBlack[62])
-                            king.ValidMoves.Add(new MoveDest(62, true));
+                            king.ValidMoves.Add(62);
                 }
 
                 if (board.WhiteCastleQueenSide)
                 {
                     if (board.Squares[61].Piece == null && board.Squares[62].Piece == null && board.Squares[63].Piece == null)
                         if (!board.ThreatenedByBlack[58] && !board.ThreatenedByBlack[59])
-                            king.ValidMoves.Add(new MoveDest(58, true));
+                            king.ValidMoves.Add(58);
                 }
             }
             else
@@ -111,14 +111,14 @@ namespace Engine
                 {
                     if (board.Squares[5].Piece == null && board.Squares[6].Piece == null)
                         if (!board.ThreatenedByWhite[5] && !board.ThreatenedByWhite[6])
-                            king.ValidMoves.Add(new MoveDest(6, true));
+                            king.ValidMoves.Add(6);
                 }
 
                 if (board.BlackCastleQueenSide)
                 {
                     if (board.Squares[1].Piece == null && board.Squares[2].Piece == null && board.Squares[3].Piece == null)
                         if (!board.ThreatenedByWhite[2] && !board.ThreatenedByWhite[3])
-                            king.ValidMoves.Add(new MoveDest(2, true));
+                            king.ValidMoves.Add(2);
                 }
             }
         }

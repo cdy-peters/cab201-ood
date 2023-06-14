@@ -13,8 +13,8 @@ namespace Engine
         /// <param name="pos">The position of the sentinel.</param>
         internal static void GetMoves(Board board, Square square, int pos)
         {
-            int row = pos / Board.Size;
-            int col = pos % Board.Size;
+            int row = pos / 8;
+            int col = pos % 8;
 
             int[] offsets = { -2, -1, 1, 2 };
             foreach (int offsetY in offsets)
@@ -28,8 +28,8 @@ namespace Engine
                         continue;
 
                     // Check if destination square is in the correct row and column
-                    int destRow = destPos / Board.Size;
-                    int destCol = destPos % Board.Size;
+                    int destRow = destPos / 8;
+                    int destCol = destPos % 8;
                     if (destRow != row + offsetY || destCol != col + offsetX)
                         continue;
 
@@ -59,14 +59,14 @@ namespace Engine
             // Add move
             if (destSquare.Piece == null)
             {
-                square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+                square.Piece.ValidMoves.Add(destPos);
                 return;
             }
 
             // If destination piece is general, set check
             Moves.IsGeneralInCheck(board, destPos);
 
-            square.Piece.ValidMoves.Add(new MoveDest(destPos, false));
+            square.Piece.ValidMoves.Add(destPos);
         }
     }
 }

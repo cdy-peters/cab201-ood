@@ -7,15 +7,13 @@ namespace Engine
     /// </summary>
     internal class Board
     {
-        internal const int Size = 8;
-
         internal PieceColor Player;
         internal int Score = 0;
         internal MovingPiece LastMove;
         internal Square[] Squares;
 
-        internal bool[] ThreatenedByWhite = new bool[Size * Size];
-        internal bool[] ThreatenedByBlack = new bool[Size * Size];
+        internal bool[] ThreatenedByWhite = new bool[64];
+        internal bool[] ThreatenedByBlack = new bool[64];
 
         internal bool WhiteCheck = false;
         internal bool BlackCheck = false;
@@ -35,11 +33,11 @@ namespace Engine
         /// </summary>
         private Board()
         {
-            Squares = new Square[Size * Size];
+            Squares = new Square[64];
             Player = Game.PlayerColor;
             LastMove = new MovingPiece();
-            ThreatenedByWhite = new bool[Size * Size];
-            ThreatenedByBlack = new bool[Size * Size];
+            ThreatenedByWhite = new bool[64];
+            ThreatenedByBlack = new bool[64];
         }
 
         /// <summary>
@@ -144,7 +142,7 @@ namespace Engine
         /// <param name="squares">The array of Squares to create the Board from.</param>
         private Board(Square[] squares) : this()
         {
-            for (int i = 0; i < Size * Size; i++)
+            for (int i = 0; i < 64; i++)
                 if (squares[i].Piece != null)
                     Squares[i] = new Square(squares[i].Piece);
         }
@@ -159,8 +157,8 @@ namespace Engine
 
             newBoard.Player = Player;
 
-            ThreatenedByWhite = new bool[Size * Size];
-            ThreatenedByBlack = new bool[Size * Size];
+            ThreatenedByWhite = new bool[64];
+            ThreatenedByBlack = new bool[64];
 
             return newBoard;
         }
@@ -171,13 +169,12 @@ namespace Engine
         /// <param name="board">The board to update.</param>
         /// <param name="srcPos">The position of the piece to move.</param>
         /// <param name="moveDest">The destination to move the piece</param>
-        internal static void MovePiece(Board board, int srcPos, MoveDest moveDest)
+        internal static void MovePiece(Board board, int srcPos, int destPos)
         {
-            int destPos = moveDest.Pos;
             Piece srcPiece = board.Squares[srcPos].Piece;
             Piece destPiece = board.Squares[destPos].Piece;
 
-            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, moveDest);
+            board.LastMove = new MovingPiece(srcPiece.PieceColor, srcPiece.PieceType, srcPos, destPos);
 
             board.Player = board.Player == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
@@ -192,8 +189,8 @@ namespace Engine
             int destPos = FromAN(move.Substring(2, 2));
 
             Piece srcPiece = Squares[srcPos].Piece;
-            foreach (MoveDest moveDest in srcPiece.ValidMoves)
-                if (moveDest.Pos == destPos)
+            foreach (int moveDest in srcPiece.ValidMoves)
+                if (moveDest == destPos)
                     return true;
 
             return false;
@@ -209,9 +206,9 @@ namespace Engine
 
             // Get pieces
             int emptySquares = 0;
-            for (int i = 0; i < Size * Size; i++)
+            for (int i = 0; i < 64; i++)
             {
-                if (i % Size == 0 && i != 0)
+                if (i % 8 == 0 && i != 0)
                 {
                     if (emptySquares > 0)
                     {
@@ -296,7 +293,7 @@ namespace Engine
 
         private static string ToAN(int pos)
         {
-            int file = pos % Size;
+            int file = pos % 8;
             int rank = 8 - (pos / 8) - 1;
 
             char fileChar = (char)('a' + file);
@@ -337,7 +334,7 @@ namespace Engine
 
             }
 
-            return Regex.Replace(boardStr, $".{{{Size}}}", "$0\n");
+            return Regex.Replace(boardStr, $".{{{8}}}", "$0\n");
         }
     }
 }

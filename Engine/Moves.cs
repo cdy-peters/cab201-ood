@@ -15,13 +15,13 @@ namespace Engine
             int blackGeneralPos = -1;
 
             /// Iterate through each square on the board and getting the valid moves for each piece
-            for (int i = 0; i < Board.Size * Board.Size; i++)
+            for (int i = 0; i < 64; i++)
             {
                 Square square = board.Squares[i];
                 if (square.Piece == null)
                     continue;
 
-                square.Piece.ValidMoves = new List<MoveDest>();
+                square.Piece.ValidMoves = new List<int>();
 
                 switch (square.Piece.PieceType)
                 {
@@ -66,7 +66,7 @@ namespace Engine
         /// <returns>The destPos to move to or - 1 if out of bounds.</returns>
         internal static int GetDestPos(int pos, int offsetX, int offsetY)
         {
-            int destPos = pos + offsetY * Board.Size + offsetX;
+            int destPos = pos + offsetY * 8 + offsetX;
 
             if (IsOutOfBounds(destPos, offsetX, offsetY))
                 return -1;
@@ -84,22 +84,22 @@ namespace Engine
         internal static bool IsOutOfBounds(int pos, int? offsetX = null, int? offsetY = null)
         {
             /// Check if the initial position is off the board.
-            if (pos < 0 || pos >= Board.Size * Board.Size)
+            if (pos < 0 || pos >= 64)
                 return true;
 
             if (offsetX != null)
             {
-                if (offsetX == 1 && pos % Board.Size <= 0)
+                if (offsetX == 1 && pos % 8 <= 0)
                     return true;
-                if (offsetX == -1 && pos % Board.Size >= Board.Size - 1)
+                if (offsetX == -1 && pos % 8 >= 8 - 1)
                     return true;
             }
 
             if (offsetY != null)
             {
-                if (offsetY == 1 && pos / Board.Size <= 0)
+                if (offsetY == 1 && pos / 8 <= 0)
                     return true;
-                if (offsetY == -1 && pos / Board.Size >= Board.Size - 1)
+                if (offsetY == -1 && pos / 8 >= 8 - 1)
                     return true;
             }
 
