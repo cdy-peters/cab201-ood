@@ -125,7 +125,7 @@ namespace Engine
             // Set en passant
             charIdx++;
             if (fen[charIdx] != '-')
-                EnPassant = int.Parse(FromAN(fen.Substring(charIdx++, 2)));
+                EnPassant = FromAN(fen.Substring(charIdx++, 2));
             else
                 EnPassant = -1;
 
@@ -184,6 +184,19 @@ namespace Engine
             // Generic move
             board.Squares[srcPos].Piece = null!;
             board.Squares[destPos].Piece = srcPiece;
+        }
+
+        internal bool IsValidMoveAN(string move)
+        {
+            int srcPos = FromAN(move.Substring(0, 2));
+            int destPos = FromAN(move.Substring(2, 2));
+
+            Piece srcPiece = Squares[srcPos].Piece;
+            foreach (MoveDest moveDest in srcPiece.ValidMoves)
+                if (moveDest.Pos == destPos)
+                    return true;
+
+            return false;
         }
 
         /// <summary>
@@ -273,20 +286,23 @@ namespace Engine
             return fen;
         }
 
-        private static string FromAN(string an)
+        private static int FromAN(string an)
         {
-            int file = an[0] - 97;
-            int rank = an[1] - 49;
+            int file = an[0] - 'a';
+            int rank = 8 - (an[1] - '1') - 1;
 
-            return (rank * Size + file).ToString();
+            return rank * 8 + file;
         }
 
         private static string ToAN(int pos)
         {
             int file = pos % Size;
-            int rank = pos / Size;
+            int rank = 8 - (pos / 8) - 1;
 
-            return $"{(char)(file + 97)}{rank + 1}";
+            char fileChar = (char)('a' + file);
+            char rankChar = (char)('1' + rank);
+
+            return fileChar.ToString() + rankChar.ToString();
         }
 
         /// <summary>
