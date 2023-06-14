@@ -19,6 +19,8 @@ public class FunctionalityTests
     public void ValidMovesBenchmark()
     {
         string[] lines = File.ReadAllLines(@"benchmark.txt");
+        List<string> failures = new List<string>();
+
         for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i];
@@ -35,8 +37,11 @@ public class FunctionalityTests
             }
             catch
             {
-                Assert.Fail($"Case {i}: The best move {bm} was not found for the board,\n{fen}");
+                failures.Add($"Case {i}: The best move {bm} was not found for the board,\n{fen}");
             }
         }
+
+        if (failures.Count > 0)
+            Assert.Fail($"{failures.Count}/800 tests failed\n" + string.Join("\n\n", failures));
     }
 }
