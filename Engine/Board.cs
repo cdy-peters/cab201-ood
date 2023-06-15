@@ -205,6 +205,32 @@ namespace Engine
             return false;
         }
 
+        internal bool IsValidMoveAN(MovingPieceAN move)
+        {
+            PieceType pieceType = move.PieceType;
+            int destPos = move.DestPos;
+            char? file = move.File;
+
+            for (int i = 0; i < 64; i++)
+            {
+                if (Squares[i].Piece == null)
+                    continue;
+                if (Squares[i].Piece.PieceType != pieceType)
+                    continue;
+                if (file != null)
+                {
+                    int sqrFile = i % 8;
+                    if (sqrFile != file - 'a')
+                        continue;
+                }
+
+                foreach (int moveDest in Squares[i].Piece.ValidMoves)
+                    if (moveDest == destPos)
+                        return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Converts the Board to a FEN string.
         /// </summary>

@@ -49,11 +49,11 @@ public class FunctionalityTests
     public void ValidMovesBenchmark2()
     {
         string[] lines = File.ReadAllLines(@"kaufman.txt");
-        List<string> failures = new List<string>();
+        List<string> failBestMoveFound = new List<string>();
+        List<string> failBestMoveNotFound = new List<string>();
 
         for (int i = 0; i < lines.Length; i++)
         {
-            //Console.WriteLine(i);
             string line = lines[i];
             string[] parts = line.Split(";");
 
@@ -76,12 +76,118 @@ public class FunctionalityTests
             }
             catch
             {
-                failures.Add($"Case {i + 1}: Expected '{bm}', received '{an}'");
+                MovingPieceAN mpAN = FromAN(bm);
+                bool valid = board.IsValidMoveAN(mpAN);
+
+                if (valid)
+                    failBestMoveFound.Add($"Case {i + 1}: Expected '{bm}', received '{an}'");
+                else
+                    failBestMoveNotFound.Add($"Case {i + 1}: Expected best move '{bm}' was not found");
             }
         }
 
-        if (failures.Count > 0)
-            Assert.Fail($"{failures.Count}/{lines.Length} tests failed\n" + string.Join("\n", failures));
+
+        int totalFailed = failBestMoveFound.Count + failBestMoveNotFound.Count;
+        string totalMsg = $"{totalFailed}/{lines.Length} tests failed\n\n";
+
+        string notFoundMsg = "";
+        if (failBestMoveNotFound.Count > 0)
+            notFoundMsg = string.Join("\n", failBestMoveNotFound) + "\n\n";
+
+        string foundMsg = "";
+        if (failBestMoveFound.Count > 0)
+            foundMsg = string.Join("\n", failBestMoveFound) + "\n";
+
+        Assert.Fail(totalMsg + notFoundMsg + foundMsg);
+    }
+
+    private static PieceType GetPiece(char piece)
+    {
+        switch (piece)
+        {
+            case 'K':
+                return PieceType.King;
+            case 'Q':
+                return PieceType.Queen;
+            case 'R':
+                return PieceType.Rook;
+            case 'B':
+                return PieceType.Bishop;
+            case 'N':
+                return PieceType.Knight;
+            case 'P':
+                return PieceType.Pawn;
+            default:
+                throw new Exception($"Invalid piece: {piece}");
+        }
+    }
+
+    private static MovingPieceAN FromAN(string AN)
+    {
+        // string str = "";
+        MovingPieceAN mpAN = new MovingPieceAN();
+
+        int rIdx = AN.Length - 1;
+
+        // Check flag
+        if (AN[rIdx] == '+')
+        {
+            mpAN.Check = true;
+            rIdx -= 2;
+        }
+
+        // Destination
+        string dest = AN.Substring(rIdx - 1, 2);
+        mpAN.DestPos = Board.FromAN(dest);
+        rIdx -= 2;
+
+        // Moving piece
+        if (rIdx < 0)
+        {
+            mpAN.PieceType = PieceType.Pawn;
+            return mpAN;
+        }
+        if (rIdx == 0)
+        {
+            mpAN.PieceType = GetPiece(AN[rIdx]);
+            return mpAN;
+        }
+
+        // Capture
+        if (AN[rIdx] == 'x')
+        {
+            mpAN.Capture = true;
+            rIdx--;
+        }
+
+        // Rank
+        if (Char.IsDigit(AN[rIdx]))
+        {
+            mpAN.Rank = AN[rIdx];
+            rIdx--;
+
+            if (rIdx < 0)
+            {
+                mpAN.PieceType = PieceType.Pawn;
+                return mpAN;
+            }
+        }
+
+        // File
+        if (Char.IsLower(AN[rIdx]))
+        {
+            mpAN.File = AN[rIdx];
+            rIdx--;
+
+            if (rIdx < 0)
+            {
+                mpAN.PieceType = PieceType.Pawn;
+                return mpAN;
+            }
+        }
+
+        mpAN.PieceType = GetPiece(AN[rIdx]);
+        return mpAN;
     }
 
     private static string ToAN(Board board, MovingPiece bestMove)

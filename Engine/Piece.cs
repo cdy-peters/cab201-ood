@@ -22,6 +22,26 @@ namespace Engine
         King
     }
 
+    internal struct MovingPieceAN
+    {
+        internal PieceType PieceType;
+        internal char? File;
+        internal int? Rank;
+        internal int DestPos;
+        internal bool Capture;
+        internal bool Check;
+
+        internal MovingPieceAN(PieceType pieceType, char? file, int? rank, int destPos, bool capture, bool check)
+        {
+            PieceType = pieceType;
+            File = file;
+            Rank = rank;
+            DestPos = destPos;
+            Capture = capture;
+            Check = check;
+        }
+    }
+
     /// <summary>
     /// Structure representing a moving piece.
     /// </summary>
