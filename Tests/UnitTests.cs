@@ -26,15 +26,13 @@ public class FunctionalityTests
         for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i];
-            string[] parts = line.Split(";");
+            string testStr = line.Split(";")[0];
 
-            string fen = parts[0].Trim();
+            string[] separator = { "bm", "am" };
+            string[] parts = testStr.Split(separator, StringSplitOptions.TrimEntries);
 
+            string fen = parts[0];
             string bm = parts[1];
-            bm = bm.Replace("\0", "");
-            bm = bm.Replace("bm", "");
-            bm = bm.Replace("am", "");
-            bm = bm.Trim();
 
             Board board = new Board(fen);
             Moves.GetValidMoves(board);
