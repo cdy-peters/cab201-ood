@@ -129,7 +129,16 @@ namespace Engine
 
             // Set halfmove clock
             charIdx += 2;
-            HalfMoveClock = int.Parse(fen.Substring(charIdx, 1));
+            try
+            {
+                HalfMoveClock = int.Parse(fen.Substring(charIdx, 1));
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                HalfMoveClock = 0;
+                FullMoves = 1;
+                return;
+            }
 
             // Set fullmove number
             charIdx += 2;
