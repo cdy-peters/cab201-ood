@@ -19,6 +19,7 @@ public class FunctionalityTests
     public void KaufmanTests()
     {
         string[] lines = File.ReadAllLines(@"kaufman.txt");
+        List<string> failException = new List<string>();
         List<string> failBestMoveFound = new List<string>();
         List<string> failBestMoveNotFound = new List<string>();
 
@@ -46,7 +47,17 @@ public class FunctionalityTests
             }
             catch
             {
-                MovingPieceAN mpAN = FromAN(bm);
+                MovingPieceAN mpAN;
+                try
+                {
+                mpAN = FromAN(bm);
+                }
+                catch (Exception e)
+                {
+                    failException.Add($"Case {i + 1} threw an exception: {e.Message} {e.StackTrace}");
+                    continue;
+                }
+
                 bool valid = board.IsValidMoveAN(mpAN);
 
                 if (valid)
@@ -57,8 +68,12 @@ public class FunctionalityTests
         }
 
 
-        int totalFailed = failBestMoveFound.Count + failBestMoveNotFound.Count;
+        int totalFailed = failException.Count + failBestMoveFound.Count + failBestMoveNotFound.Count;
         string totalMsg = $"{totalFailed}/{lines.Length} tests failed\n\n";
+
+        string exceptionMsg = "";
+        if (failException.Count > 0)
+            exceptionMsg = string.Join("\n", failException) + "\n\n";
 
         string notFoundMsg = "";
         if (failBestMoveNotFound.Count > 0)
@@ -68,7 +83,7 @@ public class FunctionalityTests
         if (failBestMoveFound.Count > 0)
             foundMsg = string.Join("\n", failBestMoveFound) + "\n";
 
-        Assert.Fail(totalMsg + notFoundMsg + foundMsg);
+        Assert.Fail(totalMsg + exceptionMsg + notFoundMsg + foundMsg);
     }
 
     private static PieceType GetPiece(char piece)
@@ -88,7 +103,7 @@ public class FunctionalityTests
             case 'P':
                 return PieceType.Pawn;
             default:
-                throw new Exception($"Invalid piece: {piece}");
+                throw new ArgumentException($"Invalid piece: {piece}");
         }
     }
 
