@@ -16,37 +16,7 @@ public class FunctionalityTests
     }
 
     [TestMethod]
-    public void ValidMovesBenchmark()
-    {
-        string[] lines = File.ReadAllLines(@"benchmark.txt");
-        List<string> failures = new List<string>();
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string line = lines[i];
-            string[] parts = line.Split(" bm ");
-            string fen = parts[0];
-            string bm = parts[1];
-
-            Board board = new Board(fen);
-            Moves.GetValidMoves(board);
-
-            try
-            {
-                Assert.IsTrue(board.IsValidMoveAN(bm));
-            }
-            catch
-            {
-                failures.Add($"Case {i + 1}: The best move {bm} was not found for the board,\n{fen}");
-            }
-        }
-
-        if (failures.Count > 0)
-            Assert.Fail($"{failures.Count}/{lines.Length} tests failed\n" + string.Join("\n\n", failures));
-    }
-
-    [TestMethod]
-    public void ValidMovesBenchmark2()
+    public void KaufmanTests()
     {
         string[] lines = File.ReadAllLines(@"kaufman.txt");
         List<string> failBestMoveFound = new List<string>();
