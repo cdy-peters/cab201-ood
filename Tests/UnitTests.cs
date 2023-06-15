@@ -116,7 +116,10 @@ public class FunctionalityTests
         if (AN[rIdx] == '+')
         {
             mpAN.Check = true;
-            rIdx -= 2;
+            rIdx--;
+
+            if (AN[rIdx] == ' ')
+                rIdx--;
         }
 
         // Destination
