@@ -16,7 +16,22 @@ public class FunctionalityTests
     }
 
     [TestMethod]
-    public void EnPassantTest()
+    public void EnPassantMove()
+    {
+        string fenIn = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+        Board board = new Board(fenIn);
+        Moves.GetValidMoves(board);
+
+        Board.MovePiece(board, 49, 33);
+
+        string fenOutEx = "rnbqkbnr/pppppppp/8/8/1P6/8/P1PPPPPP/RNBQKBNR b KQkq b3 0 1";
+        string fenOut = board.ToFEN();
+        Assert.AreEqual(fenOut, fenOutEx);
+    }
+
+    [TestMethod]
+    public void EnPassantCaptureTest()
     {
         string fen = "8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3";
 
@@ -26,11 +41,14 @@ public class FunctionalityTests
         if (board.IsValidMove(34, 43))
         {
             Board.MovePiece(board, 34, 43);
-            if (board.Squares[35].Piece != null)
-                Assert.Fail("Pawn was not captued");
+
+            string fenOutEx = "8/6bb/8/8/R5k1/3pP3/P7/K7 w KQkq - 0 1";
+            string fenOut = board.ToFEN();
+            Assert.AreEqual(fenOut, fenOutEx);
+
             return;
         }
-        Assert.Fail("En passant move does not exist");
+        Assert.Fail("En passant capture does not exist");
     }
 
     [TestMethod]

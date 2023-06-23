@@ -191,14 +191,30 @@ namespace Engine
             board.Squares[srcPos].Piece = null!;
             board.Squares[destPos].Piece = srcPiece;
 
-            // En passant
-            if (srcPiece.PieceType == PieceType.Pawn && destPos == board.EnPassant)
+            // En passant handling
+            if (srcPiece.PieceType == PieceType.Pawn)
             {
-                if (destPos / 8 == 5)
-                    board.Squares[board.EnPassant - 8].Piece = null!;
-                else
-                    board.Squares[board.EnPassant + 8].Piece = null!;
+                // En passant move
+                int diff = Math.Abs(destPos - srcPos);
+                if (diff % 8 == 0 && diff != 8)
+                {
+                    if (srcPiece.PieceColor == PieceColor.White)
+                        board.EnPassant = srcPos - 8;
+                    else
+                        board.EnPassant = destPos - 8;
+                    return;
+                }
+
+                // En passant square
+                if (destPos == board.EnPassant)
+                {
+                    if (srcPiece.PieceColor == PieceColor.White)
+                        board.Squares[board.EnPassant + 8].Piece = null!;
+                    else
+                        board.Squares[board.EnPassant - 8].Piece = null!;
+                }
             }
+            board.EnPassant = -1;
         }
 
         internal bool IsValidMove(int srcPos, int destPos)
