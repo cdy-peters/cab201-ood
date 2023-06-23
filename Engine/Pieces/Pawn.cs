@@ -73,6 +73,13 @@ namespace Engine
                 if (destPos == -1)
                     continue;
 
+                // Add en passant move
+                if (destPos == board.EnPassant)
+                {
+                    Moves.AddMove(board, square, destPos);
+                    return;
+                }
+
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece != null && destSquare.Piece.PieceColor == PieceColor.Black)
                     AddCapture(board, square, destPos);
@@ -121,6 +128,13 @@ namespace Engine
                 destPos = Moves.GetDestPos(pos, offsetX, 1);
                 if (destPos == -1)
                     continue;
+
+                // Add en passant move
+                if (destPos == board.EnPassant)
+                {
+                    Moves.AddMove(board, square, destPos);
+                    return;
+                }
 
                 Square destSquare = board.Squares[destPos];
                 if (destSquare.Piece != null && destSquare.Piece.PieceColor == PieceColor.White)

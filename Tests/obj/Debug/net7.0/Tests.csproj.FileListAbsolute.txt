@@ -102,3 +102,4 @@
 /Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Tests.pdb
 /Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/Tests.genruntimeconfig.cache
 /Users/cody/Documents/Chess/Tests/obj/Debug/net7.0/ref/Tests.dll
+/Users/cody/Documents/Chess/Tests/bin/Debug/net7.0/kaufman.txt

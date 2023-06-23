@@ -190,6 +190,21 @@ namespace Engine
             // Generic move
             board.Squares[srcPos].Piece = null!;
             board.Squares[destPos].Piece = srcPiece;
+
+            // En passant
+            if (srcPiece.PieceType == PieceType.Pawn && destPos == board.EnPassant)
+            {
+                if (destPos / 8 == 5)
+                    board.Squares[board.EnPassant - 8].Piece = null!;
+                else
+                    board.Squares[board.EnPassant + 8].Piece = null!;
+            }
+        }
+
+        internal bool IsValidMove(int srcPos, int destPos)
+        {
+            Piece srcPiece = Squares[srcPos].Piece;
+            return srcPiece.ValidMoves.Contains(destPos);
         }
 
         internal bool IsValidMoveAN(string move)

@@ -16,6 +16,24 @@ public class FunctionalityTests
     }
 
     [TestMethod]
+    public void EnPassantTest()
+    {
+        string fen = "8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3";
+
+        Board board = new Board(fen);
+        Moves.GetValidMoves(board);
+
+        if (board.IsValidMove(34, 43))
+        {
+            Board.MovePiece(board, 34, 43);
+            if (board.Squares[35].Piece != null)
+                Assert.Fail("Pawn was not captued");
+            return;
+        }
+        Assert.Fail("En passant move does not exist");
+    }
+
+    [TestMethod]
     public void KaufmanTests()
     {
         string[] lines = File.ReadAllLines(@"kaufman.txt");
